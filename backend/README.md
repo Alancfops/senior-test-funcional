@@ -1,32 +1,30 @@
 # Backend — Sênior Teste Funcional
 
-**Prioridade de implementação** neste projeto. O cliente mobile consome apenas a API documentada aqui.
+**Prioridade de implementação** neste projeto. O aplicativo cliente consome apenas a API documentada e versionada segundo as convenções do repositório.
 
 ## Objetivos imediatos
 
-1. Expor endpoints REST estáveis cobrindo [levantamento-requisitos.md](../docs/produto/levantamento-requisitos.md) (RF001+) em incremental.
-2. Publicar/manter contrato **[OpenAPI 3]** (Swagger no Nest ou `openapi.yaml`) para o frontend rascunho e para a futura implementação guiada pelo design.
+1. Expor endpoints REST estáveis incrementalmente segundo [levantamento-requisitos.md](../docs/produto/levantamento-requisitos.md) (RF001 em diante).  
+2. Publicar e manter contrato **OpenAPI 3** coerente com o código-fonte (`openapi.yaml`/Swagger Nest ou ferramentas equivalentes) para garantir interoperabilidade com o cliente móvel e integrações eventualmente autorizadas.
 
-## Como documentar dentro desta pasta (quando o código existir)
+Governança de dados sensíveis: [privacidade-e-lgpd.md](../docs/produto/privacidade-e-lgpd.md).
 
-Estrutura sugerida (ajuste ao framework):
+## Estrutura sugerida (ao criar o código)
 
 ```
 backend/
 ├── README.md                     # Você está aqui
-├── src/                          # Código NestJS ou equivalente (a criar)
-├── prisma/                       # prisma.schema + migrações (a criar)
-└── openapi/ ou gerado Swagger   # copiar ou artefatos CI (a criar)
+├── src/
+├── prisma/                       # quando ORM migrações adotarem Prisma ou equivalentes
+└── artefatos OpenAPI opcionais
 ```
 
-## Modelo conceitual
+Ver **[docs/engenharia/modelo-de-dados.md](../docs/engenharia/modelo-de-dados.md)** para modelo conceitual.
 
-Ver **[docs/engenharia/modelo-de-dados.md](../docs/engenharia/modelo-de-dados.md)**.
+## Fluxo de trabalho e fases
 
-## Fluxo de trabalho
+**[docs/engenharia/repositorio-e-fluxo-desenvolvimento.md](../docs/engenharia/repositorio-e-fluxo-desenvolvimento.md)** — fases **A** e **B** concentram o esforço desta pasta no início do cronograma.
 
-Ver **[docs/engenharia/repositorio-e-fluxo-desenvolvimento.md](../docs/engenharia/repositorio-e-fluxo-desenvolvimento.md)** — fases A e B concentram o esforço desta pasta primeiro.
+### Toolchain Bun (workspaces na raiz)
 
-### Quando o código existir (Bun workspaces)
-
-Da **raiz** do repo: `bun install`. Para subir só a API, use o script configurado no `package.json` (exemplo típico: `bun run --filter backend start:dev`). Prisma CLI: prefira `bunx prisma`; se algo falhar, `npx prisma` como último recurso naquele comando.
+Na raiz: `bun install`. Subir apenas a API: script correspondente declarado futuramente (exemplo típico `bun run --filter backend start:dev`). Prisma CLI quando existir schema: prefira `bunx prisma`; use `npx prisma` apenas se binário pontual assim exigir.

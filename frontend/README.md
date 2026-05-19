@@ -2,30 +2,25 @@
 
 Aplicativo cliente em **React Native (Expo)**, segundo [arquitetura.md](../docs/engenharia/arquitetura.md).
 
-## Fase atual do produto no plano oficial
+O diretório concentra inicialmente uma **implementação orientada primeiro aos requisitos e aos fluxos de negócio oficiais**: consumir API homologável, validar todas as navegações descritas na PRD até feedback e exportações relacionadas e, só então consolidar camada cosmética alinhada aos **tokens** de identidade institucional quando definidos.
 
-Este diretório deverá conter inicialmente telas **de rascunho / placeholder** apenas para **consumir endpoints reais** do `../backend/` e garantir fluxo RF até feedback/PDF funcionais ponta-a-ponto.
+Dados tratados pela aplicação e obrigações legais brasileiras: [privacidade-e-lgpd.md](../docs/produto/privacidade-e-lgpd.md).
 
-Depois haverá **implementação UI definitiva** feita com materiais vindos da **equipe de design** (tokens, grids, biblioteca).
-
-## Como documentar dentro desta pasta (quando o código existir)
+## Estrutura sugerida (quando o scaffold existir)
 
 ```
 frontend/
-├── README.md          # Você está aqui
-├── app ou src/       # Fluxo expo-router ou RN clássico (a criar)
-└── docs/
-    └── design-handoff.md  # Links Figma ou assets quando disponíveis
+├── README.md               # Você está aqui
+├── app ou src/
+└── documentação própria     # exemplo: referência rápida a tema/tokens externos
 ```
 
-## Contrato com Backend
+## Integração com a API do servidor
 
-Versão atual da API será referenciada no backend (Swagger/OpenAPI). O front **não inventa mocks** quando API existe — apenas fallback controlado opcional modo dev.
+Versão vigente das rotas públicas é definida pela pasta **`backend/`** e documentada pela OpenAPI. Durante desenvolvimento integrado, preferir apenas respostas reais já implementadas; usar mocks apenas em cenários **explicitamente delimitados** e **marcados**.
 
-## Fluxo esperado até UI final
+## Cronograma (fases C–E)
 
-Consulte **[docs/engenharia/repositorio-e-fluxo-desenvolvimento.md](../docs/engenharia/repositorio-e-fluxo-desenvolvimento.md)** (Fases **C**, **D**, **E**).
+**[docs/engenharia/repositorio-e-fluxo-desenvolvimento.md](../docs/engenharia/repositorio-e-fluxo-desenvolvimento.md)** — as fases **C**–**E** referem‑se predominantemente ao trabalho desta pasta, **após** as fases iniciais concluídas no servidor (A–B).
 
-### Quando o código existir (Bun workspaces)
-
-Projeto criado conforme Expo + Bun (`bun install` na raiz do monorepo). Subir apenas o cliente: exemplo típico `bun run --filter frontend start` (ajuste ao `name` do `package.json` do app). Documentação oficial: [Using Bun](https://docs.expo.dev/guides/using-bun/).
+Da raiz (`bun install`), subir apenas o cliente conforme scripts futuros declarados (`bun run --filter …`). Documentação oficial Expo + Bun: [Using Bun](https://docs.expo.dev/guides/using-bun/).

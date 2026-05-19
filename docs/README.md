@@ -1,6 +1,6 @@
 # Documentação — Sênior Teste Funcional
 
-Este diretório concentra **comportamento esperado do produto**, **decisões técnicas**, **contratos (artefatos machine-readable)** e **referência clínica** — separados de propósito para reduzir ambiguidade.
+Este diretório concentra **comportamento esperado do produto**, **orientação sobre proteção de dados (LGPD)**, **decisões técnicas**, **contratos (artefatos machine-readable)** e **referência clínica**, organizados por finalidade para reduzir ambiguidade.
 
 A **arquitetura do software** descrita para leitura pública — sem detalhar segredos, credenciais ou políticas operacionais de produção — está no **[README na raiz do repositório](../README.md)** (seção sobre arquitetura em camadas e princípios).
 
@@ -19,28 +19,29 @@ A **arquitetura do software** descrita para leitura pública — sem detalhar se
 
 | Se você quer… | Comece por… |
 |----------------|-------------|
-| Entender produto MVP, fluxos, mapa rápido de RFs | [produto/PRD.md](produto/PRD.md) |
+| Visão de produto, fluxos, mapa rápido de RFs | [produto/PRD.md](produto/PRD.md) |
 | Implementar comportamento campo a campo (**RF001+**) | [produto/levantamento-requisitos.md](produto/levantamento-requisitos.md) |
 | Stack, limites Backend/Front, Postgres, Bun, fases **A→E** | [engenharia/arquitetura.md](engenharia/arquitetura.md) + [engenharia/repositorio-e-fluxo-desenvolvimento.md](engenharia/repositorio-e-fluxo-desenvolvimento.md) |
 | ER e glossário antes de migrações | [engenharia/modelo-de-dados.md](engenharia/modelo-de-dados.md) |
 | Regras de **aplicação** dos testes na prática | [protocolos-clinicos/](protocolos-clinicos/README.md) |
+| Marcos LGPD — dados sensíveis, papéis, direitos dos titulares | [produto/privacidade-e-lgpd.md](produto/privacidade-e-lgpd.md) |
 
 ## Mapa das pastas (arquitetura da informação)
 
 ```
 docs/
 ├── README.md                 ← você está aqui (índice canônico)
-├── produto/                  O quê — PRD sintético + especificação funcional detalhada (RFs)
-├── engenharia/               Como — código, infra, modelo de dados, fluxo mono-repo/dev
-├── protocolos-clinicos/      Roteiros de instrumentos na prática (complementam, não substituem, os RFs)
-└── contratos/                Artefatos de integração formais — OpenAPI, exemplos payloads (quando houver código)
+├── produto/                  O quê — PRD, LGPD aplicável ao produto + RFs formais
+├── engenharia/               Como — arquitetura, modelo de dados, fluxo de repositório
+├── protocolos-clinicos/      Roteiros de instrumentos na prática (referência; não substituem RF)
+└── contratos/                Artefatos machine-readable — OpenAPI, exemplos (quando houver código gerador)
 ```
 
 **Princípios:**
 
-1. **`produto`** ≠ **`protocolos-clinicos`**: RFs dizem **o que o sistema obriga**; protocolos dizem **como o aplicador faz o teste fisicamente** e citam literatura — podem divergir levemente de UI implementada, mas devem estar alinhados no **cálculo** e cortes parametrizados.  
+1. **`produto`** ≠ **`protocolos-clinicos`**: RFs dizem **o que o sistema obriga**; protocolos descrevem **como o aplicador conduz o teste fisicamente** e citam literatura. Divergências de apresentação na interface devem preservar consistência nos **cálculos** e nos **cortes parametrizados**.  
 2. **`engenharia`** evita repetir páginas longas de RF — atualiza comportamento técnico e aponta de volta para `produto/` quando houver inconsistência registrada em issue/decisão.  
-3. **`contratos/`** separa o que é “intenção” do que é **forma explícita** da API (OpenAPI, exemplos de payload); até existir scaffold, há só um README‑placeholder honesto.
+3. **`contratos/`** materializa forma explícita da API (**OpenAPI**, exemplares de payloads); até existir scaffolding exportador automatizado neste disco, apenas **este README formaliza espaço esperado**.
 
 ---
 
@@ -50,8 +51,9 @@ docs/
 
 | Doc | Finalidade |
 |-----|-------------|
-| [produto/PRD.md](produto/PRD.md) | Visão, escopo, personas, roadmap, síntese de RFs |
-| [produto/levantamento-requisitos.md](produto/levantamento-requisitos.md) | Casos uso tabulados **RF001–RF013**, regras, matrizes placeholders acadêmico |
+| [produto/PRD.md](produto/PRD.md) | Visão, escopo, personas, síntese de RFs e encaminhamento evolutivo |
+| [produto/privacidade-e-lgpd.md](produto/privacidade-e-lgpd.md) | Tratamento de dados pessoais e sensíveis, papéis, princípios e obrigações (referência jurídica interna ao repositório) |
+| [produto/levantamento-requisitos.md](produto/levantamento-requisitos.md) | Casos de uso tabulados **RF001–RF013**, regras, matrizes e referências disciplinares |
 
 Opcional arquivo Word legado (se presente neste disco): tratá‑lo como cópia; **fonte atual** deve ser sempre os `.md` em `produto/`.
 
@@ -69,7 +71,7 @@ Ver [protocolos-clinicos/README.md](protocolos-clinicos/README.md). Caminho base
 
 `protocolos-clinicos/instrumentos/<código>/` onde `<código>` ∈ `tug | katz | berg | tinetti | meem`.
 
-### Contratos futuros
+### Contratos e integrações
 
 [contratos/README.md](contratos/README.md)
 

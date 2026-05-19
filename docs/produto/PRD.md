@@ -50,7 +50,7 @@ O **Sênior Teste Funcional** é uma plataforma digital centrada em **aplicativo
 | Tipo | Descrição |
 |------|-----------|
 | **Primário** | Fisioterapeuta que cadastra pacientes, aplica testes, consulta histórico e gera relatórios |
-| **Futuro / secundário** | Gestor ou clínica — indicadores agregados e relatórios gerenciais (fora do escopo mínimo descrito aqui) |
+| **Secundário (escopo atual)** | Gestor ou clínica — indicadores agregados e relatórios gerenciais; **mantido registrado apenas como referência** e **fora** do núcleo requisitado nos RFs vigentes neste conjunto |
 
 ---
 
@@ -146,7 +146,7 @@ A numeração completa com tabelas de campos e regras está em **[levantamento-r
 | Avaliação | Tutorial varia por instrumento; formulário específico por protocolo; persistência ao concluir feedback |
 | Evolução / PDF | Eixos e legendas coherentes por instrumento; PDF omite gráfico se não há histórico suficiente; PDF MEEM registra escolaridade usada na interpretação |
 
-Detalhar casos extremos conforme protótipo e testes de aceitação do time.
+Detalhar casos extremos conforme cenários formais de teste de aceitação e revisão técnica.
 
 ---
 
@@ -176,26 +176,37 @@ Consulte metas prévias (ex.: taxa de conclusão do fluxo, tempo médio por aval
 
 ---
 
-## 13. Roadmap simplificado
+## 13. Priorização incremental (orientação macro)
 
-| Fase | Foco |
-|------|------|
-| 1 | Fundação mobile: RF001–RF005 |
-| 2 | Núcleo de avaliação: RF007–RF011 |
-| 3 | Evolução: RF006 (refino), RF012, RF013 |
-| 4 | RNF e segurança formais + avaliação de canal web |
+Distribuição de esforços em fases compatíveis com a engenharia (ver `docs/engenharia/`). Não substitui a especificação detalhada em `levantamento-requisitos.md`.
+
+| Fase macro | Foco |
+|-------------|------|
+| 1 | RF001–RF005 (identidade do profissional, pacientes) |
+| 2 | RF007–RF011 (fluxo principal de avaliação) |
+| 3 | RF006 (refino onde necessário), RF012, RF013 (evolução, PDF) |
+| 4 | Requisitos não funcionais formais e endurecimento de segurança/operação; revisitura de canais opcionais (ex.: web) |
 
 ---
 
-## 14. Itens em aberto (exemplos)
+## 14. Privacidade e proteção de dados (LGPD — Brasil)
 
-- Fechamento definitivo de todas as faixas de classificação e material didático tutor.
-- Definição de SLAs e políticas de retenção/backup quando RNF entrar no escopo.
-- Papel exato da versão web e governança de dados/LGPD em profundidade.
+O produto registra dados de pacientes — incluindo informações relacionadas à saúde e funcionalidade — e dados de identificação de profissionais. Sob a [Lei nº 13.709/2018](http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm) (LGPD), esse tratamento exige bases legais adequadas ao **tipo** de dado, medidas proporcionais de **segurança** e respeito aos **direitos dos titulares**, competindo ao **controlador** da operação (clínica, organização ou profissional definido pelo contexto jurídico de implantação) formalizar avisos, contratos com operadores e canais institucionais.
+
+**Documento mestre sobre o tema neste repositório:** **[privacidade-e-lgpd.md](./privacidade-e-lgpd.md)** — deve ser atualizado sempre que fluxos ou integrações criarem novo tratamento de dados.
+
+---
+
+## 15. Pontos sob refinamento ou dependência externa
+
+- Uniformização das faixas de classificação e do material didático dos tutoriais após validação clínica e acadêmica.
+- Definição de SLAs e políticas operacionais de retenção e backup quando requisitos não funcionais forem formalizados no escopo.
+- Papel preciso de canais adicionais (ex.: web) em relação ao núcleo mobile.
 
 ---
 
 ## Referências cruzadas
 
 - Especificação tabular RF001–RF013: [levantamento-requisitos.md](./levantamento-requisitos.md).  
+- LGPD / dados pessoais e sensíveis: [privacidade-e-lgpd.md](./privacidade-e-lgpd.md).  
 - Roteiros clínicos: [../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/).  

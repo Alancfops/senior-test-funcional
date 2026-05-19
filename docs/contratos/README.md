@@ -1,16 +1,16 @@
-# Contratos de interface (machine‑readable)
+# Contratos de interface (machine-readable)
 
-Propósito: armazenar **artefatos que geram cliente tipado**, validação CI e clareza p/ designing mobile sem abrir servidor.
+Pasta destinada **artefatos consumíveis automaticamente** por ferramentas: geração de tipos de cliente (TypeScript/outros), checagens de conformidade sob CI ou referência rápida sem depender apenas de servidor em execução.
 
-Estado inicial **vazio propositalmente** até existir codebase API.
-
-Futuros exemplos sugeridos (imparciais formato):
+**Situação atual:** estrutura mínima intencional enquanto o servidor não publica primeira OpenAPI oficial; não indica menor prioridade técnica para **contratos explícitos** — apenas ausência física momento zero.
 
 ```
-openapi/openapi-v1.yaml        # Snapshot exportável do Swagger Nest
-schemas/minimal/request/*.json # Payloads exemplo validados zod paralelo (opcional)
+openapi/openapi-v1.yaml        # Exemplo típico: snapshot Swagger/Nest bundle CI
+schemas/minimal/request/*.json # Exemplos de payload paralelos Zod opcionais QA
 ```
 
-**Propagação:**
-- Primário vivo fica sempre no **Swagger gerado código `backend/`** quando rodando desenvolvimento.  
-- Pasta `docs/contratos/` pode servir de **checkpoint antes de release maior** (diff legível do contrato).
+**Propagação sugerida**
+
+- Artefatos **dinâmicos** primários ficam junto código gerador servidor (`backend/`) sempre que servidor rodar ou build exportar swagger.  
+- **`docs/contratos/`** acumula **snapshots versionados** apenas quando institucionalmente útil antes de rupturas semver da API (**diff público revisível**).
+

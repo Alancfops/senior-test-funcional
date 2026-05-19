@@ -1,6 +1,6 @@
 # Modelo de dados (conceitual e ER inicial)
 
-Este documento **não substitui** migrations Prisma definitivas; serve para **alinhar você, design futuro e implementação da pasta `backend/`** sobre quais **entidades** existem no PostgreSQL em torno das requisitos RF001–RF013.
+Este documento **não substitui** migrations geradas pela ORM; serve para **alinhar modelo conceitual à implementação em `backend/`** e aos requisitos **RF001–RF013**.
 
 Versão inicial pensada como **PostgreSQL normalizado**, com payloads de avaliações **semi-estruturados** até consolidar todas as restrições de instrumento por tabela física opcional posterior.
 

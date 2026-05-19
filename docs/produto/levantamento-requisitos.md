@@ -8,7 +8,7 @@
 
 ### Aviso de alteração
 
-**Este documento é passível de mudanças.** Prioridades de produto, regras de negócio, textos auxiliares e detalhes de formulário podem ser revisados conforme decisão da equipe, orientação da disciplina ou validação clínica. Para visão sintética e decisões de produto, ver também [PRD.md](./PRD.md).
+**Este documento é passível de revisão.** Prioridades de produto, regras de negócio, textos auxiliares e parâmetros de formulário podem evoluir conforme decisões de gestão do produto, pareceres clínico‑assistenciais aplicáveis ou exigências acadêmico‑institucionais do contexto onde o projeto for implantado. Para visão sintética do produto, ver também [PRD.md](./PRD.md).
 
 ---
 

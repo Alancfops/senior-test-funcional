@@ -9,8 +9,8 @@ Plataforma digital para **fisioterapeutas** acompanharem pacientes idosos com in
 | Pasta | Papel |
 |-------|--------|
 | **[backend/](backend/)** | API e regras de negócio (prioridade de desenvolvimento) |
-| **[frontend/](frontend/)** | App React Native (Expo): primeiro **telas rascunho**, depois **UI guiada pelo design** |
-| **[docs/](docs/)** | Especificação: produto (PRD e RFs em `levantamento-*`), engenharia, protocolos clínicos, espaço futuro para contratos de API |
+| **[frontend/](frontend/)** | Aplicativo React Native (Expo): interface do cliente, alinhado aos requisitos e ao contrato da API |
+| **[docs/](docs/)** | Especificação consolidada — produto (PRD e requisitos), engenharia, protocolos clínicos e políticas formais onde aplicável; contratos machine-readable em **`docs/contratos/`** |
 
 **Monorepo com Bun workspaces** quando o código scaffold existir (um `package.json` na raiz listando `backend` e `frontend`). Detalhes de setup em **[docs/engenharia/arquitetura.md](docs/engenharia/arquitetura.md)** e fluxo **A→E** em **[docs/engenharia/repositorio-e-fluxo-desenvolvimento.md](docs/engenharia/repositorio-e-fluxo-desenvolvimento.md)**.
 
@@ -18,7 +18,7 @@ Plataforma digital para **fisioterapeutas** acompanharem pacientes idosos com in
 
 ## Arquitetura do projeto (visão de sistema)
 
-Este trecho resume **forma e responsabilidades** do software para quem chega pela primeira vez ou para uso com assistências ao desenvolvimento (por exemplo ferramentas de IA) que precisam de contexto inicial. **Não** descreve configurações operacionais, segredos, credenciais nem políticas institucionais de dados — isto pertence à documentação técnica interna quando o projeto estiver implantado.
+Este trecho resume **forma e responsabilidades** do software para onboarding técnico. **Não** descreve configurações operacionais em produção nem segredos e credenciais. **Governança de dados e conformidade regulatória** (LGPD no Brasil) são tratadas nos documentos de produto, em especial **`docs/produto/privacidade-e-lgpd.md`**.
 
 ### Camadas
 
@@ -33,7 +33,7 @@ Este trecho resume **forma e responsabilidades** do software para quem chega pel
 | Princípio | Na prática |
 |-----------|-------------|
 | **Servidor como fonte da verdade** | Pontuações, classificações parametrizadas, permissões (“cada perfil só acessa o que é dele”) e integridade dos registros ficam garantidas pela API — o app cliente não redefine regra de negócio sozinho. |
-| **Fronteira clara cliente/servidor** | O cliente pensa em fluxo de telas e experiência; o servidor centraliza dados e comportamento repetível entre dispositivos. |
+| **Fronteira clara cliente/servidor** | O cliente oferece a experiência do domínio; o servidor centraliza dados e comportamento repetível entre dispositivos. |
 | **Modelo orientado ao domínio clínico** | Instrumentos (TUG, Katz, Berg, Tinetti, MEEM etc.) têm naturalezas diferentes; o modelo de dados e a API tratam esse domínio de forma estruturada, sem “um blob genérico” que esconda regras. |
 | **Evoluição guiada pela documentação de produto** | Requisitos formais ficam sob `docs/produto/`; roteiros clínicos de apoio em `docs/protocolos-clinicos/`. Divergências entre texto assistencial e código são resolvidas atualizando a documentação e o software em conjunto. |
 
@@ -48,14 +48,16 @@ Informação flui assim no uso previsto pelo produto: o profissional autentica n
 | Stack sugerida, PDF/e-mail lado servidor, limites conscientes da documentação atual | [`docs/engenharia/arquitetura.md`](docs/engenharia/arquitetura.md) |
 | Entidades e relacionamentos esperados antes de migrações | [`docs/engenharia/modelo-de-dados.md`](docs/engenharia/modelo-de-dados.md) |
 | Prioridades de implementação, fases A→E, Bun e estrutura de pastas Git | [`docs/engenharia/repositorio-e-fluxo-desenvolvimento.md`](docs/engenharia/repositorio-e-fluxo-desenvolvimento.md) |
-| Comportamento e RFs númerados | [`docs/produto/levantamento-requisitos.md`](docs/produto/levantamento-requisitos.md), [`docs/produto/PRD.md`](docs/produto/PRD.md) |
+| Comportamento e RFs numerados | [`docs/produto/levantamento-requisitos.md`](docs/produto/levantamento-requisitos.md), [`docs/produto/PRD.md`](docs/produto/PRD.md) |
+| LGPD / privacidade e dados sensíveis | [`docs/produto/privacidade-e-lgpd.md`](docs/produto/privacidade-e-lgpd.md) |
 
-Políticas de segurança, **armazenamento de segredos**, log detalhado e conformidade institucional entram quando houver projeto de **deploy** próprio ou exigências regulatórias explícitas; não ficam escritas aqui nesta visão neutra.
+Medidas operacionais de segurança, **armazenamento de segredos**, detalhes de auditoria/logging e obrigações legais plenas em produção complementam esta visão: ver **`docs/engenharia/arquitetura.md`** e **`docs/produto/privacidade-e-lgpd.md`**.
 
 ---
 
 ## Leitura rápida
 
-1. **[docs/README.md](docs/README.md)** — índice canônico de toda documentação interna (`docs/`).  
-2. **[AGENTS.md](AGENTS.md)** — ponte curta sobre onde ler contexto automatizado neste repo.
+1. **[docs/README.md](docs/README.md)** — índice canônico sob `docs/`.  
+2. **[docs/produto/privacidade-e-lgpd.md](docs/produto/privacidade-e-lgpd.md)** — marcos obrigatórios para dados pessoais e sensível saúde (LGPD Brasil).  
+3. **[AGENTS.md](AGENTS.md)** — ponto de entrada curto sobre contexto documental automatizado sobre este repo.
 

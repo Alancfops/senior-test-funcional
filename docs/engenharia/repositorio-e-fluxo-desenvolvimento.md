@@ -1,109 +1,100 @@
 # Repositório, separação Backend / Frontend e fluxo de trabalho
 
-Este documento descreve **como o projeto no Git será organizado e em que ordem evoluir**, considerando:
+Este documento formaliza **como o projeto versionado será organizado** e **qual ordem de entrega preserva custo e conformidade**:
 
-- código **separado** em **`backend/`** e **`frontend/`** dentro do mesmo repositório (um clone, dois produtos implantáveis diferentes);
-- **prioridade ao backend**, para que domínio, regras e contratos estejam estáveis antes de investir tempo em UX final;
-- **telas inicialmente como rascunho** no app React Native — a **implementação visual definitiva** virá da **equipe de design** posteriormente.
+- **`backend/`** e **`frontend/`** no mesmo repositório Git (mesmo ciclo release, dois artefatos implantáveis independentes — API e app);
+- Prioridade inicial ao servidor — domínio, regras, persistência e **contratos HTTP públicos** estáveis **antes** de investir proporcionalmente em refinamento visual;
+- Implementação inicial do cliente móvel com **prioridade comportamental**, evoluindo depois pela **camada de apresentação** conforme **design system** institucional ou material gráfico aprovado pela governança de produto.
 
-Ele complementa [arquitetura.md](./arquitetura.md) e [PRD.md](../produto/PRD.md).
+Complementos obrigatórios: [arquitetura.md](./arquitetura.md), [PRD.md](../produto/PRD.md), [levantamento-requisitos.md](../produto/levantamento-requisitos.md), [privacidade-e-lgpd.md](../produto/privacidade-e-lgpd.md).
 
 ---
 
-## 1. Estrutura do repositório (visão atual)
-
-Na raiz do Git:
+## 1. Estrutura do repositório
 
 ```
 senior-test/
 ├── README.md
-├── docs/                              # Toda especificação (ver docs/README.md)
-│   ├── README.md                     # Índice canônico + mapa mental
-│   ├── produto/                      # O quê construir + RFs formais
-│   ├── engenharia/                   # Como construir + dados + fluxo dev
-│   ├── protocolos-clinicos/instrumentos/ # Conteúdo clínico (não são requisitos de software literal)
-│   └── contratos/                    # Snapshot OpenAPI quando existir
+├── docs/                              # Especificação (índice: docs/README.md)
+│   ├── README.md                     # Índice canônico
+│   ├── produto/                      # Requisitos e LGPD
+│   ├── engenharia/                   # Arquitetura, modelo de dados, fluxo
+│   ├── protocolos-clinicos/instrumentos/  # Referência clínica
+│   └── contratos/                    # Snapshots OpenAPI quando versionados aqui
 ├── backend/
 ├── frontend/
-├── package.json                      # Bun workspaces (quando scaffold existir)
+├── package.json                      # Bun workspaces (quando o scaffold existir)
 ├── bun.lock
-└── packages/                         # Opcional (ex.: shared-contracts)
+└── packages/                         # Opcional (`shared-contracts`, etc.)
 ```
 
-**Por que um só repositório (monorepo leve)?**  
-Facilita versão única dos requisitos, issue tracking e revisão ponta a ponta quando você trabalha só ou coordena poucas pessoas. Se mais tarde você quiser **split** em dois repositórios (`senior-backend` / `senior-mobile`), a fronteira bem definida **OpenAPI + versionamento semver da API** torna esse corte menos doloroso.
+**Monorepo leve.** Manter código e documentação próximos reduz divergências entre código e texto normativo. Se o repositório for futuramente particionado (por exemplo `senior-backend` / `senior-mobile`), uma fronteira bem definida — **contrato OpenAPI** e **versionamento semântico da API** — reduz custo dessa migração.
 
-### 1.1 Toolchain: Bun (recomendado neste projeto)
+### 1.1 Toolchain: Bun
 
-Use **Bun** na raiz do repositório para **instalar dependências** (`bun install`) e **rodar scripts** em cada workspace (ex.: `bun run --filter backend start:dev`, conforme os `scripts`/`name` de cada `package.json`). Também vale centralizar comandos úteis no `package.json` da raiz (`"dev:api": "bun run --filter backend start:dev"`). Veja workspaces em **[arquitetura.md §4](./arquitetura.md)**.
+`bun install` na raiz, scripts por workspace (`bun run --filter <pacote> <script>`), aliases úteis no `package.json` raiz quando prático. Workspace detalhado em **[arquitetura.md §4](./arquitetura.md)**.
 
-Benefícios no seu cenário (desenvolvimento solo): comandos rápidos, menos atrito ao alternar entre API e Expo, um único `bun.lock` para os dois apps.
+Benefícios: instalações rápidas, alternância suave CLI entre API e Expo, lockfile único para dependências repetidas cliente-servidor.
 
 ---
 
-## 2. Hierarquia de prioridades de trabalho
+## 2. Hierarquia de prioridades
 
 | Ordem | Foco | Objetivo |
 |-------|------|----------|
-| **1** | **Backend** — modelo de dados, autenticação, escopo por fisioterapeuta | “Fonte da verdade” disponível por HTTP, testável sem app bonito |
-| **2** | **Contrato da API** (OpenAPI 3 ou equivalente mantido pelo backend) | Design e cliente rascunho podem trabalhar contra **forma e nomes estáveis dos dados** |
-| **3** | **Frontend — camadas finas**: cliente HTTP + fluxo navegação RF + telas funcionais **sem acabamento visual** | Prova que os RFs batem com a API antes do design final |
-| **4** | **Design** — Figma ou similar (equipe externa): componentes, grid, cores, tipografia, estados empty/loading erro | Substituindo progressivamente placeholders do passo 3 |
-| **5** | **Frontend — UI definitiva** | Mapa telas/design → troca gradual de RN “rascunho” pelos tokens e layouts fechados |
+| **1** | **Backend**: modelo Postgres, auth, vínculos `therapist_id` conforme modelo | API testável apenas com cliente HTTP automatizado/manual |
+| **2** | **Contrato público**: OpenAPI 3 ou ferramentas equivalentes derivadas da implementação real | Consumidores (cliente próprio ou integrações) compilam schemas sem “achismos JSON” |
+| **3** | **Cliente RN**: navegações RF validadas contra API real sem investimento pesado inicial em marca | Fechar ciclo comportamental oficial antes da camada cosmética |
+| **4** | **Camada visual**: artefatos de design (tokens, biblioteca própria, guias WCAG institucional) quando disponíveis | Uniformidade com identidade institucional |
+| **5** | **Refino de interface sobre contratos já congelados** | Melhor UX sem regressão de payload sem necessidade de negócio |
 
-**Regra de ouro:** o backend **não depende** do React Native para ser validado — use coleção Bruno/Insomnia, testes automatizados e (quando disponível) **documentação Swagger** gerada pela API.
-
----
-
-## 3. Fases recomendadas (**aderidas** — roadmap operacional principal)
-
-Roteiro **A→E**: backend + contrato **antes** de investir pesado em UX final — este é o **norte oficial** deste projeto.
-
-### Fase A — Backend: fundação (RF001–RF005)
-
-- Persistência Postgres (ver [modelo-de-dados.md](./modelo-de-dados.md)).
-- Registro/login/recuperação (e-mail token 6 dígitos, TTL, invalidação — RF003).
-- CRUD pacientes com vínculo `therapist_id`, escolaridade onde aplicável.
-- **Swagger/OpenAPI exposto em dev** ou arquivo `openapi.yaml` gerado na build da API.
-
-**Saída desta fase:** API utilizável apenas com cliente HTTP ou Postman ; frontend ainda opcional.
-
-### Fase B — Backend: avaliações (RF007–RF013, por instrumentos)
-
-Instrumento piloto típico: **TUG** (estrutura de dados menor). Repetir padrão para Katz, Berg, Tinetti, MEEM.
-
-- Catálogo de instrumentos estável (`GET /instruments`).
-- Ciclo criar/avaliar/finalizar com **servidor calculando pontuações e cortes**.
-- Séries histórico para gráfico (`timeseries`).
-- Endpoint de relatório PDF (stream ou redirect assinado).
-
-**Saída:** contrato da API suficientemente completo para a equipe de design **entender dados** disponíveis (sem precisar adivinhar JSON “no escuro”).
-
-### Fase C — Frontend “rascunho”
-
-- Fluxo obrigatório da PRD: instrumento → paciente → tutorial (pode ler Markdown estático por instrumento inicialmente ou `GET tutorial` quando existir na API).
-- Formulários e listas usando **Estilo Mínimo** (componentes padrão do RN, placeholders de texto tipo “Lista pacientes”).
-- Consumir apenas implementações já entregues no backend para não inventar mocks que enganem você.
-
-Rotular no código ou comentário quando uma tela for **placeholder** até design fechar (“SUBSTITUIR quando Figma XYZ estiver disponível”).
-
-### Fase D — Design (equipe externa)
-
-- Entrega de **biblioteca de componentes UI** ou **arquivo Figma**: telas nomeadas alinhadas ao mapa RF (lista paciente, avaliação, feedback, PDF, perfil/histórico, etc.).
-- Acordo de tokens: espaçamentos, tipo de botão primário/secundário, inputs, estados erro.
-- Opcionalmente **Protótipo navegável** para validação com o time clínico (fora escopo só seu — mas você consome resultado).
-
-### Fase E — Frontend UI definitiva
-
-Refatorações **principalmente cosméticas e de navegação** sobre a mesma arquitetura de dados já testada na Fase C:
-
-- Extrair tema (cores/fontes/espacamentos) desde tokens do design system.
-- Trocar componentes “generic” por wrappers `AppButton`, `AppTextField`.
-- Animar apenas onde design pedir sem mudar payloads da API sem necessidade.
+**Invariante.** O comportamento da API deve ser verificável por testes automatizados no servidor, coleções HTTP (Bruno, Insomnia) e documentação OpenAPI. O cliente móvel **não substitui** a validação servidor nem é obrigatório para a primeira homologação funcional das rotas públicas já implementadas.
 
 ---
 
-## 4. Como o Backend e o Frontend “conversam”
+## 3. Fases A→E — roteiro adotado
+
+### Fase A — Backend fundação (`RF001`–`RF005`)
+
+- Schema PostgreSQL inicial ([modelo-de-dados.md](./modelo-de-dados.md)).  
+- Registro, login e recuperação (token TTL, invalidações — [`RF003`](../produto/levantamento-requisitos.md)).  
+- CRUD de pacientes vinculado ao terapeuta, campos obrigatórios MEEM.  
+- Swagger/OpenAPI acessível em desenvolvimento **ou** `openapi.yaml` versionado pela build CI.
+
+**Entrega esperada:** servidor utilizável apenas via HTTP antes de obrigar trabalho paralelo pesado na interface.
+
+### Fase B — Avaliações servidor (`RF007`–`RF013`)
+
+Instrumentos na ordem acordada; **padrão** costuma iniciar pelo **TUG** (payload mais contido antes de Katz/Berg/Tinetti/**MEEM**).
+
+- Lista canônica de instrumentos (`GET /instruments`).  
+- Recalculo de pontuações e aplicação de cortes sempre **pelo servidor** ao finalizar a sessão.  
+- Séries temporais para gráfico e geração de PDF com semânticas estáveis.
+
+**Saída:** contrato público suficiente para especialistas UX ou comunicação visual lerem payloads e estados esperados antes de elaborar artefatos de alta fidelidade.
+
+### Fase C — Cliente comportamental inicial
+
+Fluxo obrigatório produto (`instrumento` → `paciente` → `tutorial` → `execução` → `feedback` → exportações relacionadas):
+
+- Tutorial inicialmente conforme texto versionado em `docs/protocolos-clinicos/` e `docs/produto/` até haver decisão sobre conteúdo dinâmico exposto pela API.  
+- Componentização suficientemente clara para manutenção, priorizando corretitude funcional; identidade visual aplica‑se quando os artefatos estiverem formalizados.  
+- Evitar mocks estáticos que simulem respostas inexistentes no servidor homologável.
+
+
+### Fase D — Design institucional
+
+Quando houver artefatos de **design tokens**, bibliotecas próprias de componentes e guias para estados (carregamento, vazio, erro), manter nomenclatura e fluxos espelhando o mapa oficial de **RF**.
+
+Protótipo navegável pode apoiar validações com stakeholders autorizados (contexto institucional de saúde); qualquer decisão oriunda desse ciclo atualiza **`docs/produto/`** antes das alterações de código correspondentes.
+
+### Fase E — Harmonização de interface
+
+Refactors majoritariamente visuais (tema único; componentes wrappers como `AppButton`) **sem** alterar contratos HTTP enquanto o produto oficial não registra novo RF.
+
+---
+
+## 4. Comunicação tecnológica entre Backend e Frontend
 
 ```mermaid
 sequenceDiagram
@@ -111,57 +102,56 @@ sequenceDiagram
     participant API as backend/ API HTTPS
     participant DB as PostgreSQL
 
-    Note over UX,DB: Fase inicial: desenvolvimento de API independente<br/>testável via Postman/Bruno
+    Note over UX,DB: Ciclo servidor pode avançar com testes automatizados sem build de app obrigatório
 
     UX->>API: REST + JSON + Bearer JWT
-    API->>DB: Persistência escalonada<br/>por therapist_id
-    API-->>UX: Contrato documentado<br/>(OpenAPI)
+    API->>DB: Operações filtradas de acordo com o profissional autenticado (escopo therapist)
+    API-->>UX: Respostas segundo contrato OpenAPI declarado (`v1` ou equivalente semver)
 ```
 
-- **Única lingua franca oficial:** payloads e códigos HTTP documentados na OpenAPI (`backend` é dono principal do arquivo/versionamento semver `v1`).
-- Frontend **mapeia telas aos endpoints** usando um cliente gerado opcionalmente (ex.: openapi-typescript-codegen) ou Tipos escritos uma vez até gerador existir.
+O cliente mobile consome apenas contratos atualizados; a OpenAPI no servidor deve ser tratada como **fonte técnica de verdade**, salvo espelhos opcionais em `docs/contratos/` quando assim for decidido. Opcional codegen (`openapi-typescript-codegen`) ou compartilhamento de schemas (**Zod**) em `packages/`.
 
 ---
 
-## 5. Implicações para a equipe de design
+## 5. Artefatos de design e alinhamento de domínios
 
-Informar (ou documentar em link no Figma README):
+Ao produzir guias UX ou documentação gráficas (Figma, Penpot ou equivalent):
 
-1. Tipos principais já expostos: `Paciente`, `Instrumento`, `AvaliacaoEmAndamento`, `ResultadoFeedback`, `SerieTemporal`, `UsuarioProfissional` em termos funcionais não técnicos.
-2. Fluxos obrigatórios da PRD (ordem wizard, bloqueios de finalização, mensagens de lista vazia).
-3. O que pertence ao **servidor**: PDF gerado igual em todos celulares, e-mails de recuperação.
+1. Conceitos funcionais públicos já modelados pela API — por exemplo Paciente, Instrumento, Sessão, Resultados, Séries históricas e identidade profissional — traduzidos em linguagem própria aos guias de UX quando necessário (sem ambiguar campos obrigatórios).  
+2. Restrições de fluxo vindas da PRD: ordem do assistente (**wizard**), bloqueios de finalização até coleta válida e proibições de feedback antecipado onde assim estiver especificado (**MEEM**, entre outros casos sensíveis de produto).  
+3. PDF e correio para recuperação de credenciais ficam sempre no servidor para **saídas equivalentes** em todas as variantes cliente suportadas do app.
 
-Assim Design **não desenha** telas irreais (ex.: “classificação no meio da coleta do MEEM” sem flag de UX explícito que quebra requisitos).
+Fluxos ou logs que tratam dados pessoais (incluindo **saúde**): devem estar coerentes com **[privacidade-e-lgpd.md](../produto/privacidade-e-lgpd.md)** antes de uso em ambientes autorizados com titulares reais.
 
 ---
 
-## 6. Gestão Git sugerida (simples para um dev líder backend)
+## 6. Gestão Git e integração contínua
 
 | Prática | Descrição |
 |---------|-----------|
-| **Branch principal** (`main`) | Sempre compilável onde aplicável ; merge pequenos incrementos |
-| **Features backend** (`feat/api-forgot-password`, etc.) | Concluído + testes antes de merge |
-| **Features frontend stub** pode ir na mesma `main` com flag “UI provisional” até design chegar |
+| **Branch principal** (`main`) | Estado estável compilável sempre que projetos compiláveis já existirem; merges restritos ao que passou revisão combinada código + especificação. |
+| **Branches temáticas** (`feat/backend-*`, `feat/mobile-*`, etc.) | Ciclos curtos de entrega para evitar divergência prolongada servidor/cliente ou documentação/implementação. |
+| **Recursos incompletos** | *Feature flags* ou equivalentes apenas quando seguranças e tratamento dados sensíveis **nunca** ficam ocultados por cosméticas inacabadas. |
 
-Se no futuro houver CI: pipeline separado opcional com **Bun** — ex.: `{ backend: bun run lint && bun test }, { frontend: bun run lint && npx expo doctor }` (ou equivalente aos scripts definidos em cada pacote).
+Exemplo CI multi‑workspace conforme toolchain adotado: `{ backend: bun run lint && bun test }, { frontend: bun run lint && npx expo doctor }` (adaptar aos `scripts` declarados quando o código existir).
 
 ---
 
-## 7. Artefatos mínimos a manter enquanto projeto crescer
+## 7. Artefatos mínimos enquanto crescer
 
-| Artefato | Local sugerido | Finalidade |
-|----------|-----------------|------------|
-| OpenAPI YAML/JSON (snapshot ou espelho) | [`docs/contratos/`](../contratos/README.md) *e/ou* saída do Swagger em `backend/` | Design, mobile e checagens de conformidade contra o contrato |
-| Changelog técnico resumido | `CHANGELOG.md` raiz opcional OU notas Release GitHub | “Quebrou coisa quando subiu v2?” |
+| Artefato | Onde guardar |
+|----------|---------------|
+| OpenAPI oficial / snapshots marcados semver | Swagger runtime + opcional cópias `docs/contratos/` |
+| Changelog técnico público opcional | `CHANGELOG.md` na raiz ou notas junto releases Git etiquetadas |
 
 ---
 
 ## 8. Referências cruzadas
 
-- [modelo-de-dados.md](./modelo-de-dados.md) — entidades relacionais esperadas pela API atual  
-- [arquitetura.md](./arquitetura.md) — stack técnico e decisões já tomadas  
-- [PRD.md](../produto/PRD.md) / [levantamento-requisitos.md](../produto/levantamento-requisitos.md) — comportamento esperado pelo produto  
+- [modelo-de-dados.md](./modelo-de-dados.md)  
+- [arquitetura.md](./arquitetura.md)  
+- [PRD.md](../produto/PRD.md), [levantamento-requisitos.md](../produto/levantamento-requisitos.md), [privacidade-e-lgpd.md](../produto/privacidade-e-lgpd.md)  
 
 ---
 
-*Documentação viva — ajustar conforme adoção efetiva de OpenAPI gerado versus arquivo estático, e conforme entrada da equipe de design.*
+*Documentação viva.* Harmonizar sempre que mudar apenas pipeline OpenAPI gerada vs arquivo estático, ou quando atualizar artefatos oficiais de design (tokens, biblioteca própria de componentes).

@@ -16,4 +16,4 @@ instrumentos/
 | Um `*.md` com o nome da pasta (`tug.md`, `katz.md`, …) | Resumo executivo + link para o roteiro completo |
 | `avaliar.md` | Passo a passo, níveis numéricos, referências bibliográficas |
 
-Futuro servidor-side **tutorial dinâmico** (RF009) pode reusar excerpts destes arquivos, versionando sempre que médico/orientação alterarem cortes oficiais adotados no produto.
+O **tutorial ligado ao RF009**, quando implementado com conteúdo dinâmico no servidor, pode reutilizar trechos destes Markdown; qualquer atualização institucional a cortes ou roteiros exige revisão paralela dos documentos sob `docs/produto/` e do software já implantado conforme esse recorte normativo.
