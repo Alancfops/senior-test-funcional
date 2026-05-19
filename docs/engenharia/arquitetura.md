@@ -5,7 +5,9 @@
 **Restrições técnicas fixas:** cliente em **React Native**.  
 **Preferência declarada:** **TypeScript**.
 
-Este documento descreve **como eu estruturaria o sistema para maximizar segurança, manutenibilidade e velocidade de uma pessoa só**, usando TypeScript ponta a ponta. Está **alinhado** ao [PRD.md](./PRD.md) e ao [levantamento-requisitos.md](./levantamento-requisitos.md), sem substituí-los.
+Este documento descreve **como estruturar o sistema para maximizar segurança, manutenibilidade e velocidade sendo um desenvolvedor só**, usando TypeScript ponta a ponta. Está **alinhado** ao [PRD.md](../produto/PRD.md) e ao [levantamento-requisitos.md](../produto/levantamento-requisitos.md), sem substituí-los.
+
+Para **prioridade ao `backend/`**, fluxo com **frontend rascunho** até o **handoff ao design**, leia também **[repositorio-e-fluxo-desenvolvimento.md](./repositorio-e-fluxo-desenvolvimento.md)**.
 
 ---
 
@@ -93,22 +95,45 @@ Provedores transacionais com API simples (ex.: **Resend**, AWS SES via SMTP/API,
 
 ---
 
-## 4. Organização do repositório (monorepo)
+## 4. Organização do repositório (decisão do projeto)
 
-Para um dev solo, um **pnpm workspace** único tende a ser mais rápido que dois repositórios separados quando você mexer em contratos o dia inteiro:
+Este repositório Git usa **pastas de primeiro nível** explícitas (prioriza clareza com equipe futura):
 
 ```
-/apps
-  /mobile           # Expo (React Native)
-  /api              # NestJS (ou Fastify)
-/packages
-  /shared-contracts # Zod schemas + tipos gerados/compartilhados (opcional mas útil)
-  /eslint-config    # Opcional — padronizar lint entre api e mobile
+/backend           # Primeiro foco de implementação (API + Postgres + Swagger)
+/frontend          # React Native Expo — inicialmente telas rascunho até design fechar UI
+/packages          # (Opcional posterior) Contratos TS/Zod ou eslint compartilhado
+/docs              # Produto + arquitetura + modelo de dados
 ```
 
-**Fluxo típico de mudança:** alterar schema Zod/compartilhado → atualizar validação backend → atualizar formulário RN com o mesmo shape.
+Fluxo recomendável de mudanças: primeiro **mudar modelo + endpoints no `backend`** e atualizar contrato (**OpenAPI**); depois ajustar o `frontend` apenas às mensagens já estáveis JSON.
 
-Se você **odear** workspaces, dois repositórios (`mobile` + `api`) também funcionam; o custo é duplicar versionamento de DTO ou gerar cliente OpenAPI (mais trabalho inicial).
+### Monorepo com **Bun** (workspaces)
+
+O fluxo recomendado de toolchain é **Bun** (`bun install`, `bun run`, `bun test`) com **workspaces** declarados na raiz em um `package.json` privado:
+
+```json
+{
+  "name": "senior-test",
+  "private": true,
+  "workspaces": ["backend", "frontend", "packages/*"]
+}
+```
+
+Pastas continuam sendo `backend/` e `frontend/`; use **`packages/`** opcional (ex.: `shared-contracts` com Zod).
+
+- **NestJS:** scripts típicos via `bun run …`; gere o projeto conforme docs do `@nestjs/cli`.  
+- **Prisma:** prefira `bunx prisma migrate dev`; se algum comando do CLI falhar por binário específico, use **`npx prisma …`** só naquele passo (exceção pontual).  
+- **Expo:** Bun é suportado para criar projeto e gerenciar dependências ([guia Expo + Bun](https://docs.expo.dev/guides/using-bun/)); **EAS Build** permanece igual após configurar `eas.json`.  
+
+Trocar depois por **npm** ou **pnpm** não invalida arquitetura nem as **fases A→E** — só ajuste manifestos e CI.
+
+```
+/packages               # Opcional posterior
+  /shared-contracts     # Zod + tipos
+```
+
+Se preferir não usar monorepo, pode dividir em dois repositórios desde que **`semver + OpenAPI`** continuem explícitos, como em **[repositorio-e-fluxo-desenvolvimento.md](./repositorio-e-fluxo-desenvolvimento.md)**.
 
 ---
 
@@ -193,13 +218,22 @@ Variáveis `.env`: `DATABASE_URL`, `JWT_SECRET`, `SMTP ou RESEND_*`, buckets se 
 
 ---
 
-## 9. Fases de construção (encaixa no roadmap da PRD)
+## 9. Fases de construção
 
-1. **Fundação**: DB + Auth + Patients (RF001–RF005) funcionando pela API + telas RN básicas.  
-2. **Núcleo de avaliação**: um instrumento end-to-end (sugiro **TUG**, mais simples) em RF007–RF011.  
-3. **Demais instrumentos**: repetir padrão de módulos/payload/schema. MEEM por último por refino escolaridade.  
-4. **Histórico + gráfico + PDF** (RF006, RF012, RF013).  
-5. **Endurecer**: rate limit, auditoria mais rica, políticas quando RNF/RS entrarem no escopo oficial.
+As fases foram **explicitamente partidas** entre:
+
+- **prioridade Backend** até contrato estável;  
+- **Frontend rascunho** válido apenas funcionalmente;  
+- **UI futura pela equipe de design**.
+
+Consulte **[repositorio-e-fluxo-desenvolvimento.md](./repositorio-e-fluxo-desenvolvimento.md)** (Fases **A→E**) e **[modelo-de-dados.md](./modelo-de-dados.md)**. Resumo rápido alinhado à PRD:
+
+1. **Fundação (backend, Fase A):** Postgres + RF001–RF005 e OpenAPI inicial — frontend opcional até aqui estar sólido.  
+2. **Núcleo avaliações (backend, Fase B):** um instrumento ponta‑a‑ponta (sugerido **TUG**), expandir Katz/Berg/Tinetti e por último **MEEM** (escolaridade).  
+3. **Frontend rascunho (Fase C):** fluxos RF usando API real sem acabamento visual.  
+4. **Design externo + UI definitiva (Fases D–E):** componentes/tokenização substituindo placeholders.  
+5. **Histórico, gráfico e PDF RF006/012/013** assim que backend entregar séries/PDF estáveis para o cliente se apoiar.  
+6. **Endurecer** quando RNF/RS entrarem no escopo oficial (rate limit, observabilidade, etc.).
 
 ---
 
@@ -216,15 +250,17 @@ Variáveis `.env`: `DATABASE_URL`, `JWT_SECRET`, `SMTP ou RESEND_*`, buckets se 
 
 ## 11. Próximo passo de documentação
 
-Quando você for implementar, vale acrescentar **dois artefatos curtos**:
+Quando você for implementar, mantenha sempre atualizado:
 
-1. **Diagrama ER** inicial ( Therapist, Patient, Assessment, payloads por tipo ).  
-2. **Contrato OpenAPI** ou coleção Bruno/Insomnia — mantém você honesto contra os próprios RFs quando voltar dias depois.
+1. **[modelo-de-dados.md](./modelo-de-dados.md)** e migrações reais correspondentes ao schema.  
+2. **Contrato OpenAPI** — fonte vivo no **`backend/`** (Swagger Nest) ou snapshot versionado em **[`../contratos/`](../contratos/README.md)** (ex.: cópias `openapi-v1.yaml` quando fizer sentido ao time).
 
 ---
 
 ## Referências internas
 
-- [PRD.md](./PRD.md) — visão produto e prioridades  
-- [levantamento-requisitos.md](./levantamento-requisitos.md) — RF001–RF013 em detalhe  
-- `docs/testes/*` — regras clínicas e textos tutor (fonte auxiliar ao domínio)  
+- [PRD.md](../produto/PRD.md) — visão produto e prioridades  
+- [levantamento-requisitos.md](../produto/levantamento-requisitos.md) — RF001–RF013 em detalhe  
+- [repositorio-e-fluxo-desenvolvimento.md](./repositorio-e-fluxo-desenvolvimento.md) — pastas backend/frontend, prioridades e fases com design  
+- [modelo-de-dados.md](./modelo-de-dados.md) — ER inicial e glossário das entidades  
+- [Protocolos clínicos (Markdown)](../protocolos-clinicos/README.md) — roteiros e referências bibliográficas por instrumento  

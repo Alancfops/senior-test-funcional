@@ -45,7 +45,7 @@ Quando aplicável:
 
 #### 1.2.3 Anexo técnico dos instrumentos
 
-O detalhamento item a item dos testes (texto das perguntas, critérios 0–4 da Berg, blocos do MEEM, etc.) está consolidado na pasta **[testes/](testes/)** do repositório (subpastas `tug`, `katz`, `berg`, `tinetti`, `meem`), com **fonte bibliográfica** indicada em cada roteiro. Este documento define **o que o sistema deve fazer**; aqueles arquivos amparam **como o protocolo se aplica** na prática.
+O detalhamento item a item dos testes (texto das perguntas, critérios 0–4 da Berg, blocos do MEEM, etc.) está consolidado na pasta **[../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/)** do repositório (subpastas `tug`, `katz`, `berg`, `tinetti`, `meem`), com **fonte bibliográfica** indicada em cada roteiro. Este documento define **o que o sistema deve fazer**; aqueles arquivos amparam **como o protocolo se aplica** na prática.
 
 ---
 
@@ -138,7 +138,7 @@ O histórico individual organiza as aplicações por instrumento e sustenta **gr
 | Idade | Sim | Inteiro de 0 a 120. |
 | Sexo | Sim | Enum: Masculino / Feminino / Outro. |
 | Contato | Sim | Aceitar e-mail **ou** telefone celular (formato a validar no app). |
-| Escolaridade | Recomendado | Faixa compatível com a interpretação do **MEEM** (cortes por escolaridade — vide [testes/meem/](testes/meem/) e literatura Brucki et al., 2003). **Recomenda-se** preencher no cadastro para não repetir o dado em toda aplicação do MEEM; na abertura do MEEM, o profissional **confirma** o valor e pode **ajustar pontualmente** se houver correção clínica. Se estiver **em branco**, o fluxo do MEEM deve **exigir** o preenchimento (ou direcionar à edição do cadastro) **antes** de aplicar os cortes. |
+| Escolaridade | Recomendado | Faixa compatível com a interpretação do **MEEM** (cortes por escolaridade — vide [../protocolos-clinicos/instrumentos/meem/](../protocolos-clinicos/instrumentos/meem/) e literatura Brucki et al., 2003). **Recomenda-se** preencher no cadastro para não repetir o dado em toda aplicação do MEEM; na abertura do MEEM, o profissional **confirma** o valor e pode **ajustar pontualmente** se houver correção clínica. Se estiver **em branco**, o fluxo do MEEM deve **exigir** o preenchimento (ou direcionar à edição do cadastro) **antes** de aplicar os cortes. |
 | Foto | Não | JPG ou PNG. |
 
 **Regras**
@@ -263,7 +263,7 @@ O histórico individual organiza as aplicações por instrumento e sustenta **gr
 
 **Katz**  
 - Seis domínios: Banho, Vestir-se, Uso do vaso sanitário, Transferência, Continência, Alimentação.  
-- Em cada um: **(I) Independente**, **(A) Assistência**, **(D) Dependente**, com texto de apoio conforme protocolo (vide [testes/katz/avaliar.md](testes/katz/avaliar.md)).  
+- Em cada um: **(I) Independente**, **(A) Assistência**, **(D) Dependente**, com texto de apoio conforme protocolo (vide [../protocolos-clinicos/instrumentos/katz/avaliar.md](../protocolos-clinicos/instrumentos/katz/avaliar.md)).  
 - **Resultado numérico para gráfico/evolução:** contar quantos domínios estão em **(D)** → estrato **0 a 6** (0 = independente em todos; 6 = dependente em todos). A opção **(A)** entra na **coleta** e no relatório descritivo; **os estratos 0–6** seguem a regra acordada com o protocolo de referência do projeto (contagem de dependentes).
 
 **Berg**  
@@ -277,7 +277,7 @@ O histórico individual organiza as aplicações por instrumento e sustenta **gr
 - Indicador de progresso: preferir **“Item X de 16”** (em vez de “pergunta”), alinhado aos 16 itens totais.
 
 **MEEM**  
-- Blocos na ordem do protocolo adotado (Folstein; referências em [testes/meem/](testes/meem/)).  
+- Blocos na ordem do protocolo adotado (Folstein; referências em [../protocolos-clinicos/instrumentos/meem/](../protocolos-clinicos/instrumentos/meem/)).  
 - **Limites de pontuação por bloco** (total 30):  
   - Orientação (temporal e espacial): **10**  
   - Registros: **3**  
@@ -416,11 +416,11 @@ Manter a metodologia e a tabela de contagem adotadas na disciplina (ALI, AIE, EE
 ## 9. Referências
 
 - Materiais de modelo de documento de requisitos utilizados na disciplina.  
-- Protocolos e pontos de corte: ver **[testes/](testes/)** (cada subpasta traz referência bibliográfica no `avaliar.md` ou no resumo `*.md`).  
+- Protocolos e pontos de corte: ver **[../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/)** (cada subpasta traz referência bibliográfica no `avaliar.md` ou no resumo `*.md`).  
 - Brucki, S. M. D. et al. Sugestões para o uso do Mini-Exame do Estado Mental no Brasil. *Arq Neuro-Psiquiatr.*, 2003.  
 - Folstein, M. F. et al. Mini-Mental State. *J Psychiatr Res.*, 1975.  
-- Outras fontes por instrumento: Podsiadlo & Richardson (TUG); Tinetti (1986); Katz et al. (1963); Berg et al. (1992); Miyamoto et al. (versão brasileira da Berg), conforme citado nos roteiros em [testes/](testes/).
+- Outras fontes por instrumento: Podsiadlo & Richardson (TUG); Tinetti (1986); Katz et al. (1963); Berg et al. (1992); Miyamoto et al. (versão brasileira da Berg), conforme citado nos roteiros em [../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/).
 
 ---
 
-*Documento revisado para alinhar numeração dos RFs, fluxo instrumento → paciente, regras de cálculo (MEEM e Katz), escolaridade no cadastro com uso no MEEM, e anexo técnico em [testes/](testes/). Conteúdo sujeito a alterações.*
+*Documento revisado para alinhar numeração dos RFs, fluxo instrumento → paciente, regras de cálculo (MEEM e Katz), escolaridade no cadastro com uso no MEEM, e anexo técnico em [../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/). Conteúdo sujeito a alterações.*

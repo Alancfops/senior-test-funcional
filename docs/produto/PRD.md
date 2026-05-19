@@ -8,7 +8,7 @@
 
 ### Aviso de status
 
-Este PRD integra decisões já descritas nos materiais do projeto e **acompanha** o arquivo [levantamento-requisitos.md](./levantamento-requisitos.md), onde estão os RFs tabulados. **Classificação por instrumentos, textos tutoriais e cortes podem evoluir** após homologação clínica. Trate esta pasta como referência atual, não como contrato imutável.
+Este PRD integra decisões já descritas nos materiais do projeto e **acompanha** o arquivo [levantamento-requisitos.md](./levantamento-requisitos.md), onde estão os RFs tabulados. **Classificação por instrumentos, textos tutoriais e cortes podem evoluir** após homologação clínica. Trate a pasta **`docs/produto/`** como referência atual do produto, não como contrato imutável.
 
 ---
 
@@ -61,7 +61,7 @@ O **Sênior Teste Funcional** é uma plataforma digital centrada em **aplicativo
 - Cadastro de fisioterapeuta, login e recuperação de senha (**RF001–RF003**).
 - CRUD/listagem/perfil de pacientes com foto opcional avatar padrão; **escolaridade recomendada** para suporte ao MEEM (**RF004–RF006**).
 - Fluxo de avaliação: **instrumento → paciente → tutorial → execução → feedback → histórico / gráfico / PDF** (**RF007–RF013**).
-- Cinco instrumentos: TUG, Katz, Berg, Tinetti, MEEM — detalhe clínico em [docs/testes/](testes/).
+- Cinco instrumentos: TUG, Katz, Berg, Tinetti, MEEM — detalhe clínico em [../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/).
 - Registrar **data, horário e profissional** por aplicação.
 - Classificação e comparativo com a **última avaliação do mesmo instrumento** quando aplicável.
 
@@ -99,7 +99,7 @@ Ordem obrigatória:
 | Tinetti | Soma equilíbrio + marcha (0–28) | Preferir progresso tipo “item X de 16” |
 | MEEM | Soma 0–30 | Cortes Brucki et al. conforme escolaridade; não exibir pontuação parcial/totalização interpretativa até o encerramento, salvo mudança explícita de UX |
 
-Implementação campo a campo e tabelas de corte por versão: ver arquivos em [testes/](testes/).
+Implementação campo a campo e tabelas de corte por versão: ver arquivos em [../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/).
 
 ---
 
@@ -198,4 +198,4 @@ Consulte metas prévias (ex.: taxa de conclusão do fluxo, tempo médio por aval
 ## Referências cruzadas
 
 - Especificação tabular RF001–RF013: [levantamento-requisitos.md](./levantamento-requisitos.md).  
-- Roteiros clínicos: [testes/](testes/).  
+- Roteiros clínicos: [../protocolos-clinicos/instrumentos/](../protocolos-clinicos/instrumentos/).  
