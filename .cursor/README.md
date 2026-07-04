@@ -2,11 +2,14 @@
 
 | Pasta | Conteúdo |
 |-------|----------|
+| `rules/` | Regras persistentes (LGPD, telas Figma obrigatórias, …) |
 | `commands/` | `/session` → salvar conversa (frontmatter `name` + `description`) |
 | `skills/save-session/` | Skill `save-session` — resumo em `session/` |
-| `agents/` | Subagents (frontmatter `name`, `description`, `model`) |
-
-**Atalho na raiz:** symlink `cursor/` → `.cursor/` para ver esta pasta no **Arquivos** do Linux sem `Ctrl+H`. Se sumir, recrie na raiz do repo: `ln -s .cursor cursor`.
+| `skills/wcag2-frontend-ui/` | Skill WCAG 2 — UI/UX acessível no app (nível AA) |
+| `skills/figma-to-frontend/` | Skill Figma → implementação de telas (Expo/RN + docs/) |
+| `skills/conventional-commits/` | Skill Git — Conventional Commits em inglês |
+| `skills/git-branching/` | Skill Git — branches (`develop`, `feature/`, `hotfix/`, …) |
+| `agents/` | Subagents — `senior-test-docs-maintainer`, `senior-test-frontend` |
 
 ## Não aparece `.cursor` no explorador?
 

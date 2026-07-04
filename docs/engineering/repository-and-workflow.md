@@ -45,6 +45,23 @@ Stack e monorepo leve descritos em **[architecture.md](./architecture.md)** (Bun
 
 **Invariante.** O comportamento da API deve ser verificável por testes automatizados no servidor, coleções HTTP (Bruno, Insomnia) e documentação OpenAPI. O cliente móvel **não substitui** a validação servidor nem é obrigatório para a primeira homologação funcional das rotas públicas já implementadas.
 
+### 2.1 Fatia vertical por tela (decisão de entrega)
+
+Quando a equipe (ou um pedido explícito) for **implementar a tela de um RF**, a ordem é:
+
+| Passo | Camada | Entregável mínimo |
+|-------|--------|-------------------|
+| **1** | **Backend** | Rotas, validação e persistência do RF; contrato refletido na OpenAPI viva |
+| **2** | **Frontend** | Rota Expo Router + UI conforme frame Figma; integração com API **real** |
+
+**Regras:**
+
+- Não fechar a UI de um RF sem o contrato HTTP correspondente homologável (evita mocks de classificação ou payload inventado).
+- Mapa visual RF ↔ rota ↔ frame: [figma-map.md](../frontend/figma-map.md).
+- Telas só conforme Figma (rule `figma-screens-required`); comportamento conforme `docs/product/` e `docs/frontend/`.
+
+Isso **não substitui** as fases A→B macro (fundação servidor antes do app em larga escala); define a ordem **dentro** de cada entrega de tela ou RF durante as fases C–E.
+
 ---
 
 ## 3. Fases A→E — roteiro adotado
@@ -110,6 +127,8 @@ O cliente mobile consome apenas contratos atualizados; a OpenAPI no servidor dev
 
 ## 5. Artefatos de design e alinhamento de domínios
 
+Mapa oficial RF ↔ rota ↔ frame Figma: [figma-map.md](../frontend/figma-map.md).
+
 Ao produzir guias UX ou documentação gráficas (Figma, Penpot ou equivalent):
 
 1. Conceitos funcionais públicos já modelados pela API — por exemplo Paciente, Instrumento, Sessão, Resultados, Séries históricas e identidade profissional — traduzidos em linguagem própria aos guias de UX quando necessário (sem ambiguar campos obrigatórios).  
@@ -122,10 +141,26 @@ Fluxos ou logs que tratam dados pessoais (incluindo **saúde**): devem estar coe
 
 ## 6. Gestão Git e integração contínua
 
-| Prática | Descrição |
-|---------|-----------|
-| **Branch principal** (`main`) | Estado estável compilável sempre que projetos compiláveis já existirem; merges restritos ao que passou revisão combinada código + especificação. |
-| **Branches temáticas** (`feat/backend-*`, `feat/mobile-*`, etc.) | Ciclos curtos de entrega para evitar divergência prolongada servidor/cliente ou documentação/implementação. |
+Fluxo **Git Flow simplificado** (detalhes e comandos: skill Cursor `git-branching` em `.cursor/skills/git-branching/`).
+
+| Branch | Papel |
+|--------|--------|
+| **`main`** | Estável / pronta para release; sempre compilável quando houver código |
+| **`develop`** | Integração do dia a dia; base para novas funcionalidades |
+| **`feature/*`** | Nova funcionalidade — ex.: `feature/backend-auth-rf002`, `feature/mobile-login-rf002` |
+| **`hotfix/*`** | Correção urgente em produção (base: `main`) |
+| **`docs/*`** | Só documentação (`docs/`, specs, AGENTS) |
+| **`fix/*`** | Bug não urgente (base: `develop`) |
+| **`chore/*`** | Tooling, CI, deps, `.cursor/` |
+
+**Convenção de nome:** `<prefix>/<escopo>-<descricao-curta>` — inglês, kebab-case. Escopos sugeridos: `backend`, `frontend`, `mobile`, `auth`, `patients`, `assessments`, `contracts`, `cursor`.
+
+**Regra:** trabalho de funcionalidade **não** commita direto em `develop`/`main` — abrir branch temática primeiro. Commits: Conventional Commits em inglês (skill `conventional-commits`).
+
+**`develop` ainda inexistente:** criar a partir de `main` quando iniciar features (uma vez; ver skill `git-branching`).
+
+| Prática adicional | Descrição |
+|-------------------|-----------|
 | **Recursos incompletos** | *Feature flags* ou equivalentes apenas quando seguranças e tratamento dados sensíveis **nunca** ficam ocultados por cosméticas inacabadas. |
 
 Exemplo CI multi‑workspace conforme toolchain adotado: `{ backend: bun run lint && bun test }, { frontend: bun run lint && npx expo doctor }` (adaptar aos `scripts` declarados quando o código existir).
@@ -145,7 +180,7 @@ Exemplo CI multi‑workspace conforme toolchain adotado: `{ backend: bun run lin
 
 - [data-model.md](./data-model.md)  
 - [architecture.md](./architecture.md)  
-- [../backend/README.md](../backend/README.md) · [../frontend/README.md](../frontend/README.md)  
+- [../backend/README.md](../backend/README.md) · [../frontend/README.md](../frontend/README.md) · [../frontend/figma-map.md](../frontend/figma-map.md)  
 - [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md)  
 
 ---

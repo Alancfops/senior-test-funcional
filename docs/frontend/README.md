@@ -19,7 +19,8 @@
 9. [Integração com a API](#9-integração-com-a-api)  
 10. [Organização do código (quando existir)](#10-organização-do-código-quando-existir)  
 11. [Anti-padrões](#11-anti-padrões)  
-12. [Fases C–E e maturidade visual](#12-fases-ce-e-maturidade-visual)
+12. [Fases C–E e maturidade visual](#12-fases-ce-e-maturidade-visual)  
+13. [Mapa Figma (telas e rotas)](figma-map.md)
 
 ---
 
@@ -163,6 +164,8 @@ A spec atual ([requirements](../product/requirements.md)) define **instrumento a
 ## 5. Fluxos de tela e estados de UX
 
 ### 5.1 Mapa de navegação (alvo)
+
+Handoff visual detalhado (RF ↔ rota ↔ frame Figma, tabela de frames): **[figma-map.md](figma-map.md)**.
 
 ```mermaid
 flowchart TB
@@ -395,6 +398,7 @@ Cronograma integrado: [repository-and-workflow](../engineering/repository-and-wo
 
 ## Referências
 
+- [figma-map.md](figma-map.md) — mapa Figma, rotas e RFs  
 - [../backend/README.md](../backend/README.md)  
 - [../engineering/architecture.md](../engineering/architecture.md)  
 - [../engineering/repository-and-workflow.md](../engineering/repository-and-workflow.md)  

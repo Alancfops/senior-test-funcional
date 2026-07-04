@@ -68,7 +68,7 @@ flowchart TB
 | **Estado remoto no app** | **TanStack Query** |
 | **Estado local (wizard)** | **Zustand** ou contexto mínimo |
 | **Formulários no app** | **React Hook Form + Zod** |
-| **Navegação** | **React Navigation** |
+| **Navegação** | **Expo Router** (file-based; motor React Navigation) |
 | **HTTP no app** | Cliente centralizado (**fetch** ou **ky**) + Bearer |
 | **Monorepo** | **Bun workspaces** (`backend`, `frontend`, `packages/*`) |
 | **Contrato** | **REST + OpenAPI 3** (Swagger Nest) |
@@ -95,6 +95,7 @@ Roteiros clínicos: [clinical-protocols/instruments/](../clinical-protocols/inst
 | Peça | Adotado | Observação |
 |------|---------|------------|
 | Framework | Expo + React Native | Bare RN só se requisito de plataforma impedir Expo (exige ADR) |
+| Navegação | **Expo Router** | Rotas em `app/`; grupos `(auth)` / `(main)` — ver [frontend README §10](../frontend/README.md) |
 | Gráficos RF012 | **Victory Native**, **react-native-gifted-charts** ou **react-native-svg** | API entrega série `[{ date, rawValue, label }]`; **não** Recharts |
 | Tokens | expo-secure-store | Evitar credenciais em AsyncStorage sem proteção |
 
@@ -194,7 +195,7 @@ frontend/         # Expo + React Native (implementação)
 packages/         # Opcional: shared-contracts (Zod)
 ```
 
-**Fluxo de mudança:** modelo + API + OpenAPI primeiro; depois app contra contrato estável. Toolchain prevista: Bun workspaces, Prisma, Expo — ver [repository-and-workflow.md](./repository-and-workflow.md).
+**Fluxo de mudança:** modelo + API + OpenAPI primeiro; depois app contra contrato estável. Por tela/RF: backend do contrato → UI Figma ([repository-and-workflow.md §2.1](./repository-and-workflow.md), [figma-map.md](../frontend/figma-map.md)). Toolchain prevista: Bun workspaces, Prisma, Expo — ver [repository-and-workflow.md](./repository-and-workflow.md).
 
 ---
 

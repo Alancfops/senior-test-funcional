@@ -29,6 +29,7 @@ Visão resumida: [README na raiz](../README.md).
 | Arquitetura global e stack | [engineering/architecture.md](engineering/architecture.md) |
 | **Backend (API)** | [backend/README.md](backend/README.md) |
 | **Frontend (app)** | [frontend/README.md](frontend/README.md) |
+| Mapa Figma ↔ rotas ↔ RFs | [frontend/figma-map.md](frontend/figma-map.md) |
 | Modelo de dados | [engineering/data-model.md](engineering/data-model.md) |
 | Fases A→E | [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md) |
 | Protocolos clínicos | [clinical-protocols/README.md](clinical-protocols/README.md) |
