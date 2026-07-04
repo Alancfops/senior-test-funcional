@@ -1,4 +1,4 @@
----
+- --
 name: senior-test-docs-maintainer
 description: Especialista em documentação do Sênior Teste Funcional (sem código). Use quando alterar ou revisar docs/product/, docs/backend/, docs/frontend/, docs/engineering/, docs/clinical-protocols/ ou LGPD.
 model: inherit

@@ -22,7 +22,7 @@ Pastas em `docs/` com nomes em **inglês**; texto em **português**.
 | Rule | [backend-nestjs-implementation](.cursor/rules/backend-nestjs-implementation.mdc) | Padrões NestJS/Prisma ao editar `backend/` |
 | Skill | [save-session](.cursor/skills/save-session/SKILL.md) | `/session` — registrar conversa em `session/` |
 | Skill | [wcag2-frontend-ui](.cursor/skills/wcag2-frontend-ui/SKILL.md) | UI/UX do app — WCAG 2 nível AA |
-| Skill | [figma-to-frontend](.cursor/skills/figma-to-frontend/SKILL.md) | Implementar telas do [Figma](https://www.figma.com/design/mtMbhRez2Xy2k414cfzcFm/Senior-Test-Funcional) com base em `docs/` |
+| Skill | [figma-to-frontend](.cursor/skills/figma-to-frontend/SKILL.md) | Implementar telas do [Figma Senior Teste Funcional](https://www.figma.com/design/mtMbhRez2Xy2k414cfzcFm/Senior-Test-Funcional?node-id=1-11490) com base em `docs/` |
 | Skill | [conventional-commits](.cursor/skills/conventional-commits/SKILL.md) | Commits em inglês — `type(scope): subject` (sem assinatura de IA) |
 | Skill | [git-branching](.cursor/skills/git-branching/SKILL.md) | Branches — `develop`, `feature/`, `hotfix/`, `docs/`, merge seguro |
 | Skill | [code-review](.cursor/skills/code-review/SKILL.md) | Revisão de código — Bugbot + Security + checklist LGPD/API |

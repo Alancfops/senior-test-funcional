@@ -9,6 +9,8 @@ File key: mtMbhRez2Xy2k414cfzcFm
 Seção telas (entrada): node-id=1-11490  →  node 1:11490
 ```
 
+Arquivo legado (não usar): `Klxn2AvnDaMNofnQ91PZS0` — STP — TESTE.
+
 **Como abrir um frame específico:** copie o `node-id` do Figma (barra de endereço ao selecionar o frame) e monte:
 
 `https://www.figma.com/design/mtMbhRez2Xy2k414cfzcFm/Senior-Test-Funcional?node-id=NODE`
@@ -49,9 +51,14 @@ frontend/src/
 
 | Componente Figma | Variantes / estados | Arquivo RN | Notas |
 |------------------|---------------------|------------|-------|
-| *(ex. Button)* | Primary, Secondary, Disabled | `components/ui/Button.tsx` | `variant`, `disabled` |
-| *(ex. Input)* | Default, Error, Focus | `components/ui/TextInput.tsx` | `error`, `accessibilityLabel` |
-| | | | |
+| Button/Primary | default, pressed, disabled, loading | `frontend/src/components/ui/Button.tsx` | `#1A3278`, full width |
+| Input/Default | default, error, ícone | `frontend/src/components/ui/TextInput.tsx` | fundo `#F3F4F6` |
+| Auth layout | welcome, form + back | `frontend/src/components/auth/AuthScreenLayout.tsx` | fundo branco |
+| Social login row | Google, Facebook, Apple | `frontend/src/components/auth/SocialLoginRow.tsx` | visual only (RF pendente) |
+| Welcome / Entrada | node `14081:424` | `frontend/src/app/(auth)/welcome.tsx` | botão pill + logo |
+| Logo STP | node `14182:516` | `frontend/src/components/brand/StpLogo.tsx` | `assets/images/brand/stp-logo.png` (export oficial) |
+| Cadastrar | node `12001:3` | `frontend/src/app/(auth)/register.tsx` | RF001 |
+| Entrar | node `14091:1132` | `frontend/src/app/(auth)/login.tsx` | RF002 |
 
 **Instrução ao agente:** ao criar ou descobrir componente no Figma, **adicione linha** nesta tabela.
 

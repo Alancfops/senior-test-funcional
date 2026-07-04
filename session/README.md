@@ -25,6 +25,7 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-07-04 15:58 | [2026-07-04_15-58.md](2026-07-04_15-58.md) | Arquitetura commitada/push; skills review+instrumentos; agent backend; app Expo login/cadastro Figma; fix npm/assets |
 | 2026-06-11 13:54 | [2026-06-11_13-54.md](2026-06-11_13-54.md) | Alinhamento Expo Router, Git, figma-map, backend→front; subagent senior-test-frontend |
 | 2026-06-09 17:51 | [2026-06-09_17-51.md](2026-06-09_17-51.md) | Rules/skills Cursor (LGPD, Figma, WCAG, git); análise front; components Figma; próximo subagent |
 | 2026-06-03 17:16 | [2026-06-03_17-16.md](2026-06-03_17-16.md) | Polimento docs/Cursor, gitignore session, SSH 443, push concluído |

@@ -1,0 +1,12 @@
+{
+  "name": "senior-test-funcional",
+  "private": true,
+  "description": "Senior Teste Funcional — docs + monorepo (backend, frontend)",
+  "scripts": {
+    "start": "npm run start --prefix frontend",
+    "web": "npm run web --prefix frontend",
+    "android": "npm run android --prefix frontend",
+    "tunnel": "npm run start:tunnel --prefix frontend",
+    "frontend:install": "npm install --prefix frontend"
+  }
+}
