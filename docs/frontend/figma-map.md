@@ -42,15 +42,17 @@ Atualize a coluna **Frame Figma** conforme confirmar nomes no arquivo.
 | RF012 | Gráfico evolutivo | seção em perfil ou rota dedicada | ≥2 aval. mesmo instrumento |
 | RF013 | PDF | ação em feedback/perfil | PDF bytes da API |
 
-### Instrumentos RF010 (`[code]`)
+### Instrumentos RF010 (`[code]` na rota Expo)
 
-| code | Protocolo | UI destacada |
-|------|-----------|--------------|
-| `tug` | [tug](../clinical-protocols/instruments/tug/) | 3 ensaios, cronômetro |
-| `katz` | [katz](../clinical-protocols/instruments/katz/) | 6× radio I/A/D |
-| `berg` | [berg](../clinical-protocols/instruments/berg/) | 14 itens 0–4 |
-| `tinetti` | [tinetti](../clinical-protocols/instruments/tinetti/) | 16 itens |
-| `meem` | [meem](../clinical-protocols/instruments/meem/) | blocos; sem score parcial |
+Rotas usam **minúsculas**; a API persiste `instrument_code` em **MAIÚSCULAS** (`TUG`, `KATZ`, …).
+
+| code (rota) | API (`instrument_code`) | Protocolo | UI destacada |
+|-------------|-------------------------|-----------|--------------|
+| `tug` | `TUG` | [tug](../clinical-protocols/instruments/tug/) | 3 ensaios, cronômetro |
+| `katz` | `KATZ` | [katz](../clinical-protocols/instruments/katz/) | 6× radio I/A/D |
+| `berg` | `BERG` | [berg](../clinical-protocols/instruments/berg/) | 14 itens 0–4 |
+| `tinetti` | `TINETTI` | [tinetti](../clinical-protocols/instruments/tinetti/) | 16 itens |
+| `meem` | `MEEM` | [meem](../clinical-protocols/instruments/meem/) | blocos; sem score parcial |
 
 ---
 

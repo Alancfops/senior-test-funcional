@@ -2,7 +2,7 @@
 
 Plataforma digital para **fisioterapeutas** acompanharem pacientes idosos com instrumentos funcionais padronizados (histórico, evolução e relatórios).
 
-**Este repositório concentra documentação** — requisitos, arquitetura, LGPD e protocolos clínicos. O código da API e do app será versionado **em outro momento / outro repositório** (ou pastas definidas pela equipe), alinhado a esta especificação.
+**Este repositório concentra a especificação do produto** — requisitos, arquitetura, LGPD e protocolos clínicos. A **implementação** (API NestJS + app Expo) será versionada **no mesmo monorepo**, nas pastas `backend/`, `frontend/` e opcional `packages/`, conforme [docs/engineering/architecture.md](docs/engineering/architecture.md) e [repository-and-workflow.md](docs/engineering/repository-and-workflow.md).
 
 ---
 

@@ -2,14 +2,18 @@
 
 | Pasta | Conteúdo |
 |-------|----------|
-| `rules/` | Regras persistentes (LGPD, telas Figma obrigatórias, …) |
-| `commands/` | `/session` → salvar conversa (frontmatter `name` + `description`) |
+| `rules/` | Regras persistentes (LGPD, Figma, backend, …) |
+| `commands/` | `/session`, `/code-review`, `/verify-instruments` |
 | `skills/save-session/` | Skill `save-session` — resumo em `session/` |
 | `skills/wcag2-frontend-ui/` | Skill WCAG 2 — UI/UX acessível no app (nível AA) |
 | `skills/figma-to-frontend/` | Skill Figma → implementação de telas (Expo/RN + docs/) |
 | `skills/conventional-commits/` | Skill Git — Conventional Commits em inglês |
 | `skills/git-branching/` | Skill Git — branches (`develop`, `feature/`, `hotfix/`, …) |
-| `agents/` | Subagents — `senior-test-docs-maintainer`, `senior-test-frontend` |
+| `skills/code-review/` | Skill revisão — Bugbot + Security + checklist projeto |
+| `skills/clinical-instrument-scoring/` | Skill verificação TUG/Katz/Berg/Tinetti/MEEM |
+| `rules/backend-server-authority.mdc` | API = fonte da verdade; scoring; isolamento |
+| `rules/backend-nestjs-implementation.mdc` | NestJS/Prisma ao codificar `backend/` |
+| `agents/` | Subagents — `senior-test-docs-maintainer`, `senior-test-backend`, `senior-test-frontend` |
 
 ## Não aparece `.cursor` no explorador?
 

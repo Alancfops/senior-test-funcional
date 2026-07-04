@@ -8,7 +8,16 @@ Versão inicial pensada como **PostgreSQL normalizado**, com payloads de avalia�
 
 ## 1. Princípio de segregação (`therapist_id`)
 
-Toda leitura/escrita de paciente ou avaliação deve ser sempre **consistente com o usuário profissional autenticado** — no modelo relacionado pelo campo `Therapist`. O backend **injeta filtro obrigatório** (nunca confiar em ID de paciente vindos do cliente isoladamente para autorização).
+Toda leitura/escrita de paciente ou avaliação deve ser sempre **consistente com o usuário profissional autenticado** — no modelo relacionado pelo campo `Therapist`. O backend **injeta filtro obrigatório** (nunca confiar em ID de paciente vindo do cliente isoladamente para autorização).
+
+### 1.1 Convenção `instrument_code`
+
+| Contexto | Formato | Exemplo |
+|----------|---------|---------|
+| API JSON, banco (`INSTRUMENT.code`, `Assessment.instrument_code`) | **MAIÚSCULAS** | `TUG`, `KATZ`, `MEEM` |
+| Pastas de código, segmentos de URL REST | **minúsculas** | `tug`, `katz`, `meem` |
+
+Valores canônicos no seed: `TUG`, `KATZ`, `BERG`, `TINETTI`, `MEEM`.
 
 ---
 
@@ -92,9 +101,9 @@ erDiagram
 
 > **Notas de modelagem:**
 >
-> - `ASSESSMENT.payload` permite **rápido** iterar payloads JSON validados pelo backend com **schemas Zod/JSON-schema distintos** por `instrument_code` sem criar primeiro 5 tabelas filhas físicas cada uma com migrações adicionadas (você poderá migrar payloads calorosos para linhas físicas quando houver relatórios/analytics específicos).  
+> - `ASSESSMENT.payload` permite iterar rapidamente com **schemas Zod distintos** por `instrument_code`, sem criar de imediato cinco famílias de tabelas filhas; payloads **volumosos** podem migrar para linhas físicas quando analytics exigir.  
 > - **`schooling_band_used`** na linha da avaliação atende RF004/RF010 sobre **valor efetivo usado nos cortes** daquela aplicação.  
-> - Tabela OTP/log separada só se quiser auditoria fina RF003 ; senão ficar apenas em `PASSWORD_RESET_TOKEN`.
+> - Tabela OTP/log separada só se quiser auditoria fina RF003; senão, apenas `PASSWORD_RESET_TOKEN`.
 
 ---
 
@@ -115,7 +124,7 @@ erDiagram
 ## 4. Índices iniciais sugeridos (performance previsível)
 
 - `Patient(therapist_id, lower(full_name))` — lista + buscas RF005.  
-- `Assessment(therapist_id, patient_id, instrument_code, finalized_at DESC)` — série temporal RF012 RF006 linha cronológicas.  
+- `Assessment(therapist_id, patient_id, instrument_code, finalized_at DESC)` — série temporal RF012 e linhas cronológicas RF006.  
 - `Assessment(status)` onde `DRAFT` — limpeza ou jobs futuros (ex.: remover rascunhos antigos opcionalmente, fora obrigatoriedade MVP).
 
 ---
@@ -126,7 +135,7 @@ erDiagram
 |----------|----------------|
 | Tutorial versionado pelo servidor (**RF009**) | Migra texto dos Markdown de `docs/clinical-protocols/instruments/` para campos permitindo versionamento quando fechar navegações |
 | objetos externos S3 relatórios pré-gerados | cache PDF idênticos |
-| Auditoria PHI estendidas | conformidade institucional adicional LGPD HIPAA-like |
+| Auditoria PHI estendida | conformidade institucional adicional (LGPD / HIPAA-like) |
 
 ---
 

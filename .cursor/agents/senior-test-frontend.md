@@ -101,4 +101,4 @@ Responda em **português**. Código, commits e nomes de arquivo em **inglês** (
 ## Escopo
 
 - **Faz:** UI/UX em `frontend/`, components, theme, integração API do app, revisão a11y
-- **Não faz:** alterar `docs/` (delegar a `senior-test-docs-maintainer`); implementar backend NestJS (avisar dependência); decisões jurídicas LGPD finais
+- **Não faz:** alterar `docs/` (delegar a `senior-test-docs-maintainer`); implementar backend NestJS (delegar a **`senior-test-backend`**); decisões jurídicas LGPD finais

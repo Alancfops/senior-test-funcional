@@ -1,7 +1,7 @@
 # Arquitetura do sistema — Sênior Teste Funcional
 
 **Público:** engenharia, produto técnico e implementação (incluindo agentes automatizados).  
-**Status:** stack e desenho **oficiais** deste repositório. Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
+**Status:** stack e desenho **oficiais** — arquitetura **fechada para iniciar Fase A** (backend fundação). Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
 
 **Alinhamento:** [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), [data-model.md](./data-model.md). Fases de entrega: [repository-and-workflow.md](./repository-and-workflow.md).
 
@@ -89,6 +89,8 @@ Todos os protocolos do MVP usam o mesmo pipeline (Prisma + JSONB + Zod por `inst
 | `MEEM` | Mini-Exame do Estado Mental | Soma 0–30 + cortes por escolaridade |
 
 Roteiros clínicos: [clinical-protocols/instruments/](../clinical-protocols/instruments/). Coleta: **RF010**; feedback: **RF011**.
+
+**Convenção de código:** persistência e API usam **MAIÚSCULAS** (`TUG`, `KATZ`, …); pastas de implementação e segmentos de URL usam **minúsculas** — ver [data-model §1.1](./data-model.md).
 
 ### 3.3 Cliente mobile (detalhe)
 
@@ -326,9 +328,27 @@ Trocar npm/pnpm por Bun **não** invalida esta arquitetura.
 
 Ao codificar, manter sincronizados:
 
-1. [data-model.md](./data-model.md) e, quando houver código, schema Prisma/migrações reais  
+1. [data-model.md](./data-model.md) e schema Prisma/migrações reais  
 2. OpenAPI viva no Nest + snapshots em [../contracts/](../contracts/README.md) quando houver release  
 3. Este arquivo e [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), se mudar stack ou fluxos de dados  
+
+---
+
+## 13. Critérios de pronto para codificar (Fase A)
+
+Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
+
+| # | Critério | Referência |
+|---|----------|------------|
+| 1 | Stack e módulos NestJS definidos | §3.4, §6 deste doc; [backend README §9](../backend/README.md) |
+| 2 | Modelo ER e `instrument_code` convenção | [data-model.md §1.1](./data-model.md) |
+| 3 | Endpoints RF001–RF005 mapeados | [backend README §4.4](../backend/README.md) |
+| 4 | Isolamento `therapist_id` documentado | [backend README §7.2](../backend/README.md) |
+| 5 | LGPD checklist conhecido | [privacy-and-lgpd.md §10](../product/privacy-and-lgpd.md) |
+| 6 | Git: `develop` + branch `feature/backend-*` | [repository-and-workflow §6](./repository-and-workflow.md) |
+| 7 | Rules Cursor backend ativas | `.cursor/rules/backend-*.mdc` |
+
+**Fase B** só após Fase A homologável via HTTP (Postman/Insomnia) sem app.
 
 ---
 

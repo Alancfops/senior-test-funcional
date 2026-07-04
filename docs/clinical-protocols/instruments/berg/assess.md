@@ -161,13 +161,13 @@ Faça o mesmo por cima do ombro direito. (O examinador poderá pegar um objeto e
 - **1:** Tenta levantar uma perna, mas é incapaz de permanecer por 3 seg., embora permaneça em pé independentemente.
 - **0:** Incapaz de tentar, ou necessita de ajuda para não cair.
 
-## 4) Interpretacao do escore
+## 4) Interpretação do escore
 
 - **0 a 20:** prejuízo do equilíbrio
 - **21 a 40:** equilíbrio aceitável
 - **41 a 56:** bom equilíbrio
 
-Observacao: para decisao clinica, usar o escore total junto da evolucao longitudinal. Em muitos contextos, valores abaixo de 45 pontos sao tratados como alerta para maior risco de quedas, mas o ponto de corte pode variar.
+Observação: para decisão clínica, usar o escore total junto da evolução longitudinal. Em muitos contextos, valores abaixo de 45 pontos são tratados como alerta para maior risco de quedas, mas o ponto de corte pode variar.
 
 ## 5) Campos recomendados para o app (para implementação)
 

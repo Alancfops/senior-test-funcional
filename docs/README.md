@@ -2,7 +2,9 @@
 
 Índice canônico. Conteúdo em **português**; pastas e arquivos em **inglês**.
 
-Este repositório é **documentação do produto e da arquitetura** — não contém código da API nem do app.
+Este repositório é **documentação do produto e da arquitetura** — a implementação vive em `backend/` e `frontend/` (monorepo previsto; ver [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md)).
+
+**Status da arquitetura (2026):** especificação **fechada para Fase A** — backend fundação (RF001–RF005) e contrato OpenAPI antes do app em larga escala.
 
 Visão resumida: [README na raiz](../README.md).
 

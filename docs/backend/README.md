@@ -1,6 +1,7 @@
 # Backend — documentação de arquitetura
 
-> **Só documentação** em `docs/backend/`. Explica **contexto do produto**, **stack com porquês**, **como a API deve se comportar**, **dados**, **segurança/LGPD** e **limites**. Não há código neste repositório.
+> **Só documentação** em `docs/backend/`. Explica **contexto do produto**, **stack com porquês**, **como a API deve se comportar**, **dados**, **segurança/LGPD** e **limites**. Implementação prevista em `backend/` (monorepo).  
+> **Status:** arquitetura **fechada para Fase A** (RF001–RF005 + Prisma + OpenAPI).
 
 **Leitura relacionada:** [frontend](../frontend/README.md) (app) · [architecture](../engineering/architecture.md) (visão global) · [requirements](../product/requirements.md) (RFs) · [PRD](../product/PRD.md) (visão de produto).
 
@@ -337,24 +338,28 @@ Tabelas de corte com `versionTag` (ex.: `tug-cutoff-2026-01`). Avaliação final
 ## 9. Organização em módulos
 
 ```
-src/
+backend/src/
 ├── prisma/                 # PrismaService
 ├── health/
-├── auth/
-├── patients/
-├── instruments/
+├── auth/                   # RF001–RF003: registro, login, reset
+├── therapists/             # perfil do profissional autenticado
+├── patients/               # RF004–RF006
+├── instruments/            # RF007 catálogo (seed 5 códigos)
 ├── assessments/
-│   ├── assessments.controller/service
+│   ├── assessments.controller.ts
+│   ├── assessments.service.ts
 │   └── instruments/
-│       ├── tug/            # zod schema + scorer
+│       ├── tug/            # schema Zod + score() + classify()
 │       ├── katz/
 │       ├── berg/
 │       ├── tinetti/
 │       └── meem/
-├── scoring-rules/          # parametrização
-├── reports/
-└── notifications/
+├── scoring-rules/          # tabelas de corte versionadas
+├── reports/                # RF013 PDF
+└── notifications/          # RF003 e-mail transacional
 ```
+
+**Convenção `instrument_code`:** valores persistidos e expostos na API em **MAIÚSCULAS** (`TUG`, `KATZ`, …); pastas de código e segmentos de URL em **minúsculas** (`tug`, `katz`, …). Detalhe: [data-model §1.1](../engineering/data-model.md).
 
 Cada pasta `instruments/*` contém: **schema Zod**, **função score()**, **função classify()** opcional — testável unitariamente sem HTTP.
 

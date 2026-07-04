@@ -13,19 +13,21 @@ Complementos obrigatórios: [architecture.md](./architecture.md), [PRD.md](../pr
 ## 1. Estrutura do repositório
 
 ```
-senior-test-funcional/                 # Repositório atual = documentação
+senior-test-funcional/
 ├── README.md
-└── docs/
-    ├── README.md
-    ├── product/
-    ├── backend/                       # Doc.: como a API funciona (sem código)
-    ├── frontend/                      # Doc.: como o app funciona (sem código)
-    ├── engineering/
-    ├── clinical-protocols/instruments/
-    └── contracts/
+├── docs/                              # Especificação (este repositório hoje)
+│   ├── product/
+│   ├── backend/
+│   ├── frontend/
+│   ├── engineering/
+│   ├── clinical-protocols/instruments/
+│   └── contracts/
+├── backend/                           # NestJS + Prisma (Fase A→B)
+├── frontend/                          # Expo + RN (Fase C→E)
+└── packages/                          # Opcional: shared-contracts (Zod)
 ```
 
-**Implementação futura:** quando existir código, a equipe pode adotar monorepo (`backend/` + `frontend/` na raiz com Bun/npm workspaces) ou repositórios separados — desde que **OpenAPI** e **semver** da API permaneçam explícitos. A documentação em `docs/backend/` e `docs/frontend/` continua válida como especificação de comportamento.
+**Implementação (decisão adotada):** monorepo na raiz com `backend/`, `frontend/` e opcional `packages/` (Bun workspaces), conforme [architecture.md](./architecture.md). Repositórios separados só com ADR explícito — **OpenAPI** e **semver** da API permanecem obrigatórios. A documentação em `docs/backend/` e `docs/frontend/` continua válida como especificação de comportamento.
 
 ### 1.1 Toolchain prevista (quando houver código)
 
@@ -80,7 +82,7 @@ Isso **não substitui** as fases A→B macro (fundação servidor antes do app e
 Instrumentos na ordem acordada; **padrão** costuma iniciar pelo **TUG** (payload mais contido antes de Katz/Berg/Tinetti/**MEEM**).
 
 - Lista canônica de instrumentos (`GET /instruments`).  
-- Recalculo de pontuações e aplicação de cortes sempre **pelo servidor** ao finalizar a sessão.  
+- Recálculo de pontuações e aplicação de cortes sempre **pelo servidor** ao finalizar a sessão.  
 - Séries temporais para gráfico e geração de PDF com semânticas estáveis.
 
 **Saída:** contrato público suficiente para especialistas UX ou comunicação visual lerem payloads e estados esperados antes de elaborar artefatos de alta fidelidade.
@@ -157,7 +159,7 @@ Fluxo **Git Flow simplificado** (detalhes e comandos: skill Cursor `git-branchin
 
 **Regra:** trabalho de funcionalidade **não** commita direto em `develop`/`main` — abrir branch temática primeiro. Commits: Conventional Commits em inglês (skill `conventional-commits`).
 
-**`develop` ainda inexistente:** criar a partir de `main` quando iniciar features (uma vez; ver skill `git-branching`).
+**Branch `develop`:** base de integração para features; criada a partir de `main` (ver skill `git-branching`).
 
 | Prática adicional | Descrição |
 |-------------------|-----------|
