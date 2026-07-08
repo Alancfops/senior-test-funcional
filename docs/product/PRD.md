@@ -178,14 +178,15 @@ Consulte metas prévias (ex.: taxa de conclusão do fluxo, tempo médio por aval
 
 ## 13. Priorização incremental (orientação macro)
 
-Distribuição de esforços em fases compatíveis com a engenharia (ver `docs/engineering/`). Não substitui a especificação detalhada em `requirements.md`.
+Alinhado a [repository-and-workflow](../engineering/repository-and-workflow.md) §3. Não substitui `requirements.md`.
 
 | Fase macro | Foco |
 |-------------|------|
-| 1 | RF001–RF005 (identidade do profissional, pacientes) |
-| 2 | RF007–RF011 (fluxo principal de avaliação) |
-| 3 | RF006 (refino onde necessário), RF012, RF013 (evolução, PDF) |
-| 4 | Requisitos não funcionais formais e endurecimento de segurança/operação; revisitura de canais opcionais (ex.: web) |
+| **A** | App Expo: telas Figma (RF001–RF013), navegação, mocks controlados |
+| **B** | Backend RF001–RF005 (identidade do profissional, pacientes) + OpenAPI |
+| **C** | Backend RF007–RF013 (avaliações, finalize, PDF) |
+| **D** | Integração app ↔ API; substituir mocks |
+| **E** | Polish visual; RNF formais e endurecimento operacional quando aplicável |
 
 ---
 

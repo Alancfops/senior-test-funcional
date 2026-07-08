@@ -1,10 +1,10 @@
-import { Redirect } from 'expo-router';
+import { Redirect, Href } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 import { getAccessToken } from '@/lib/auth/storage';
 
 export default function Index() {
-  const [href, setHref] = useState<'/(main)' | '/(auth)/login' | null>(null);
+  const [href, setHref] = useState<Href | null>(null);
 
   useEffect(() => {
     getAccessToken().then((token) => {

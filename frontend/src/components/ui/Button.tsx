@@ -13,7 +13,7 @@ import { tokens } from '@/theme/tokens';
 type ButtonProps = PressableProps & {
   label: string;
   loading?: boolean;
-  variant?: 'primary' | 'outline';
+  variant?: 'primary' | 'outline' | 'outlinePrimary';
   fullWidth?: boolean;
   compactLabel?: boolean;
   accessibilityHint?: string;
@@ -42,7 +42,7 @@ export function Button({
       style={({ pressed }) => [
         styles.base,
         fullWidth && styles.fullWidth,
-        variant === 'primary' ? styles.primary : styles.outline,
+        variant === 'primary' ? styles.primary : variant === 'outlinePrimary' ? styles.outlinePrimary : styles.outline,
         pressed && variant === 'primary' && styles.primaryPressed,
         isDisabled && styles.disabled,
         style as ViewStyle,
@@ -57,6 +57,8 @@ export function Button({
           style={[
             compactLabel ? styles.compactLabel : styles.label,
             variant === 'outline' && (compactLabel ? styles.compactOutlineLabel : styles.outlineLabel),
+            variant === 'outlinePrimary' &&
+              (compactLabel ? styles.compactOutlinePrimaryLabel : styles.outlinePrimaryLabel),
           ]}
           numberOfLines={1}
           adjustsFontSizeToFit
@@ -93,7 +95,7 @@ export function ButtonRow({
     <View style={styles.row}>
       <Button
         label={backLabel}
-        variant="outline"
+        variant="outlinePrimary"
         fullWidth={false}
         onPress={onBack}
         style={wideAction ? styles.backNarrow : styles.half}
@@ -136,6 +138,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: tokens.colors.border,
   },
+  outlinePrimary: {
+    backgroundColor: tokens.colors.surface,
+    borderWidth: 1,
+    borderColor: tokens.colors.primary,
+  },
   disabled: {
     opacity: 0.55,
   },
@@ -155,6 +162,14 @@ const styles = StyleSheet.create({
   compactOutlineLabel: {
     ...tokens.typography.buttonCompact,
     color: tokens.colors.text,
+    textAlign: 'center',
+  },
+  outlinePrimaryLabel: {
+    color: tokens.colors.primary,
+  },
+  compactOutlinePrimaryLabel: {
+    ...tokens.typography.buttonCompact,
+    color: tokens.colors.primary,
     textAlign: 'center',
   },
   row: {

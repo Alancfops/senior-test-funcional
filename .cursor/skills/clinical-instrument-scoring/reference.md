@@ -177,7 +177,7 @@ Persistir **`schooling_band_used` na Assessment** — não só no Patient.
 
 ---
 
-## Ordem de implementação sugerida (Fase B)
+## Ordem de implementação sugerida (Fase C — backend)
 
 1. TUG (payload simples)
 2. Katz (enum + contagem)

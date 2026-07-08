@@ -2,6 +2,8 @@ Contexto técnico e de produto estão em **`docs/`** (repositório de **document
 
 Comece por **[docs/README.md](docs/README.md)** e **[docs/engineering/architecture.md](docs/engineering/architecture.md)**.
 
+**Ordem de entrega (2026):** **Fase A** — telas Figma no app (mocks); **Fases B–C** — backend; **Fase D** — integração. Detalhe: [docs/engineering/repository-and-workflow.md](docs/engineering/repository-and-workflow.md).
+
 | Camada | Documentação |
 |--------|----------------|
 | API | [docs/backend/README.md](docs/backend/README.md) |
@@ -28,5 +30,5 @@ Pastas em `docs/` com nomes em **inglês**; texto em **português**.
 | Skill | [code-review](.cursor/skills/code-review/SKILL.md) | Revisão de código — Bugbot + Security + checklist LGPD/API |
 | Skill | [clinical-instrument-scoring](.cursor/skills/clinical-instrument-scoring/SKILL.md) | Verificar questionários (TUG, Katz, Berg, Tinetti, MEEM) |
 | Agent | [senior-test-docs-maintainer](.cursor/agents/senior-test-docs-maintainer.md) | Manutenção de documentação em `docs/` |
-| Agent | [senior-test-backend](.cursor/agents/senior-test-backend.md) | API NestJS — Prisma, scoring, OpenAPI, linkagem com front |
+| Agent | [senior-test-backend](.cursor/agents/senior-test-backend.md) | API NestJS — Prisma, scoring, OpenAPI, linkagem com front; **`/session`** |
 | Agent | [senior-test-frontend](.cursor/agents/senior-test-frontend.md) | UI/UX mobile — Figma, WCAG 2 AA, Expo/RN, integração API |

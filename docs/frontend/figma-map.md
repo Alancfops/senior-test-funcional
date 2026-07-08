@@ -33,6 +33,11 @@
 | Nova Senha | RF003 | `src/app/(auth)/forgot-password/new-password.tsx` | UI; API pendente |
 | Erro (recuperação) | RF003 | `src/app/(auth)/forgot-password/error.tsx` | implementado |
 | Criar Conta / Cadastro fisio | RF001 | `src/app/(auth)/register.tsx` | implementado |
+| Início / Home | RF005 (parcial) | `src/app/(main)/(tabs)/index.tsx` | UI mock; API pendente |
+| Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | UI mock; API pendente |
+| Perfil de Paciente (sem testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `maria-de-luordes` |
+| Perfil de Paciente (com testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `albertino-silva` |
+| Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | UI mock |
 
 ---
 
@@ -44,9 +49,10 @@
 | RF002 | Login | `app/(auth)/login.tsx` | → home; link reset |
 | RF003 | Recuperar senha | `app/(auth)/forgot-password/*` | token 6 dígitos, nova senha |
 | RF004 | Cadastro paciente | modal/rota em `(main)/` ou `patients/new` | campos MEEM escolaridade |
-| RF005 | Lista + busca pacientes | `app/(main)/index.tsx` | home; CTA cadastro |
+| RF005 | Lista + busca pacientes | `app/(main)/(tabs)/patients.tsx` | lista mock |
+| RF006 | Perfil / histórico paciente | `app/(main)/patients/[id].tsx` | vazio ou lista mock |
 
-*(demais RFs — ver versão anterior do mapa)*
+**Legenda de status (Fase A):** `UI mock` = tela Figma + dados simulados; `integrado` = API real (Fase D).
 
 ---
 

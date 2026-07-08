@@ -7,6 +7,11 @@ export const tokens = {
     primaryPressed: '#294FB8',
     buttonPrimary: '#3666E0',
     buttonPrimaryPressed: '#2D57C7',
+    /** Figma — home header gradient (node Início). */
+    homeGradientStart: '#3260D7',
+    homeGradientMid: '#6385E1',
+    homeGradientLight: '#94ABEA',
+    homeGradientEnd: '#F6F7FC',
     headerGradientStart: '#3666E0',
     headerGradientMid: '#5C9FC3',
     headerGradientEnd: '#7CC5B4',
@@ -20,8 +25,14 @@ export const tokens = {
     error: '#DC2626',
     onPrimary: '#FFFFFF',
     link: '#3666E0',
+    /** Figma — secundária (#7CC5B4). */
+    secondary: '#7CC5B4',
     accentTeal: '#7CC5B4',
     checkOk: '#3666E0',
+    pageBackground: '#F6F7FC',
+    cardShadow: 'rgba(15, 23, 42, 0.08)',
+    activityPrimary: '#3666E0',
+    activitySecondary: '#7CC5B4',
   },
   spacing: {
     xs: 8,

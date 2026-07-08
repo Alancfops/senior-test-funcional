@@ -1,7 +1,7 @@
 # Arquitetura do sistema — Sênior Teste Funcional
 
 **Público:** engenharia, produto técnico e implementação (incluindo agentes automatizados).  
-**Status:** stack e desenho **oficiais** — arquitetura **fechada para iniciar Fase A** (backend fundação). Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
+**Status:** stack e desenho **oficiais** — **Fase A (frontend Figma + mocks) em andamento**; especificação do backend **fechada** para implementação nas Fases B–C. Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
 
 **Alinhamento:** [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), [data-model.md](./data-model.md). Fases de entrega: [repository-and-workflow.md](./repository-and-workflow.md).
 
@@ -301,9 +301,11 @@ Roteiro completo: [repository-and-workflow.md](./repository-and-workflow.md).
 
 | Fase | Entregável técnico |
 |------|-------------------|
-| **A** | Postgres + Prisma + Nest auth/pacientes RF001–RF005 + OpenAPI |
-| **B** | Cinco instrumentos no servidor (ordem sugerida: TUG → Katz → Berg → Tinetti → MEEM) + timeseries + PDF |
-| **C–E** | Expo: fluxos RF, depois design system, sem quebrar contrato HTTP |
+| **A** | Expo: telas Figma, navegação, mocks controlados, validação client-side |
+| **B** | Postgres + Prisma + Nest auth/pacientes RF001–RF005 + OpenAPI |
+| **C** | Cinco instrumentos no servidor (TUG → Katz → Berg → Tinetti → MEEM) + timeseries + PDF |
+| **D** | Integração app ↔ API (substituir mocks); estados loading/erro/401 |
+| **E** | Polish visual sem quebrar contrato HTTP |
 
 ---
 
@@ -334,7 +336,7 @@ Ao codificar, manter sincronizados:
 
 ---
 
-## 13. Critérios de pronto para codificar (Fase A)
+## 13. Critérios de pronto para codificar o backend (Fase B)
 
 Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
 
@@ -348,7 +350,9 @@ Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
 | 6 | Git: `develop` + branch `feature/backend-*` | [repository-and-workflow §6](./repository-and-workflow.md) |
 | 7 | Rules Cursor backend ativas | `.cursor/rules/backend-*.mdc` |
 
-**Fase B** só após Fase A homologável via HTTP (Postman/Insomnia) sem app.
+**Fase C** (avaliações) só após Fase B homologável via HTTP (Postman/Insomnia).
+
+**Fase A (frontend)** pode avançar em paralelo ou **antes** do backend — ver [repository-and-workflow.md](./repository-and-workflow.md) §3.
 
 ---
 

@@ -4,7 +4,7 @@
 
 Este repositório é **documentação do produto e da arquitetura** — a implementação vive em `backend/` e `frontend/` (monorepo previsto; ver [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md)).
 
-**Status da arquitetura (2026):** especificação **fechada para Fase A** — backend fundação (RF001–RF005) e contrato OpenAPI antes do app em larga escala.
+**Status da arquitetura (2026):** **Fase A em andamento** — frontend (telas Figma + mocks no Expo); backend (Fases B–C) e integração (Fase D) conforme [repository-and-workflow.md](engineering/repository-and-workflow.md).
 
 Visão resumida: [README na raiz](../README.md).
 

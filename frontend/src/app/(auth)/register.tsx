@@ -9,9 +9,10 @@ import { PasswordRequirements } from '@/components/auth/PasswordRequirements';
 import { ButtonRow } from '@/components/ui/Button';
 import { TextInput } from '@/components/ui/TextInput';
 import { registerRequest } from '@/features/auth/api';
+import { isMockAuthEnabled, mockLogin } from '@/features/auth/mock';
 import { RegisterFormValues, registerSchema } from '@/features/auth/schemas';
 import { ApiError } from '@/lib/api/client';
-import { saveAccessToken } from '@/lib/auth/storage';
+import { saveAccessToken, saveSessionUser } from '@/lib/auth/storage';
 import { tokens } from '@/theme/tokens';
 
 /** Figma — Cadastro fisioterapeuta / Criar Conta (RF001). Tela branca full-screen, sem header azul. */
@@ -30,8 +31,17 @@ export default function RegisterScreen() {
     setFormError(null);
     setSubmitting(true);
     try {
+      if (isMockAuthEnabled()) {
+        const session = mockLogin(values.email, values.password);
+        await saveAccessToken(session.accessToken);
+        await saveSessionUser({ fullName: values.fullName, email: values.email });
+        router.replace('/(main)');
+        return;
+      }
+
       const { accessToken } = await registerRequest(values.fullName, values.email, values.password);
       await saveAccessToken(accessToken);
+      await saveSessionUser({ fullName: values.fullName, email: values.email });
       router.replace('/(main)');
     } catch (error) {
       if (error instanceof ApiError && error.statusCode === 409) {

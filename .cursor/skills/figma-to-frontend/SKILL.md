@@ -83,7 +83,7 @@ Antes da tela (e **de novo** se o frame usar componente ainda não mapeado):
 | 3 | [docs/backend/README.md](../../../docs/backend/README.md) | Endpoints, finalize, timeseries, PDF |
 | 4 | [docs/product/privacy-and-lgpd.md](../../../docs/product/privacy-and-lgpd.md) | Telas com paciente/avaliação |
 | 5 | [docs/clinical-protocols/instruments/](../../../docs/clinical-protocols/instruments/) | RF010 por instrumento |
-| 6 | [docs/engineering/repository-and-workflow.md](../../../docs/engineering/repository-and-workflow.md) | Fase C–E (comportamento antes de polish puro) |
+| 6 | [docs/engineering/repository-and-workflow.md](../../../docs/engineering/repository-and-workflow.md) | Fases A→E (frontend primeiro; integração Fase D) |
 
 Mapeamento RF ↔ rota ↔ frame: [figma-map.md](../../../docs/frontend/figma-map.md). Atualize a tabela de frames lá quando confirmar nome no Figma.
 
@@ -91,7 +91,7 @@ Mapeamento RF ↔ rota ↔ frame: [figma-map.md](../../../docs/frontend/figma-ma
 
 1. **Componentes** — garantir primitivos Figma em `src/components/`; compor tela.
 2. **Rota e navegação** — Expo Router conforme [docs/frontend/README.md](../../../docs/frontend/README.md) §10.
-3. **Comportamento e dados** — TanStack Query, RHF + Zod, wizard Zustand; **API real**, sem mock de classificação.
+3. **Comportamento e dados** — RHF + Zod; **Fase A:** mocks rotulados (auth, listas, cadastro); **Fase D:** TanStack Query + API real. **Proibido** mock de classificação/scoring.
 4. **Estados UX** — loading, vazio, erro rede, 401 ([frontend README §5.2](../../../docs/frontend/README.md)).
 5. **Visual** — layout do frame usando **somente** componentes mapeados + tokens.
 6. **Acessibilidade** — aplicar skill **`wcag2-frontend-ui`**; relatório WCAG na entrega.

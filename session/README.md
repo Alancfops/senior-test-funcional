@@ -20,11 +20,14 @@ Exemplo: `2026-06-03_15-42.md`
 |------|------|
 | Você | Peça para salvar a sessão (`/save-session`, "guarda essa sessão", etc.) |
 | Agente | Ao iniciar tarefas, leia os arquivos mais recentes aqui antes de agir |
+| Agente (principal, **senior-test-backend**, **senior-test-frontend**) | Ao pedido **`/session`**, execute skill **`save-session`** e atualize esta tabela |
 
 ## Índice recente
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-07-08 19:05 | [2026-07-08_19-05.md](2026-07-08_19-05.md) | Home + cadastro paciente + perfil RF006 (mock); docs fases frontend-first; logo/gradiente; backend agent + `/session` |
+| 2026-07-04 18:25 | [2026-07-04_18-25.md](2026-07-04_18-25.md) | Auth Figma refinado (SDK 54, logo, tokens, cadastro plain); commit+merge em `develop`; local em `develop` |
 | 2026-07-04 15:58 | [2026-07-04_15-58.md](2026-07-04_15-58.md) | Arquitetura commitada/push; skills review+instrumentos; agent backend; app Expo login/cadastro Figma; fix npm/assets |
 | 2026-06-11 13:54 | [2026-06-11_13-54.md](2026-06-11_13-54.md) | Alinhamento Expo Router, Git, figma-map, backend→front; subagent senior-test-frontend |
 | 2026-06-09 17:51 | [2026-06-09_17-51.md](2026-06-09_17-51.md) | Rules/skills Cursor (LGPD, Figma, WCAG, git); análise front; components Figma; próximo subagent |

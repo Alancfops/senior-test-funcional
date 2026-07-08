@@ -5,7 +5,7 @@ description: Aplica WCAG 2 (nível AA) em UI/UX do app mobile Expo/React Native 
 
 # WCAG 2 — Frontend UI/UX
 
-Todo trabalho de **interface do app** (Expo / React Native) deve cumprir **WCAG 2.1 nível AA** como baseline; critérios **2.2** aplicam quando couber. Não trate acessibilidade como fase opcional — entra desde a **Fase C** ([docs/frontend/README.md](../../../docs/frontend/README.md)).
+Todo trabalho de **interface do app** (Expo / React Native) deve cumprir **WCAG 2.1 nível AA** como baseline; critérios **2.2** aplicam quando couber. Não trate acessibilidade como fase opcional — entra desde a **Fase A** ([docs/frontend/README.md](../../../docs/frontend/README.md)).
 
 **Contexto do produto:** fisioterapeuta em pé, formulários longos (Berg 14, Tinetti 16, MEEM), cronômetro TUG, gráficos e PDF. Público indireto inclui **idosos** — legibilidade e alvos amplos são requisito, não nice-to-have.
 

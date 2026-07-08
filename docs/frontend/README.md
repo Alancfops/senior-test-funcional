@@ -19,7 +19,7 @@
 9. [Integração com a API](#9-integração-com-a-api)  
 10. [Organização do código (quando existir)](#10-organização-do-código-quando-existir)  
 11. [Anti-padrões](#11-anti-padrões)  
-12. [Fases C–E e maturidade visual](#12-fases-ce-e-maturidade-visual)  
+12. [Fases A–E e entrega](#12-fases-ae-e-entrega)  
 13. [Mapa Figma (telas e rotas)](figma-map.md)
 
 ---
@@ -234,7 +234,7 @@ A UI implementa **entrada**; o protocolo completo está em [clinical-protocols](
 
 **MEEM — escolaridade:** exibir valor do cadastro (RF004) e permitir **confirmar/corrigir** na sessão; enviar ao servidor o valor **efetivo** para cortes ([backend](../backend/README.md) §5).
 
-**Acessibilidade (direção):** fontes legíveis, alvos de toque amplos (público idoso + profissional em pé), contraste adequado nas fases D–E do [repository-and-workflow](../engineering/repository-and-workflow.md).
+**Acessibilidade (direção):** fontes legíveis, alvos de toque amplos (público idoso + profissional em pé), contraste adequado **desde a Fase A** ([repository-and-workflow](../engineering/repository-and-workflow.md) §3).
 
 ---
 
@@ -371,7 +371,8 @@ frontend/
 
 | Anti-padrão | Consequência |
 |-------------|--------------|
-| Mock fixo de classificação em dev | App “funciona” com API quebrada |
+| Mock fixo de classificação em dev | Engana QA e profissional — **proibido** mesmo na Fase A |
+| Mock de auth/lista/cadastro sem rotular | Confunde integração na Fase D — marcar em `figma-map` e env |
 | AsyncStorage para JWT sem secure | Risco em dispositivo comprometido |
 | Recharts no RN | Não roda nativamente como na web |
 | Gráfico com 1 ponto inventado | Engana o profissional |
@@ -382,15 +383,20 @@ frontend/
 
 ---
 
-## 12. Fases C–E e maturidade visual
+## 12. Fases A–E e entrega
 
-| Fase | Objetivo | Por que nesta ordem |
-|------|----------|---------------------|
-| **C** | Todas as telas RF com API real; UI simples | Valida produto e contrato antes de design fino |
-| **D** | Tokens cores, tipografia, componentes institucionais | Evita refazer fluxo quando identidade chegar |
-| **E** | Polish, animações, microcopy | Não alterar payloads HTTP |
+Roteiro completo: [repository-and-workflow](../engineering/repository-and-workflow.md) §3.
 
-**Dependência:** fases **A–B** do backend entregam auth, pacientes, instrumentos, finalize, timeseries, PDF ([backend](../backend/README.md) §11). Implementar app “completo” em cima de API incompleta gera retrabalho e mocks perigosos.
+| Fase | Objetivo no app | Quando |
+|------|-----------------|--------|
+| **A** | Telas Figma, navegação, tokens, **mocks** (auth, listas, forms) | **Agora** — validar UX antes da API |
+| **B–C** | *(backend)* — sem mudança obrigatória no app | Servidor RF001–RF013 |
+| **D** | Integração API real; loading, vazio, erro, 401 | Substituir mocks RF a RF |
+| **E** | Polish, animações, microcopy | Sem alterar payloads HTTP |
+
+**Mocks na Fase A:** permitidos para auth, cadastro e listas **desde que** não simulem scoring clínico, classificação oficial ou PDF. Rotular no código e em [figma-map.md](figma-map.md). Desligar com `EXPO_PUBLIC_MOCK_AUTH=false` quando auth real existir (Fase D).
+
+**Acessibilidade:** WCAG 2 AA desde a Fase A — não postergar para a Fase E.
 
 Cronograma integrado: [repository-and-workflow](../engineering/repository-and-workflow.md).
 

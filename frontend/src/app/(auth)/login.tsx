@@ -9,9 +9,10 @@ import { AuthScreenLayout } from '@/components/auth/AuthScreenLayout';
 import { Button } from '@/components/ui/Button';
 import { TextInput } from '@/components/ui/TextInput';
 import { loginRequest } from '@/features/auth/api';
+import { isMockAuthEnabled, mockLogin } from '@/features/auth/mock';
 import { LoginFormValues, loginSchema } from '@/features/auth/schemas';
 import { ApiError } from '@/lib/api/client';
-import { saveAccessToken } from '@/lib/auth/storage';
+import { saveAccessToken, saveSessionUser } from '@/lib/auth/storage';
 import { tokens } from '@/theme/tokens';
 
 /** Figma — Login / Bem-Vindo (RF002). */
@@ -28,8 +29,17 @@ export default function LoginScreen() {
     setFormError(null);
     setSubmitting(true);
     try {
+      if (isMockAuthEnabled()) {
+        const session = mockLogin(values.email, values.password);
+        await saveAccessToken(session.accessToken);
+        await saveSessionUser({ fullName: session.fullName, email: session.email });
+        router.replace('/(main)');
+        return;
+      }
+
       const { accessToken } = await loginRequest(values.email, values.password);
       await saveAccessToken(accessToken);
+      await saveSessionUser({ fullName: values.email, email: values.email });
       router.replace('/(main)');
     } catch (error) {
       if (error instanceof ApiError && error.statusCode === 401) {
@@ -102,6 +112,13 @@ export default function LoginScreen() {
         </Text>
       ) : null}
 
+      {isMockAuthEnabled() ? (
+        <Text style={styles.mockHint}>
+          Modo demonstração: use qualquer e-mail e senha válidos — ex.{' '}
+          <Text style={styles.mockHintStrong}>jane.doe@email.com</Text>
+        </Text>
+      ) : null}
+
       <Button label="Entrar" onPress={onSubmit} loading={submitting} />
 
       <View style={styles.footer}>
@@ -132,6 +149,15 @@ const styles = StyleSheet.create({
   formError: {
     ...tokens.typography.caption,
     color: tokens.colors.error,
+  },
+  mockHint: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
+    textAlign: 'center',
+  },
+  mockHintStrong: {
+    fontWeight: '600',
+    color: tokens.colors.link,
   },
   footer: {
     marginTop: tokens.spacing.sm,

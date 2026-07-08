@@ -5,4 +5,6 @@ const fallbackUrl =
 
 export const env = {
   apiUrl: (process.env.EXPO_PUBLIC_API_URL ?? fallbackUrl).replace(/\/$/, ''),
+  /** Simula login sem API — defina `EXPO_PUBLIC_MOCK_AUTH=false` para usar backend real. */
+  mockAuth: process.env.EXPO_PUBLIC_MOCK_AUTH !== 'false',
 };

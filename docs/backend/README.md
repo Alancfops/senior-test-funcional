@@ -1,7 +1,7 @@
 # Backend — documentação de arquitetura
 
 > **Só documentação** em `docs/backend/`. Explica **contexto do produto**, **stack com porquês**, **como a API deve se comportar**, **dados**, **segurança/LGPD** e **limites**. Implementação prevista em `backend/` (monorepo).  
-> **Status:** arquitetura **fechada para Fase A** (RF001–RF005 + Prisma + OpenAPI).
+> **Status:** especificação **fechada para Fases B–C** (RF001–RF013 + Prisma + OpenAPI). Implementação do backend **após** telas principais no app (Fase A) — ver [repository-and-workflow](../engineering/repository-and-workflow.md).
 
 **Leitura relacionada:** [frontend](../frontend/README.md) (app) · [architecture](../engineering/architecture.md) (visão global) · [requirements](../product/requirements.md) (RFs) · [PRD](../product/PRD.md) (visão de produto).
 
@@ -381,10 +381,14 @@ Cada pasta `instruments/*` contém: **schema Zod**, **função score()**, **fun�
 
 ## 11. Entrega por fases
 
+Ordem macro do projeto: **frontend (Fase A) → backend (B–C) → integração (D)** — [repository-and-workflow](../engineering/repository-and-workflow.md) §3.
+
 | Fase | Foco backend | Critério de “pronto” |
 |------|--------------|----------------------|
-| **A** | Auth + pacientes + Prisma + OpenAPI | Postman/Insomnia executa RF001–RF005 sem app |
-| **B** | 5 instrumentos + timeseries + PDF | RF007–RF013 verificáveis por contrato; ordem sugerida: **TUG → Katz → Berg → Tinetti → MEEM** (complexidade crescente) |
+| **B** | Auth + pacientes + Prisma + OpenAPI | Postman/Insomnia executa RF001–RF005 sem app |
+| **C** | 5 instrumentos + timeseries + PDF | RF007–RF013 verificáveis por contrato; ordem sugerida: **TUG → Katz → Berg → Tinetti → MEEM** |
+
+A **Fase D** (app consumindo esta API) substitui os mocks implementados na Fase A do frontend.
 
 Detalhe cronológico: [repository-and-workflow](../engineering/repository-and-workflow.md).
 
