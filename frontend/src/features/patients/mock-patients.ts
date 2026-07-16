@@ -14,6 +14,8 @@ export type MockPatient = {
   age: number;
   gender: 'masculino' | 'feminino' | 'outro';
   phone: string;
+  /** Faixa Brucki — MEEM (RF004 / assess.md). */
+  schoolingBand?: string;
   assessments: MockAssessment[];
 };
 
@@ -25,6 +27,7 @@ export const MOCK_PATIENTS: MockPatient[] = [
     age: 77,
     gender: 'feminino',
     phone: '(82) 9 8765-4321',
+    schoolingBand: '1_4_anos',
     assessments: [],
   },
   {
@@ -33,6 +36,7 @@ export const MOCK_PATIENTS: MockPatient[] = [
     age: 82,
     gender: 'masculino',
     phone: '(82) 9 9123-4567',
+    schoolingBand: '5_8_anos',
     assessments: [
       {
         id: 'berg-2025-03-21',

@@ -1,5 +1,5 @@
 import { Href, router, useLocalSearchParams } from 'expo-router';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PatientProfileHeader } from '@/components/patients/PatientProfileHeader';
 import { PatientTestsSection } from '@/components/patients/PatientTestsSection';
@@ -22,7 +22,10 @@ export default function PatientProfileScreen() {
   const patientId = patient.id;
 
   function handleStartTest() {
-    Alert.alert('Em breve', 'O fluxo de avaliação (RF007) será implementado na próxima fase.');
+    router.push({
+      pathname: '/(main)/assessments/apply',
+      params: { patientId },
+    } as Href);
   }
 
   function handleOpenAssessment(assessmentId: string) {

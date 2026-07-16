@@ -34,7 +34,7 @@ export function PatientTestsSection({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Nova avaliação"
-          accessibilityHint="Abrirá a seleção de instrumentos quando disponível"
+          accessibilityHint="Abrir seleção de paciente e teste"
           onPress={onAddTest ?? onStartTest}
           hitSlop={8}
           style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}>

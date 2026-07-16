@@ -8,27 +8,47 @@ export type MockAuthSession = {
   email: string;
 };
 
-/** Credenciais de demonstração exibidas no fluxo mock (qualquer e-mail/senha válidos também funcionam). */
 export const MOCK_DEMO = {
-  email: 'jane.doe@email.com',
-  password: 'Senha@123',
+  email: 'alan@email.com',
+  password: '12345',
 } as const;
+
+export class MockAuthError extends Error {
+  constructor(message = 'E-mail ou senha inválidos.') {
+    super(message);
+    this.name = 'MockAuthError';
+  }
+}
 
 export function isMockAuthEnabled() {
   return env.mockAuth;
 }
 
-export function mockLogin(email: string, _password: string): MockAuthSession {
+export function mockLogin(email: string, password: string): MockAuthSession {
   if (!env.mockAuth) {
     throw new Error('Mock auth desabilitado.');
   }
 
-  const displayName =
-    email.trim().toLowerCase() === MOCK_DEMO.email ? 'Jane Doe' : email.split('@')[0] ?? 'Profissional';
+  const normalizedEmail = email.trim().toLowerCase();
+  if (normalizedEmail !== MOCK_DEMO.email || password !== MOCK_DEMO.password) {
+    throw new MockAuthError();
+  }
 
   return {
     accessToken: MOCK_ACCESS_TOKEN,
-    fullName: displayName.replace(/\b\w/g, (c) => c.toUpperCase()),
+    fullName: 'Alan',
+    email: MOCK_DEMO.email,
+  };
+}
+
+export function mockRegister(fullName: string, email: string): MockAuthSession {
+  if (!env.mockAuth) {
+    throw new Error('Mock auth desabilitado.');
+  }
+
+  return {
+    accessToken: MOCK_ACCESS_TOKEN,
+    fullName: fullName.trim(),
     email: email.trim(),
   };
 }

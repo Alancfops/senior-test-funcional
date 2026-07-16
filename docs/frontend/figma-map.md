@@ -38,6 +38,10 @@
 | Perfil de Paciente (sem testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `maria-de-luordes` |
 | Perfil de Paciente (com testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `albertino-silva` |
 | Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | UI mock |
+| Aplicar Teste | RF007 + RF008 | `src/app/(main)/assessments/apply.tsx` | UI mock; Katz, Berg, Tinetti, MEEM |
+| Tutorial (passo 1 e 2) | RF009 | `src/app/(main)/assessments/tutorial.tsx` | por instrumento; TUG excluído |
+| Coleta questionário | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | Berg, Katz, Tinetti, MEEM |
+| Resultado avaliação | RF011 | `src/app/(main)/assessments/[instrumentCode]/result.tsx` | prévia Fase A; API Fase D |
 
 ---
 

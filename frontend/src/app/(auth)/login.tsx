@@ -9,7 +9,7 @@ import { AuthScreenLayout } from '@/components/auth/AuthScreenLayout';
 import { Button } from '@/components/ui/Button';
 import { TextInput } from '@/components/ui/TextInput';
 import { loginRequest } from '@/features/auth/api';
-import { isMockAuthEnabled, mockLogin } from '@/features/auth/mock';
+import { isMockAuthEnabled, MockAuthError, mockLogin } from '@/features/auth/mock';
 import { LoginFormValues, loginSchema } from '@/features/auth/schemas';
 import { ApiError } from '@/lib/api/client';
 import { saveAccessToken, saveSessionUser } from '@/lib/auth/storage';
@@ -42,7 +42,7 @@ export default function LoginScreen() {
       await saveSessionUser({ fullName: values.email, email: values.email });
       router.replace('/(main)');
     } catch (error) {
-      if (error instanceof ApiError && error.statusCode === 401) {
+      if (error instanceof MockAuthError || (error instanceof ApiError && error.statusCode === 401)) {
         setFormError('E-mail ou senha inválidos.');
       } else if (error instanceof ApiError) {
         setFormError(error.message);
@@ -112,13 +112,6 @@ export default function LoginScreen() {
         </Text>
       ) : null}
 
-      {isMockAuthEnabled() ? (
-        <Text style={styles.mockHint}>
-          Modo demonstração: use qualquer e-mail e senha válidos — ex.{' '}
-          <Text style={styles.mockHintStrong}>jane.doe@email.com</Text>
-        </Text>
-      ) : null}
-
       <Button label="Entrar" onPress={onSubmit} loading={submitting} />
 
       <View style={styles.footer}>
@@ -149,15 +142,6 @@ const styles = StyleSheet.create({
   formError: {
     ...tokens.typography.caption,
     color: tokens.colors.error,
-  },
-  mockHint: {
-    ...tokens.typography.caption,
-    color: tokens.colors.textMuted,
-    textAlign: 'center',
-  },
-  mockHintStrong: {
-    fontWeight: '600',
-    color: tokens.colors.link,
   },
   footer: {
     marginTop: tokens.spacing.sm,

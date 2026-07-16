@@ -51,7 +51,8 @@ export default function HomeTabScreen() {
           <QuickActionCard
             label="Aplicar Teste"
             icon="clipboard-outline"
-            accessibilityHint="Fluxo de avaliação — em breve"
+            onPress={() => router.push('/(main)/assessments/apply' as Href)}
+            accessibilityHint="Abre a seleção de paciente e teste"
           />
         </View>
 
