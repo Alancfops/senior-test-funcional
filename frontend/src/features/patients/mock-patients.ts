@@ -22,6 +22,15 @@ export type MockPatient = {
 /** RF006 — dados mock Fase A (substituir por GET /patients/:id na Fase D). */
 export const MOCK_PATIENTS: MockPatient[] = [
   {
+    id: 'maria-jose-silva',
+    fullName: 'Maria José da Silva',
+    age: 68,
+    gender: 'feminino',
+    phone: '(82) 9 9988-7766',
+    schoolingBand: '9_11_anos',
+    assessments: [],
+  },
+  {
     id: 'maria-de-luordes',
     fullName: 'Maria de Luordes',
     age: 77,

@@ -26,6 +26,8 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-07-16 16:23 | [2026-07-16_16-23.md](2026-07-16_16-23.md) | TUG+cronômetro; Lista Pacientes+Config Figma; Informações do Sistema (Erika, Alan Cristian); **sem commit** |
+| 2026-07-16 15:39 | [2026-07-16_15-39.md](2026-07-16_15-39.md) | Mock auth alan@email.com; fluxo avaliação Berg/Katz/Tinetti/MEEM (apply→tutorial→coleta→resultado); commit+push `22bf6c1` develop |
 | 2026-07-08 19:05 | [2026-07-08_19-05.md](2026-07-08_19-05.md) | Home + cadastro paciente + perfil RF006 (mock); docs fases frontend-first; logo/gradiente; backend agent + `/session` |
 | 2026-07-04 18:25 | [2026-07-04_18-25.md](2026-07-04_18-25.md) | Auth Figma refinado (SDK 54, logo, tokens, cadastro plain); commit+merge em `develop`; local em `develop` |
 | 2026-07-04 15:58 | [2026-07-04_15-58.md](2026-07-04_15-58.md) | Arquitetura commitada/push; skills review+instrumentos; agent backend; app Expo login/cadastro Figma; fix npm/assets |

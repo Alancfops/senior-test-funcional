@@ -8,6 +8,7 @@ export function startQuestionnaireSession(patientId: string, instrumentCode: str
     instrumentCode,
     answers: {},
     startedAt: Date.now(),
+    tugTrials: instrumentCode === 'tug' ? [null, null, null] : undefined,
   };
   return activeSession;
 }
@@ -21,6 +22,13 @@ export function updateQuestionnaireAnswers(answers: QuestionnaireAnswers) {
     return;
   }
   activeSession = { ...activeSession, answers: { ...activeSession.answers, ...answers } };
+}
+
+export function updateTugTrials(trials: (number | null)[]) {
+  if (!activeSession) {
+    return;
+  }
+  activeSession = { ...activeSession, tugTrials: trials };
 }
 
 export function clearQuestionnaireSession() {

@@ -33,14 +33,17 @@
 | Nova Senha | RF003 | `src/app/(auth)/forgot-password/new-password.tsx` | UI; API pendente |
 | Erro (recuperação) | RF003 | `src/app/(auth)/forgot-password/error.tsx` | implementado |
 | Criar Conta / Cadastro fisio | RF001 | `src/app/(auth)/register.tsx` | implementado |
-| Início / Home | RF005 (parcial) | `src/app/(main)/(tabs)/index.tsx` | UI mock; API pendente |
+| Lista de Pacientes | RF005 | `src/app/(main)/(tabs)/patients.tsx` | header azul + busca; UI mock |
+| Configurações | RF002 ext. | `src/app/(main)/(tabs)/settings.tsx` | perfil + menus; logout funcional |
+| Informações do Sistema | — | `src/app/(main)/system-info.tsx` | créditos CESMAC; versão |
 | Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | UI mock; API pendente |
 | Perfil de Paciente (sem testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `maria-de-luordes` |
 | Perfil de Paciente (com testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `albertino-silva` |
 | Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | UI mock |
 | Aplicar Teste | RF007 + RF008 | `src/app/(main)/assessments/apply.tsx` | UI mock; Katz, Berg, Tinetti, MEEM |
-| Tutorial (passo 1 e 2) | RF009 | `src/app/(main)/assessments/tutorial.tsx` | por instrumento; TUG excluído |
+| Tutorial (passo 1 e 2) | RF009 | `src/app/(main)/assessments/tutorial.tsx` | todos os instrumentos incl. TUG |
 | Coleta questionário | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | Berg, Katz, Tinetti, MEEM |
+| Coleta TUG (cronômetro) | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | 3 ensaios + diagramas |
 | Resultado avaliação | RF011 | `src/app/(main)/assessments/[instrumentCode]/result.tsx` | prévia Fase A; API Fase D |
 
 ---

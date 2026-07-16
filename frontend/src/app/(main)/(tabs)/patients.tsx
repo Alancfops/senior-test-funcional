@@ -1,59 +1,75 @@
 import { Href, router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMemo, useState } from 'react';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { PatientListItem } from '@/components/patients/PatientListItem';
+import { SearchBar } from '@/components/main/SearchBar';
+import { TabBlueHeader } from '@/components/main/TabBlueHeader';
 import { MOCK_PATIENTS } from '@/features/patients/mock-patients';
 import { tokens } from '@/theme/tokens';
 
-/** RF005 — lista mock de pacientes (Fase A). */
+/** Figma — Lista de Pacientes (RF005). */
 export default function PatientsTabScreen() {
+  const [search, setSearch] = useState('');
+
+  const patients = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) {
+      return MOCK_PATIENTS;
+    }
+    return MOCK_PATIENTS.filter((patient) => patient.fullName.toLowerCase().includes(query));
+  }, [search]);
+
+  function handleFilter() {
+    Alert.alert('Em breve', 'Filtros avançados de pacientes virão na Fase D.');
+  }
+
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title} accessibilityRole="header">
-          Pacientes
-        </Text>
-        <Text style={styles.subtitle}>
-          Toque em um paciente para abrir o perfil e o histórico de testes.
-        </Text>
+    <View style={styles.root}>
+      <TabBlueHeader title="Paciente">
+        <SearchBar value={search} onChangeText={setSearch} onFilterPress={handleFilter} />
+      </TabBlueHeader>
+
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle} accessibilityRole="header">
+            Lista de Pacientes
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Adicionar paciente"
+            accessibilityHint="Abre o formulário de cadastro"
+            onPress={() => router.push('/(main)/patients/new' as Href)}
+            style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}>
+            <Ionicons name="person-add-outline" size={22} color={tokens.colors.primary} />
+          </Pressable>
+        </View>
 
         <View style={styles.list}>
-          {MOCK_PATIENTS.map((patient) => (
-            <Pressable
-              key={patient.id}
-              accessibilityRole="button"
-              accessibilityLabel={`${patient.fullName}, ${patient.age} anos`}
-              accessibilityHint={
-                patient.assessments.length === 0
-                  ? 'Perfil sem testes cadastrados'
-                  : `${patient.assessments.length} testes no histórico`
-              }
-              onPress={() => router.push(`/(main)/patients/${patient.id}` as Href)}
-              style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
-              <View style={styles.avatar}>
-                <Ionicons name="person-outline" size={28} color={tokens.colors.primary} />
-              </View>
-              <View style={styles.cardBody}>
-                <Text style={styles.name}>{patient.fullName}</Text>
-                <Text style={styles.meta}>
-                  {patient.age} anos ·{' '}
-                  {patient.assessments.length === 0
-                    ? 'Sem testes'
-                    : `${patient.assessments.length} teste(s)`}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={tokens.colors.textMuted} />
-            </Pressable>
-          ))}
+          {patients.length === 0 ? (
+            <Text style={styles.empty}>Nenhum paciente encontrado.</Text>
+          ) : (
+            patients.map((patient) => (
+              <PatientListItem
+                key={patient.id}
+                fullName={patient.fullName}
+                age={patient.age}
+                onPress={() => router.push(`/(main)/patients/${patient.id}` as Href)}
+              />
+            ))
+          )}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
+  root: {
     flex: 1,
     backgroundColor: tokens.colors.pageBackground,
   },
@@ -62,53 +78,34 @@ const styles = StyleSheet.create({
     gap: tokens.spacing.md,
     paddingBottom: tokens.spacing.xl,
   },
-  title: {
-    ...tokens.typography.title,
-    color: tokens.colors.text,
-  },
-  subtitle: {
-    ...tokens.typography.body,
-    color: tokens.colors.textMuted,
-  },
-  list: {
-    gap: tokens.spacing.sm,
-    marginTop: tokens.spacing.sm,
-  },
-  card: {
+  sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: tokens.spacing.sm,
-    backgroundColor: tokens.colors.surface,
-    borderRadius: tokens.radius.lg,
-    padding: tokens.spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 1,
+    justifyContent: 'space-between',
   },
-  pressed: {
-    opacity: 0.92,
+  sectionTitle: {
+    ...tokens.typography.title,
+    fontSize: 20,
+    color: tokens.colors.primary,
   },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: tokens.radius.md,
-    backgroundColor: '#EEF3FF',
+  addButton: {
+    width: 44,
+    height: 44,
+    borderRadius: tokens.radius.full,
+    backgroundColor: 'rgba(54, 102, 224, 0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardBody: {
-    flex: 1,
-    gap: 2,
+  pressed: {
+    opacity: 0.85,
   },
-  name: {
+  list: {
+    gap: tokens.spacing.sm,
+  },
+  empty: {
     ...tokens.typography.body,
-    fontWeight: '600',
-    color: tokens.colors.text,
-  },
-  meta: {
-    ...tokens.typography.caption,
     color: tokens.colors.textMuted,
+    textAlign: 'center',
+    paddingVertical: tokens.spacing.lg,
   },
 });

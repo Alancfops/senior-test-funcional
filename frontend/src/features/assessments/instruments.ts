@@ -7,8 +7,8 @@ export type TutorialStep = {
   bullets?: readonly string[];
 };
 
-export type QuestionnaireInstrument = {
-  code: QuestionnaireInstrumentCode;
+export type TutorialInstrument = {
+  code: string;
   name: string;
   tutorial: {
     step1: TutorialStep;
@@ -16,7 +16,11 @@ export type QuestionnaireInstrument = {
   };
 };
 
-/** Instrumentos de questionário (RF007/RF009). TUG excluído — coleta por tempo (RF010). */
+export type QuestionnaireInstrument = TutorialInstrument & {
+  code: QuestionnaireInstrumentCode;
+};
+
+/** Instrumentos de questionário (RF007/RF009). Coleta em formulário paginado (RF010). */
 export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
   {
     code: 'berg',
@@ -111,4 +115,37 @@ export function getQuestionnaireInstrument(code: string): QuestionnaireInstrumen
 
 export function isQuestionnaireInstrumentCode(code: string): code is QuestionnaireInstrumentCode {
   return QUESTIONNAIRE_INSTRUMENTS.some((item) => item.code === code);
+}
+
+export const TUG_INSTRUMENT: TutorialInstrument = {
+  code: 'tug',
+  name: 'TUG (Timed Up and Go)',
+  tutorial: {
+    step1: {
+      body:
+        'O TUG (Timed Up and Go) avalia mobilidade, equilíbrio dinâmico e risco de quedas pelo tempo para levantar de uma cadeira, caminhar 3 metros, girar, retornar e sentar. São necessários três ensaios reais após uma tentativa prática, com cronômetro integrado.',
+    },
+    step2: {
+      body: 'O resultado bruto é a média aritmética dos três ensaios. A interpretação de triagem segue:',
+      bullets: [
+        'Menor que 10 segundos: desempenho funcional muito bom.',
+        '10 a 13,4 segundos: desempenho funcional esperado — atenção clínica ao contexto.',
+        '13,5 segundos ou mais: maior risco de quedas em idosos da comunidade.',
+      ],
+    },
+  },
+};
+
+export const ALL_ASSESSMENT_INSTRUMENTS = [...QUESTIONNAIRE_INSTRUMENTS, TUG_INSTRUMENT] as const;
+
+export const ALL_ASSESSMENT_INSTRUMENT_OPTIONS = ALL_ASSESSMENT_INSTRUMENTS.map((item) => ({
+  value: item.code,
+  label: item.name,
+}));
+
+export function getAssessmentInstrument(code: string): TutorialInstrument | undefined {
+  if (code === 'tug') {
+    return TUG_INSTRUMENT;
+  }
+  return getQuestionnaireInstrument(code);
 }

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AssessmentScreenHeader } from '@/components/assessments/AssessmentScreenHeader';
 import { ButtonRow } from '@/components/ui/Button';
-import { getQuestionnaireInstrument } from '@/features/assessments/instruments';
+import { getAssessmentInstrument } from '@/features/assessments/instruments';
 import { getMockPatientById } from '@/features/patients/mock-patients';
 import { tokens } from '@/theme/tokens';
 
@@ -16,7 +16,7 @@ export default function AssessmentTutorialScreen() {
     step: string;
   }>();
 
-  const instrument = getQuestionnaireInstrument(instrumentCode ?? '');
+  const instrument = getAssessmentInstrument(instrumentCode ?? '');
   const patient = getMockPatientById(patientId ?? '');
   const currentStep = step === '2' ? 2 : 1;
 

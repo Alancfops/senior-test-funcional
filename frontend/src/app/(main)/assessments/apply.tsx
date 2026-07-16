@@ -6,11 +6,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AssessmentScreenHeader } from '@/components/assessments/AssessmentScreenHeader';
 import { SearchSelectField } from '@/components/assessments/SearchSelectField';
 import { ButtonRow } from '@/components/ui/Button';
-import { QUESTIONNAIRE_INSTRUMENT_OPTIONS } from '@/features/assessments/instruments';
+import { ALL_ASSESSMENT_INSTRUMENT_OPTIONS } from '@/features/assessments/instruments';
 import { MOCK_PATIENTS } from '@/features/patients/mock-patients';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — Aplicar Teste (RF007 + RF008). Questionários Katz, Berg, Tinetti e MEEM. */
+/** Figma — Aplicar Teste (RF007 + RF008). Katz, Berg, Tinetti, MEEM e TUG. */
 export default function ApplyAssessmentScreen() {
   const { patientId: preselectedPatientId } = useLocalSearchParams<{ patientId?: string }>();
 
@@ -75,7 +75,7 @@ export default function ApplyAssessmentScreen() {
             value={instrumentCode}
             placeholder="Buscar Teste"
             searchPlaceholder="Buscar teste…"
-            options={QUESTIONNAIRE_INSTRUMENT_OPTIONS}
+            options={ALL_ASSESSMENT_INSTRUMENT_OPTIONS}
             onChange={setInstrumentCode}
           />
         </View>

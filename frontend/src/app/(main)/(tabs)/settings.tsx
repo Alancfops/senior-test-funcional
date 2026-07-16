@@ -1,13 +1,22 @@
-import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
+import { Href, router } from 'expo-router';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { SettingsMenuItem, SettingsSection } from '@/components/settings/SettingsMenuItem';
 import { useSessionUser } from '@/hooks/use-session-user';
 import { clearAccessToken } from '@/lib/auth/storage';
 import { tokens } from '@/theme/tokens';
 
+function showSoon(label: string) {
+  Alert.alert('Em breve', `${label} será disponibilizado em uma próxima versão.`);
+}
+
+/** Figma — Configurações (cores adaptadas ao design system #3666E0 / #F6F7FC). */
 export default function SettingsTabScreen() {
+  const insets = useSafeAreaInsets();
   const sessionUser = useSessionUser();
+  const displayName = sessionUser?.fullName ?? 'Profissional';
 
   async function handleLogout() {
     await clearAccessToken();
@@ -15,18 +24,62 @@ export default function SettingsTabScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.content}>
-        <Text style={styles.title} accessibilityRole="header">
-          Configurações
-        </Text>
+    <View style={styles.root}>
+      <View style={[styles.topBand, { paddingTop: insets.top }]}>
+        <View style={styles.topBar}>
+          <View style={styles.topBarSide} />
+          <Text style={styles.topTitle} accessibilityRole="header">
+            Configurações
+          </Text>
+          <View style={styles.topBarSide} />
+        </View>
+      </View>
 
-        {sessionUser ? (
-          <View style={styles.profileCard}>
-            <Text style={styles.profileName}>{sessionUser.fullName}</Text>
-            <Text style={styles.profileEmail}>{sessionUser.email}</Text>
+      <ScrollView
+        style={styles.sheet}
+        contentContainerStyle={[
+          styles.sheetContent,
+          { paddingBottom: insets.bottom + tokens.spacing.xl },
+        ]}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.profileBlock}>
+          <View style={styles.avatarRing}>
+            <Image
+              source={require('@/assets/images/brand/seniortest-logo-circle.png')}
+              style={styles.avatar}
+              contentFit="cover"
+              accessibilityIgnoresInvertColors
+            />
           </View>
-        ) : null}
+          <Text style={styles.profileName}>{displayName}</Text>
+          {sessionUser?.email ? (
+            <Text style={styles.profileEmail}>{sessionUser.email}</Text>
+          ) : null}
+        </View>
+
+        <SettingsSection title="Geral">
+          <SettingsMenuItem label="Editar perfil" onPress={() => showSoon('Editar perfil')} />
+          <SettingsMenuItem
+            label="Gerenciar preferências"
+            onPress={() => showSoon('Gerenciar preferências')}
+          />
+        </SettingsSection>
+
+        <SettingsSection title="Segurança e privacidade">
+          <SettingsMenuItem
+            label="Permissões de Usuário"
+            onPress={() => showSoon('Permissões de Usuário')}
+          />
+          <SettingsMenuItem
+            label="Informações do Sistema"
+            onPress={() => router.push('/(main)/system-info' as Href)}
+          />
+          <SettingsMenuItem
+            label="LGPD e Termos de uso"
+            onPress={() => showSoon('LGPD e Termos de uso')}
+          />
+          <SettingsMenuItem label="Mudar senha" onPress={() => showSoon('Mudar senha')} />
+        </SettingsSection>
 
         <Pressable
           accessibilityRole="button"
@@ -35,55 +88,90 @@ export default function SettingsTabScreen() {
           style={({ pressed }) => [styles.logout, pressed && styles.logoutPressed]}>
           <Text style={styles.logoutText}>Sair</Text>
         </Pressable>
-      </View>
-    </SafeAreaView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
+  root: {
     flex: 1,
-    backgroundColor: tokens.colors.pageBackground,
+    backgroundColor: tokens.colors.primary,
   },
-  content: {
+  topBand: {
+    backgroundColor: tokens.colors.primary,
+    paddingHorizontal: tokens.spacing.lg,
+    paddingBottom: tokens.spacing.sm,
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: tokens.touchTargetMin,
+  },
+  topBarSide: {
+    width: tokens.touchTargetMin,
+  },
+  topTitle: {
     flex: 1,
-    padding: tokens.spacing.lg,
+    ...tokens.typography.body,
+    fontWeight: '600',
+    color: tokens.colors.onPrimary,
+    textAlign: 'center',
+  },
+  sheet: {
+    flex: 1,
+    backgroundColor: tokens.colors.surface,
+    borderTopLeftRadius: tokens.radius.cardTop,
+    borderTopRightRadius: tokens.radius.cardTop,
+  },
+  sheetContent: {
+    paddingHorizontal: tokens.spacing.lg,
+    paddingTop: tokens.spacing.xl,
     gap: tokens.spacing.lg,
   },
-  title: {
-    ...tokens.typography.title,
-    color: tokens.colors.text,
+  profileBlock: {
+    alignItems: 'center',
+    gap: tokens.spacing.sm,
+    marginBottom: tokens.spacing.sm,
   },
-  profileCard: {
-    backgroundColor: tokens.colors.surface,
-    borderRadius: tokens.radius.lg,
-    padding: tokens.spacing.lg,
-    gap: 4,
+  avatarRing: {
+    width: 88,
+    height: 88,
+    borderRadius: tokens.radius.full,
+    backgroundColor: tokens.colors.pageBackground,
+    padding: 3,
+    overflow: 'hidden',
+  },
+  avatar: {
+    width: '100%',
+    height: '100%',
+    borderRadius: tokens.radius.full,
   },
   profileName: {
-    ...tokens.typography.body,
+    ...tokens.typography.title,
+    fontSize: 20,
     color: tokens.colors.text,
-    fontWeight: '600',
+    textAlign: 'center',
   },
   profileEmail: {
     ...tokens.typography.caption,
     color: tokens.colors.textMuted,
+    textAlign: 'center',
   },
   logout: {
-    marginTop: 'auto',
     minHeight: tokens.touchTargetMin,
-    borderRadius: tokens.radius.pill,
-    borderWidth: 1,
-    borderColor: tokens.colors.primary,
+    borderRadius: tokens.radius.lg,
+    backgroundColor: 'rgba(220, 38, 38, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: tokens.spacing.lg,
+    marginTop: tokens.spacing.sm,
   },
   logoutPressed: {
     opacity: 0.85,
   },
   logoutText: {
     ...tokens.typography.button,
-    color: tokens.colors.primary,
+    color: tokens.colors.error,
   },
 });

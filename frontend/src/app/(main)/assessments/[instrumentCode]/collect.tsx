@@ -5,8 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssessmentCollectHeader } from '@/components/assessments/AssessmentCollectHeader';
 import { QuestionnaireItemCard } from '@/components/assessments/QuestionnaireItemCard';
+import { TugCollectScreen } from '@/components/assessments/TugCollectScreen';
 import { ButtonRow } from '@/components/ui/Button';
-import { getQuestionnaireInstrument } from '@/features/assessments/instruments';
+import { getAssessmentInstrument } from '@/features/assessments/instruments';
 import {
   formatProgress,
   getQuestionnaireDefinition,
@@ -24,7 +25,7 @@ import type { QuestionnaireAnswers } from '@/features/assessments/types';
 import { getMockPatientById } from '@/features/patients/mock-patients';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — coleta RF010 (questionários Katz, Berg, Tinetti, MEEM). */
+/** Figma — coleta RF010 (questionários + TUG). */
 export default function AssessmentCollectScreen() {
   const insets = useSafeAreaInsets();
   const { instrumentCode, patientId } = useLocalSearchParams<{
@@ -32,9 +33,20 @@ export default function AssessmentCollectScreen() {
     patientId: string;
   }>();
 
-  const instrumentMeta = getQuestionnaireInstrument(instrumentCode ?? '');
-  const definition = getQuestionnaireDefinition(instrumentCode ?? '');
   const patient = getMockPatientById(patientId ?? '');
+
+  if (instrumentCode === 'tug' && patient) {
+    return (
+      <TugCollectScreen
+        patient={patient}
+        patientId={patientId ?? ''}
+        instrumentCode={instrumentCode}
+      />
+    );
+  }
+
+  const instrumentMeta = getAssessmentInstrument(instrumentCode ?? '');
+  const definition = getQuestionnaireDefinition(instrumentCode ?? '');
 
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState<QuestionnaireAnswers>({});

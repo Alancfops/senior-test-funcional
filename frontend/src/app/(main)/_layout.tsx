@@ -8,6 +8,7 @@ export default function MainLayout() {
       <Stack.Screen name="patients/new" />
       <Stack.Screen name="patients/[id]" />
       <Stack.Screen name="patients/[id]/assessment/[assessmentId]" />
+      <Stack.Screen name="system-info" />
     </Stack>
   );
 }
