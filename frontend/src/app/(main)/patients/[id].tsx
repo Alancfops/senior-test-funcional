@@ -1,47 +1,117 @@
-import { Href, router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Href, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PatientProfileHeader } from '@/components/patients/PatientProfileHeader';
+import { PatientRegistrationSection } from '@/components/patients/PatientRegistrationSection';
 import { PatientTestsSection } from '@/components/patients/PatientTestsSection';
-import { getMockPatientById } from '@/features/patients/mock-patients';
+import { getPatientByIdRequest, PatientRecord } from '@/features/patients/api';
+import { getGenderLabel, getSchoolingLabel } from '@/features/patients/constants';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — Perfil de Paciente (RF006). Estados: sem testes / com histórico. */
+/** Figma — Perfil de Paciente (RF006). */
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const patient = getMockPatientById(id ?? '');
+  const patientId = id ?? '';
 
-  if (!patient) {
-    return (
-      <View style={styles.notFound}>
-        <Text style={styles.notFoundText}>Paciente não encontrado.</Text>
-      </View>
-    );
-  }
+  const [patient, setPatient] = useState<PatientRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-  const patientId = patient.id;
+  const loadPatient = useCallback(async () => {
+    if (!patientId) {
+      setPatient(null);
+      setLoadError('Paciente não encontrado.');
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setLoadError(null);
+
+    try {
+      const response = await getPatientByIdRequest(patientId);
+      setPatient(response);
+    } catch (error) {
+      setPatient(null);
+      if (error instanceof ApiError && error.statusCode === 404) {
+        setLoadError('Paciente não encontrado.');
+      } else if (error instanceof ApiError && error.statusCode === 401) {
+        setLoadError('Sessão expirada. Saia e faça login novamente.');
+      } else if (error instanceof ApiError) {
+        setLoadError(error.message);
+      } else {
+        setLoadError('Não foi possível carregar o paciente.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [patientId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadPatient();
+    }, [loadPatient]),
+  );
 
   function handleStartTest() {
+    if (!patient) {
+      return;
+    }
+
     router.push({
       pathname: '/(main)/assessments/apply',
-      params: { patientId },
+      params: { patientId: patient.id },
     } as Href);
   }
 
   function handleOpenAssessment(assessmentId: string) {
-    router.push(`/(main)/patients/${patientId}/assessment/${assessmentId}` as Href);
+    if (!patient) {
+      return;
+    }
+
+    router.push(`/(main)/patients/${patient.id}/assessment/${assessmentId}` as Href);
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator color={tokens.colors.primary} accessibilityLabel="Carregando paciente" />
+      </View>
+    );
+  }
+
+  if (!patient || loadError) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.notFoundText} accessibilityRole="alert">
+          {loadError ?? 'Paciente não encontrado.'}
+        </Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.root}>
-      <PatientProfileHeader fullName={patient.fullName} age={patient.age} />
+      <PatientProfileHeader
+        fullName={patient.fullName}
+        age={patient.age}
+        avatarUrl={patient.avatarUrl}
+      />
 
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}>
+        <PatientRegistrationSection
+          genderLabel={getGenderLabel(patient.gender)}
+          contact={patient.contact}
+          schoolingLabel={getSchoolingLabel(patient.schoolingBand)}
+        />
+
         <PatientTestsSection
-          assessments={patient.assessments}
+          assessments={[]}
           patientName={patient.fullName}
           onStartTest={handleStartTest}
           onAddTest={handleStartTest}
@@ -62,9 +132,10 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: tokens.spacing.lg,
+    gap: tokens.spacing.lg,
     paddingBottom: tokens.spacing.xl,
   },
-  notFound: {
+  centered: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -74,5 +145,6 @@ const styles = StyleSheet.create({
   notFoundText: {
     ...tokens.typography.body,
     color: tokens.colors.textMuted,
+    textAlign: 'center',
   },
 });

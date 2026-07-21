@@ -1,15 +1,48 @@
-import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AuthScreenLayout } from '@/components/auth/AuthScreenLayout';
 import { Button } from '@/components/ui/Button';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — Erro no fluxo de recuperação. */
+/** Figma — Erro no fluxo de recuperação (RF003). */
 export default function ForgotPasswordErrorScreen() {
+  const { errorName, errorMessage, email } = useLocalSearchParams<{
+    errorName?: string;
+    errorMessage?: string;
+    email?: string;
+  }>();
+
+  const title = errorName?.trim() || 'Falha no envio';
+  const message =
+    errorMessage?.trim() ||
+    'Não foi possível concluir a recuperação de senha. Tente novamente.';
+
+  function handleDismiss() {
+    if (email) {
+      router.replace({
+        pathname: '/(auth)/forgot-password',
+        params: { email },
+      });
+      return;
+    }
+    router.back();
+  }
+
   return (
-    <AuthScreenLayout title="Erro! Código inválido" subtitle="Verifique o código e tente novamente.">
-      <Button label="Entendi!" variant="outline" onPress={() => router.back()} />
+    <AuthScreenLayout scrollable={false}>
+      <View style={styles.headerBlock}>
+        <Text
+          style={styles.titleRow}
+          accessibilityRole="header"
+          accessibilityLabel={`Erro. ${title}`}>
+          <Text style={styles.errorLabel}>Erro! </Text>
+          <Text style={styles.errorName}>{title}</Text>
+        </Text>
+        <Text style={styles.message}>{message}</Text>
+      </View>
+
+      <Button label="Entendi!" variant="outline" onPress={handleDismiss} />
 
       <Pressable
         accessibilityRole="link"
@@ -22,6 +55,25 @@ export default function ForgotPasswordErrorScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerBlock: {
+    marginBottom: tokens.spacing.lg,
+    gap: tokens.spacing.sm,
+  },
+  titleRow: {
+    ...tokens.typography.title,
+  },
+  errorLabel: {
+    color: tokens.colors.error,
+    fontWeight: '700',
+  },
+  errorName: {
+    color: tokens.colors.text,
+    fontWeight: '700',
+  },
+  message: {
+    ...tokens.typography.subtitle,
+    color: tokens.colors.textMuted,
+  },
   backLink: {
     alignItems: 'center',
     minHeight: tokens.touchTargetMin,
@@ -29,6 +81,7 @@ const styles = StyleSheet.create({
   },
   backLinkText: {
     ...tokens.typography.link,
-    color: tokens.colors.textMuted,
+    color: tokens.colors.link,
+    fontWeight: '600',
   },
 });

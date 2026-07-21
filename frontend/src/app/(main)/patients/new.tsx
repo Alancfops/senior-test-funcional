@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,17 +14,25 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ProfilePhotoField } from '@/components/patients/ProfilePhotoField';
+import { ProfilePhotoField, PatientAvatarSelection } from '@/components/patients/ProfilePhotoField';
 import { ButtonRow } from '@/components/ui/Button';
 import { SelectField } from '@/components/ui/SelectField';
 import { TextInput } from '@/components/ui/TextInput';
+import { createPatientRequest } from '@/features/patients/api';
 import { GENDER_OPTIONS, SCHOOLING_OPTIONS } from '@/features/patients/constants';
-import { PatientFormValues, patientSchema } from '@/features/patients/schemas';
+import { PatientFormValues, parsePatientAge, patientSchema } from '@/features/patients/schemas';
+import { ApiError } from '@/lib/api/client';
+import {
+  BRAZIL_MOBILE_PHONE_MASK_MAX_LENGTH,
+  formatBrazilMobilePhone,
+} from '@/lib/format/brazil-mobile-phone';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — Adicionar Paciente (RF004). Cadastro mockado até API Fase A. */
+/** Figma — Adicionar Paciente (RF004). */
 export default function NewPatientScreen() {
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<PatientAvatarSelection | null>(null);
 
   const {
     control,
@@ -43,13 +50,35 @@ export default function NewPatientScreen() {
   });
 
   const onSubmit = handleSubmit(async (values) => {
+    setFormError(null);
     setSubmitting(true);
     try {
-      // Mock — persistência local/API virá na Fase C (POST /patients).
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      Alert.alert('Paciente cadastrado', `${values.fullName} foi registrado (demonstração).`, [
-        { text: 'OK', onPress: () => router.back() },
-      ]);
+      await createPatientRequest({
+        fullName: values.fullName.trim(),
+        age: parsePatientAge(values.age),
+        gender: values.gender,
+        contact: values.phone.trim(),
+        schoolingBand: values.schoolingBand,
+        ...(avatar
+          ? {
+              avatarImage: {
+                mimeType: avatar.mimeType,
+                base64: avatar.base64,
+              },
+            }
+          : {}),
+      });
+      router.back();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.statusCode === 401) {
+          setFormError('Sessão expirada. Saia e faça login novamente.');
+        } else {
+          setFormError(error.message);
+        }
+      } else {
+        setFormError('Não foi possível cadastrar o paciente. Tente novamente.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -83,7 +112,7 @@ export default function NewPatientScreen() {
             Preencha os dados do paciente para realizar o cadastro no aplicativo.
           </Text>
 
-          <ProfilePhotoField />
+          <ProfilePhotoField value={avatar} onChange={setAvatar} />
 
           <View style={styles.form}>
             <Controller
@@ -144,6 +173,7 @@ export default function NewPatientScreen() {
               render={({ field: { onChange, value } }) => (
                 <SelectField
                   label="Escolaridade"
+                  required
                   value={value}
                   placeholder="Selecione a escolaridade"
                   options={SCHOOLING_OPTIONS}
@@ -162,16 +192,25 @@ export default function NewPatientScreen() {
                   labelTone="neutral"
                   required
                   value={value}
-                  onChangeText={onChange}
+                  onChangeText={(text) => onChange(formatBrazilMobilePhone(text))}
                   onBlur={onBlur}
                   error={errors.phone?.message}
                   keyboardType="phone-pad"
+                  autoComplete="tel"
+                  textContentType="telephoneNumber"
                   placeholder="(82) 9 9999-9999"
+                  maxLength={BRAZIL_MOBILE_PHONE_MASK_MAX_LENGTH}
                   returnKeyType="done"
                 />
               )}
             />
           </View>
+
+          {formError ? (
+            <Text style={styles.formError} accessibilityRole="alert" accessibilityLiveRegion="polite">
+              {formError}
+            </Text>
+          ) : null}
 
           <ButtonRow
             backLabel="Voltar"
@@ -233,5 +272,9 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: tokens.spacing.md,
+  },
+  formError: {
+    ...tokens.typography.caption,
+    color: tokens.colors.error,
   },
 });

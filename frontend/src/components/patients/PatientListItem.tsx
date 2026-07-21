@@ -2,16 +2,20 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { resolvePatientAvatarUrl } from '@/features/patients/avatar-url';
 import { tokens } from '@/theme/tokens';
 
 type PatientListItemProps = {
   fullName: string;
   age: number;
+  avatarUrl?: string | null;
   onPress: () => void;
 };
 
 /** Figma — card da lista de pacientes (RF005). */
-export function PatientListItem({ fullName, age, onPress }: PatientListItemProps) {
+export function PatientListItem({ fullName, age, avatarUrl, onPress }: PatientListItemProps) {
+  const resolvedAvatar = resolvePatientAvatarUrl(avatarUrl);
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -21,7 +25,11 @@ export function PatientListItem({ fullName, age, onPress }: PatientListItemProps
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
       <View style={styles.photoWrap}>
         <Image
-          source={require('@/assets/images/brand/seniortest-logo-circle.png')}
+          source={
+            resolvedAvatar
+              ? { uri: resolvedAvatar }
+              : require('@/assets/images/brand/seniortest-logo-circle.png')
+          }
           style={styles.photo}
           contentFit="cover"
           accessibilityIgnoresInvertColors

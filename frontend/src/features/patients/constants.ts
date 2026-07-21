@@ -15,6 +15,18 @@ export const SCHOOLING_OPTIONS = [
 export type GenderValue = (typeof GENDER_OPTIONS)[number]['value'];
 export type SchoolingValue = (typeof SCHOOLING_OPTIONS)[number]['value'];
 
+export function getGenderLabel(value: string) {
+  return GENDER_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
+
+export function getSchoolingLabel(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  return SCHOOLING_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
+
 export const MOCK_RECENT_ACTIVITIES = [
   {
     id: '1',

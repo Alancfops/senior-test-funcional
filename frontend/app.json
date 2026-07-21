@@ -33,7 +33,13 @@
           "imageWidth": 76
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permita acesso às fotos para adicionar a imagem do paciente."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

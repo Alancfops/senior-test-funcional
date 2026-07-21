@@ -37,9 +37,9 @@ export default function LoginScreen() {
         return;
       }
 
-      const { accessToken } = await loginRequest(values.email, values.password);
+      const { accessToken, user } = await loginRequest(values.email, values.password);
       await saveAccessToken(accessToken);
-      await saveSessionUser({ fullName: values.email, email: values.email });
+      await saveSessionUser({ fullName: user.fullName, email: user.email });
       router.replace('/(main)');
     } catch (error) {
       if (error instanceof MockAuthError || (error instanceof ApiError && error.statusCode === 401)) {

@@ -1,22 +1,37 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { AuthScreenLayout } from '@/components/auth/AuthScreenLayout';
 import { Button } from '@/components/ui/Button';
 import { OtpInput } from '@/components/ui/OtpInput';
+import { pushForgotPasswordError } from '@/features/auth/forgot-password-navigation';
 import { tokens } from '@/theme/tokens';
 
 /** Figma — Digite o código (RF003 passo 3). */
 export default function ForgotPasswordCodeScreen() {
+  const { email } = useLocalSearchParams<{ email?: string }>();
   const [code, setCode] = useState('');
 
   function handleConfirm() {
-    if (code.length !== 6) {
-      router.push('/(auth)/forgot-password/error');
+    if (!email) {
+      router.replace('/(auth)/forgot-password');
       return;
     }
-    router.push('/(auth)/forgot-password/new-password');
+
+    if (code.length !== 6) {
+      pushForgotPasswordError(router, {
+        errorName: 'Código incompleto',
+        errorMessage: 'Digite os 6 dígitos enviados por e-mail.',
+        email,
+      });
+      return;
+    }
+
+    router.push({
+      pathname: '/(auth)/forgot-password/new-password',
+      params: { email, token: code },
+    });
   }
 
   return (

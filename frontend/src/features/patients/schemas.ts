@@ -1,11 +1,10 @@
 import { z } from 'zod';
 
 import { GENDER_OPTIONS, GenderValue, SCHOOLING_OPTIONS, SchoolingValue } from '@/features/patients/constants';
+import { BRAZIL_MOBILE_PHONE_DISPLAY_REGEX } from '@/lib/format/brazil-mobile-phone';
 
 const genderValues = GENDER_OPTIONS.map((o) => o.value) as [string, ...string[]];
 const schoolingValues = SCHOOLING_OPTIONS.map((o) => o.value) as [string, ...string[]];
-
-const phoneRegex = /^(\(?\d{2}\)?\s?)?(?:9\s?)?\d{4}[-\s]?\d{4}$/;
 
 export const patientSchema = z.object({
   fullName: z
@@ -32,15 +31,16 @@ export const patientSchema = z.object({
     ),
   schoolingBand: z
     .string()
+    .min(1, 'Selecione a escolaridade.')
     .refine(
-      (value) => value === '' || schoolingValues.includes(value as SchoolingValue),
-      'Selecione uma escolaridade válida.',
+      (value): value is SchoolingValue => schoolingValues.includes(value as SchoolingValue),
+      'Selecione a escolaridade.',
     ),
   phone: z
     .string()
     .trim()
     .min(1, 'Informe o telefone.')
-    .regex(phoneRegex, 'Digite um telefone celular válido.'),
+    .regex(BRAZIL_MOBILE_PHONE_DISPLAY_REGEX, 'Digite um telefone celular válido.'),
 });
 
 export type PatientFormValues = {

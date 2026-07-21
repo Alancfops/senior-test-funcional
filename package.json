@@ -3,7 +3,9 @@
   "private": true,
   "description": "Senior Teste Funcional — docs + monorepo (backend, frontend)",
   "scripts": {
-    "start": "npm run start --prefix frontend",
+    "setup": "make setup",
+    "dev": "make start",
+    "start": "make start",
     "web": "npm run web --prefix frontend",
     "android": "npm run android --prefix frontend",
     "tunnel": "npm run start:tunnel --prefix frontend",

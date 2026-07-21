@@ -4,16 +4,19 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { resolvePatientAvatarUrl } from '@/features/patients/avatar-url';
 import { tokens } from '@/theme/tokens';
 
 type PatientProfileHeaderProps = {
   fullName: string;
   age: number;
+  avatarUrl?: string | null;
 };
 
 /** Figma — Perfil de Paciente: header azul, avatar, nome e idade. */
-export function PatientProfileHeader({ fullName, age }: PatientProfileHeaderProps) {
+export function PatientProfileHeader({ fullName, age, avatarUrl }: PatientProfileHeaderProps) {
   const insets = useSafeAreaInsets();
+  const resolvedAvatar = resolvePatientAvatarUrl(avatarUrl);
 
   return (
     <View style={[styles.wrap, { paddingTop: insets.top }]}>
@@ -35,7 +38,11 @@ export function PatientProfileHeader({ fullName, age }: PatientProfileHeaderProp
       <View style={styles.profileRow}>
         <View style={styles.avatarRing}>
           <Image
-            source={require('@/assets/images/brand/seniortest-logo-circle.png')}
+            source={
+              resolvedAvatar
+                ? { uri: resolvedAvatar }
+                : require('@/assets/images/brand/seniortest-logo-circle.png')
+            }
             style={styles.avatar}
             contentFit="cover"
             accessibilityIgnoresInvertColors

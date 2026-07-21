@@ -34,6 +34,7 @@ Visão resumida: [README na raiz](../README.md).
 | Mapa Figma ↔ rotas ↔ RFs | [frontend/figma-map.md](frontend/figma-map.md) |
 | Modelo de dados | [engineering/data-model.md](engineering/data-model.md) |
 | Fases A→E | [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md) |
+| Decisões explícitas (TCC, e-mail, escopo) | [engineering/project-decisions.md](engineering/project-decisions.md) |
 | Protocolos clínicos | [clinical-protocols/README.md](clinical-protocols/README.md) |
 | Contratos (OpenAPI) | [contracts/README.md](contracts/README.md) — snapshots quando existirem |
 | Roteiro MEEM (exemplo) | [clinical-protocols/instruments/meem/assess.md](clinical-protocols/instruments/meem/assess.md) |

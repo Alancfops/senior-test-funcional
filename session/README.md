@@ -26,6 +26,8 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-07-21 17:01 | [2026-07-21_17-01.md](2026-07-21_17-01.md) | Auth RF001–RF003 Gmail projeto; erro RF003 Figma; **RF004 POST /patients** + isolamento; sem domínio (TCC) |
+| 2026-07-21 15:50 | [2026-07-21_15-50.md](2026-07-21_15-50.md) | **Sem domínio** (TCC); RF003 Gmail dedicado; decisão em `docs/engineering/project-decisions.md` |
 | 2026-07-16 16:23 | [2026-07-16_16-23.md](2026-07-16_16-23.md) | TUG+cronômetro; Lista Pacientes+Config Figma; Informações do Sistema (Erika, Alan Cristian); **sem commit** |
 | 2026-07-16 15:39 | [2026-07-16_15-39.md](2026-07-16_15-39.md) | Mock auth alan@email.com; fluxo avaliação Berg/Katz/Tinetti/MEEM (apply→tutorial→coleta→resultado); commit+push `22bf6c1` develop |
 | 2026-07-08 19:05 | [2026-07-08_19-05.md](2026-07-08_19-05.md) | Home + cadastro paciente + perfil RF006 (mock); docs fases frontend-first; logo/gradiente; backend agent + `/session` |

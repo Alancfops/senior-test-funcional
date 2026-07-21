@@ -1,25 +1,60 @@
-import { Href, router } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Href, router, useFocusEffect } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { PatientListItem } from '@/components/patients/PatientListItem';
 import { SearchBar } from '@/components/main/SearchBar';
 import { TabBlueHeader } from '@/components/main/TabBlueHeader';
-import { MOCK_PATIENTS } from '@/features/patients/mock-patients';
+import { listPatientsRequest, PatientRecord } from '@/features/patients/api';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
 /** Figma — Lista de Pacientes (RF005). */
 export default function PatientsTabScreen() {
   const [search, setSearch] = useState('');
+  const [patients, setPatients] = useState<PatientRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-  const patients = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    if (!query) {
-      return MOCK_PATIENTS;
+  const loadPatients = useCallback(async (query: string) => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const response = await listPatientsRequest({
+        search: query,
+        limit: 50,
+      });
+      setPatients(response.data);
+    } catch (error) {
+      if (error instanceof ApiError && error.statusCode === 401) {
+        setLoadError('Sessão expirada. Saia e faça login novamente.');
+      } else if (error instanceof ApiError) {
+        setLoadError(error.message);
+      } else {
+        setLoadError('Não foi possível carregar os pacientes.');
+      }
+      setPatients([]);
+    } finally {
+      setLoading(false);
     }
-    return MOCK_PATIENTS.filter((patient) => patient.fullName.toLowerCase().includes(query));
-  }, [search]);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadPatients(search);
+    }, [loadPatients, search]),
+  );
+
+  const emptyMessage = useMemo(() => {
+    if (loadError) {
+      return loadError;
+    }
+    if (search.trim()) {
+      return 'Nenhum registro encontrado';
+    }
+    return 'Nenhum paciente cadastrado';
+  }, [loadError, search]);
 
   function handleFilter() {
     Alert.alert('Em breve', 'Filtros avançados de pacientes virão na Fase D.');
@@ -49,15 +84,26 @@ export default function PatientsTabScreen() {
           </Pressable>
         </View>
 
+        {loading ? (
+          <ActivityIndicator
+            color={tokens.colors.primary}
+            accessibilityLabel="Carregando pacientes"
+            style={styles.loader}
+          />
+        ) : null}
+
         <View style={styles.list}>
-          {patients.length === 0 ? (
-            <Text style={styles.empty}>Nenhum paciente encontrado.</Text>
+          {!loading && patients.length === 0 ? (
+            <Text style={styles.empty} accessibilityRole="alert">
+              {emptyMessage}
+            </Text>
           ) : (
             patients.map((patient) => (
               <PatientListItem
                 key={patient.id}
                 fullName={patient.fullName}
                 age={patient.age}
+                avatarUrl={patient.avatarUrl}
                 onPress={() => router.push(`/(main)/patients/${patient.id}` as Href)}
               />
             ))
@@ -98,6 +144,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.85,
+  },
+  loader: {
+    marginVertical: tokens.spacing.lg,
   },
   list: {
     gap: tokens.spacing.sm,
