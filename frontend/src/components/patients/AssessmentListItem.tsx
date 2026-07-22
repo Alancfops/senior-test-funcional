@@ -6,11 +6,17 @@ import { tokens } from '@/theme/tokens';
 type AssessmentListItemProps = {
   instrumentName: string;
   displayDate: string;
+  resultSummary?: string;
   onPress?: () => void;
 };
 
 /** Figma — card de teste no perfil (lista RF006). */
-export function AssessmentListItem({ instrumentName, displayDate, onPress }: AssessmentListItemProps) {
+export function AssessmentListItem({
+  instrumentName,
+  displayDate,
+  resultSummary,
+  onPress,
+}: AssessmentListItemProps) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -19,6 +25,7 @@ export function AssessmentListItem({ instrumentName, displayDate, onPress }: Ass
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
       <View style={styles.content}>
         <Text style={styles.title}>{instrumentName}</Text>
+        {resultSummary ? <Text style={styles.result}>{resultSummary}</Text> : null}
         <Text style={styles.date}>Data de Avaliação: {displayDate}.</Text>
       </View>
       <Ionicons name="chevron-forward" size={20} color={tokens.colors.textMuted} />
@@ -51,6 +58,11 @@ const styles = StyleSheet.create({
     ...tokens.typography.body,
     fontWeight: '600',
     color: tokens.colors.text,
+  },
+  result: {
+    ...tokens.typography.caption,
+    color: tokens.colors.primary,
+    fontWeight: '600',
   },
   date: {
     ...tokens.typography.caption,

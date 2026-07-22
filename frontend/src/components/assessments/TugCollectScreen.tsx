@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { Href, router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssessmentCollectHeader } from '@/components/assessments/AssessmentCollectHeader';
@@ -10,14 +10,21 @@ import { Button } from '@/components/ui/Button';
 import {
   ensureQuestionnaireSession,
   getQuestionnaireSession,
+  syncTugDraftPayload,
   updateTugTrials,
 } from '@/features/assessments/session';
 import { TUG_TRIALS } from '@/features/assessments/tug/constants';
-import type { MockPatient } from '@/features/patients/mock-patients';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
+type TugPatient = {
+  id: string;
+  fullName: string;
+  age: number;
+};
+
 type TugCollectScreenProps = {
-  patient: MockPatient;
+  patient: TugPatient;
   patientId: string;
   instrumentCode: string;
 };
@@ -28,6 +35,7 @@ export function TugCollectScreen({ patient, patientId, instrumentCode }: TugColl
   const [trialIndex, setTrialIndex] = useState(0);
   const [trials, setTrials] = useState<(number | null)[]>([null, null, null]);
   const [formError, setFormError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const trial = TUG_TRIALS[trialIndex];
   const isLastTrial = trialIndex >= TUG_TRIALS.length - 1;
@@ -61,22 +69,35 @@ export function TugCollectScreen({ patient, patientId, instrumentCode }: TugColl
     router.back();
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (trials[trialIndex] === null) {
       setFormError('Pare o cronômetro para registrar o tempo deste ensaio antes de continuar.');
       return;
     }
 
     if (isLastTrial) {
-      const session = getQuestionnaireSession();
-      router.push({
-        pathname: '/(main)/assessments/[instrumentCode]/result',
-        params: {
-          instrumentCode,
-          patientId,
-          startedAt: String(session?.startedAt ?? Date.now()),
-        },
-      } as Href);
+      setSubmitting(true);
+      setFormError(null);
+      try {
+        await syncTugDraftPayload(trials);
+        const session = getQuestionnaireSession();
+        router.push({
+          pathname: '/(main)/assessments/[instrumentCode]/result',
+          params: {
+            instrumentCode,
+            patientId,
+            startedAt: String(session?.startedAt ?? Date.now()),
+          },
+        } as Href);
+      } catch (error) {
+        if (error instanceof ApiError) {
+          setFormError(error.message);
+        } else {
+          setFormError('Não foi possível salvar os tempos do TUG. Tente novamente.');
+        }
+      } finally {
+        setSubmitting(false);
+      }
       return;
     }
 
@@ -138,8 +159,10 @@ export function TugCollectScreen({ patient, patientId, instrumentCode }: TugColl
       <View style={[styles.footer, { paddingBottom: insets.bottom + tokens.spacing.md }]}>
         <Button
           label={isLastTrial ? 'Finalizar Teste' : 'Próximo Ensaio'}
-          onPress={handleNext}
+          onPress={() => void handleNext()}
+          disabled={submitting}
         />
+        {submitting ? <ActivityIndicator color={tokens.colors.primary} /> : null}
       </View>
     </View>
   );

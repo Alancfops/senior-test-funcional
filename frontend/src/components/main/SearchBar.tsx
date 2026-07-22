@@ -8,6 +8,7 @@ type SearchBarProps = {
   onChangeText: (text: string) => void;
   onFilterPress?: () => void;
   placeholder?: string;
+  filterActive?: boolean;
 };
 
 export function SearchBar({
@@ -15,6 +16,7 @@ export function SearchBar({
   onChangeText,
   onFilterPress,
   placeholder = 'Buscar',
+  filterActive = false,
 }: SearchBarProps) {
   return (
     <View style={styles.row}>
@@ -33,10 +35,12 @@ export function SearchBar({
 
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Filtrar"
+        accessibilityLabel={filterActive ? 'Filtrar, filtros ativos' : 'Filtrar'}
+        accessibilityState={{ selected: filterActive }}
         onPress={onFilterPress}
         style={({ pressed }) => [styles.filterButton, pressed && styles.pressed]}>
         <Ionicons name="options-outline" size={22} color={tokens.colors.primary} />
+        {filterActive ? <View style={styles.filterBadge} /> : null}
       </Pressable>
     </View>
   );
@@ -71,6 +75,16 @@ const styles = StyleSheet.create({
     backgroundColor: tokens.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+  },
+  filterBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 8,
+    height: 8,
+    borderRadius: tokens.radius.full,
+    backgroundColor: tokens.colors.primary,
   },
   pressed: {
     opacity: 0.85,

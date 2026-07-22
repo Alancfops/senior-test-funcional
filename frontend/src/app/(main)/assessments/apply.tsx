@@ -1,37 +1,62 @@
 import { Href, router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AssessmentScreenHeader } from '@/components/assessments/AssessmentScreenHeader';
 import { SearchSelectField } from '@/components/assessments/SearchSelectField';
 import { ButtonRow } from '@/components/ui/Button';
 import { ALL_ASSESSMENT_INSTRUMENT_OPTIONS } from '@/features/assessments/instruments';
-import { MOCK_PATIENTS } from '@/features/patients/mock-patients';
+import { listPatientsRequest } from '@/features/patients/api';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — Aplicar Teste (RF007 + RF008). Katz, Berg, Tinetti, MEEM e TUG. */
+/** Figma — Aplicar Teste (RF007 + RF008). Pacientes da API; questionários integrados. */
 export default function ApplyAssessmentScreen() {
   const { patientId: preselectedPatientId } = useLocalSearchParams<{ patientId?: string }>();
 
-  const patientOptions = useMemo(
-    () =>
-      MOCK_PATIENTS.map((patient) => ({
-        value: patient.id,
-        label: patient.fullName,
-      })),
-    [],
-  );
+  const [patientOptions, setPatientOptions] = useState<{ value: string; label: string }[]>([]);
+  const [loadingPatients, setLoadingPatients] = useState(true);
+  const [patientsError, setPatientsError] = useState<string | null>(null);
 
   const [patientId, setPatientId] = useState('');
   const [instrumentCode, setInstrumentCode] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+
+  const loadPatients = useCallback(async () => {
+    setLoadingPatients(true);
+    setPatientsError(null);
+    try {
+      const response = await listPatientsRequest({ limit: 50 });
+      setPatientOptions(
+        response.data.map((patient) => ({
+          value: patient.id,
+          label: patient.fullName,
+        })),
+      );
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setPatientsError(error.message);
+      } else {
+        setPatientsError('Não foi possível carregar pacientes.');
+      }
+      setPatientOptions([]);
+    } finally {
+      setLoadingPatients(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadPatients();
+  }, [loadPatients]);
 
   useEffect(() => {
     if (preselectedPatientId && patientOptions.some((option) => option.value === preselectedPatientId)) {
       setPatientId(preselectedPatientId);
     }
   }, [preselectedPatientId, patientOptions]);
+
+  const instrumentOptions = useMemo(() => ALL_ASSESSMENT_INSTRUMENT_OPTIONS, []);
 
   function handleStart() {
     if (!patientId || !instrumentCode) {
@@ -58,6 +83,19 @@ export default function ApplyAssessmentScreen() {
           Selecione o paciente e o teste que será aplicado
         </Text>
 
+        {loadingPatients ? (
+          <View style={styles.loadingRow}>
+            <ActivityIndicator color={tokens.colors.primary} />
+            <Text style={styles.loadingText}>Carregando pacientes…</Text>
+          </View>
+        ) : null}
+
+        {patientsError ? (
+          <Text style={styles.formError} accessibilityRole="alert">
+            {patientsError}
+          </Text>
+        ) : null}
+
         <View style={styles.form}>
           <SearchSelectField
             label="Paciente"
@@ -75,7 +113,7 @@ export default function ApplyAssessmentScreen() {
             value={instrumentCode}
             placeholder="Buscar Teste"
             searchPlaceholder="Buscar teste…"
-            options={ALL_ASSESSMENT_INSTRUMENT_OPTIONS}
+            options={instrumentOptions}
             onChange={setInstrumentCode}
           />
         </View>
@@ -92,7 +130,7 @@ export default function ApplyAssessmentScreen() {
             actionLabel="Iniciar"
             onBack={() => router.back()}
             onAction={handleStart}
-            actionDisabled={!patientId || !instrumentCode}
+            actionDisabled={!patientId || !instrumentCode || loadingPatients}
           />
         </View>
       </ScrollView>
@@ -114,6 +152,15 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...tokens.typography.subtitle,
+    color: tokens.colors.textMuted,
+  },
+  loadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: tokens.spacing.sm,
+  },
+  loadingText: {
+    ...tokens.typography.caption,
     color: tokens.colors.textMuted,
   },
   form: {

@@ -34,7 +34,8 @@ export type QuestionnaireSession = {
   instrumentCode: string;
   answers: QuestionnaireAnswers;
   startedAt: number;
-  schoolingBand?: string;
+  assessmentId?: string;
+  schoolingBandUsed?: string;
   /** Tempos em segundos — TUG (3 ensaios). */
   tugTrials?: (number | null)[];
 };

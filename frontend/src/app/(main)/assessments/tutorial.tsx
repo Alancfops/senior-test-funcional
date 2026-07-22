@@ -1,11 +1,13 @@
 import { Href, router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AssessmentScreenHeader } from '@/components/assessments/AssessmentScreenHeader';
 import { ButtonRow } from '@/components/ui/Button';
 import { getAssessmentInstrument } from '@/features/assessments/instruments';
-import { getMockPatientById } from '@/features/patients/mock-patients';
+import { getPatientByIdRequest, PatientRecord } from '@/features/patients/api';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
 /** Figma — Tutorial RF009 (passos 1 e 2 por instrumento). */
@@ -17,15 +19,57 @@ export default function AssessmentTutorialScreen() {
   }>();
 
   const instrument = getAssessmentInstrument(instrumentCode ?? '');
-  const patient = getMockPatientById(patientId ?? '');
+  const [patient, setPatient] = useState<PatientRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const currentStep = step === '2' ? 2 : 1;
+
+  useEffect(() => {
+    if (!patientId) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void getPatientByIdRequest(patientId)
+      .then((record) => {
+        if (!cancelled) {
+          setPatient(record);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setLoadError(error instanceof ApiError ? error.message : 'Paciente não encontrado.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [patientId]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+        <AssessmentScreenHeader title="Tutorial" onBack={() => router.back()} />
+        <View style={styles.centered}>
+          <ActivityIndicator color={tokens.colors.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!instrument || !patient) {
     return (
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
         <AssessmentScreenHeader title="Tutorial" onBack={() => router.back()} />
         <View style={styles.notFound}>
-          <Text style={styles.notFoundText}>Sessão de avaliação inválida.</Text>
+          <Text style={styles.notFoundText}>{loadError ?? 'Sessão de avaliação inválida.'}</Text>
         </View>
       </SafeAreaView>
     );
@@ -99,6 +143,11 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: tokens.colors.pageBackground,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     paddingHorizontal: tokens.spacing.lg,

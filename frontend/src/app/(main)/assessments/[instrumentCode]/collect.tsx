@@ -1,6 +1,6 @@
 import { Href, router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssessmentCollectHeader } from '@/components/assessments/AssessmentCollectHeader';
@@ -16,16 +16,19 @@ import {
   ITEMS_PER_PAGE,
   paginateItems,
 } from '@/features/assessments/questionnaires';
+import { isQuestionnaireInstrumentCode } from '@/features/assessments/instruments';
 import {
-  ensureQuestionnaireSession,
+  ensureQuestionnaireDraftSession,
   getQuestionnaireSession,
+  syncQuestionnaireDraftPayload,
   updateQuestionnaireAnswers,
 } from '@/features/assessments/session';
 import type { QuestionnaireAnswers } from '@/features/assessments/types';
-import { getMockPatientById } from '@/features/patients/mock-patients';
+import { getPatientByIdRequest, PatientRecord } from '@/features/patients/api';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — coleta RF010 (questionários + TUG). */
+/** Figma — coleta RF010 (questionários + TUG integrados à API). */
 export default function AssessmentCollectScreen() {
   const insets = useSafeAreaInsets();
   const { instrumentCode, patientId } = useLocalSearchParams<{
@@ -33,34 +36,72 @@ export default function AssessmentCollectScreen() {
     patientId: string;
   }>();
 
-  const patient = getMockPatientById(patientId ?? '');
-
-  if (instrumentCode === 'tug' && patient) {
-    return (
-      <TugCollectScreen
-        patient={patient}
-        patientId={patientId ?? ''}
-        instrumentCode={instrumentCode}
-      />
-    );
-  }
-
-  const instrumentMeta = getAssessmentInstrument(instrumentCode ?? '');
-  const definition = getQuestionnaireDefinition(instrumentCode ?? '');
+  const [patient, setPatient] = useState<PatientRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState<QuestionnaireAnswers>({});
   const [pageError, setPageError] = useState<string | null>(null);
 
+  const isTug = instrumentCode === 'tug';
+  const isQuestionnaire = instrumentCode ? isQuestionnaireInstrumentCode(instrumentCode) : false;
+
   useEffect(() => {
     if (!patientId || !instrumentCode) {
       return;
     }
-    const session = ensureQuestionnaireSession(patientId, instrumentCode);
-    if (Object.keys(session.answers).length > 0) {
-      setAnswers(session.answers);
+
+    let cancelled = false;
+
+    async function bootstrap() {
+      setLoading(true);
+      setLoadError(null);
+
+      try {
+        const patientRecord = await getPatientByIdRequest(patientId);
+        if (cancelled) {
+          return;
+        }
+
+        setPatient(patientRecord);
+
+        if (isQuestionnaire || isTug) {
+          const session = await ensureQuestionnaireDraftSession(
+            patientId,
+            instrumentCode,
+            patientRecord.schoolingBand,
+          );
+          if (isQuestionnaire && Object.keys(session.answers).length > 0) {
+            setAnswers(session.answers);
+          }
+        }
+      } catch (error) {
+        if (cancelled) {
+          return;
+        }
+        if (error instanceof ApiError) {
+          setLoadError(error.message);
+        } else {
+          setLoadError('Não foi possível iniciar a avaliação.');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     }
-  }, [patientId, instrumentCode]);
+
+    void bootstrap();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [patientId, instrumentCode, isTug, isQuestionnaire]);
+
+  const instrumentMeta = getAssessmentInstrument(instrumentCode ?? '');
+  const definition = getQuestionnaireDefinition(instrumentCode ?? '');
 
   const totalPages = definition ? getTotalPages(definition.items.length, ITEMS_PER_PAGE) : 0;
   const pageItems = useMemo(
@@ -79,10 +120,46 @@ export default function AssessmentCollectScreen() {
     setPageError(null);
   }, []);
 
-  if (!instrumentMeta || !definition || !patient) {
+  if (isTug) {
+    if (loading) {
+      return (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={tokens.colors.primary} />
+          <Text style={styles.loadingText}>Preparando avaliação…</Text>
+        </View>
+      );
+    }
+
+    if (loadError || !patient) {
+      return (
+        <View style={styles.centered}>
+          <Text style={styles.notFoundText}>{loadError ?? 'Sessão de avaliação inválida.'}</Text>
+        </View>
+      );
+    }
+
     return (
-      <View style={styles.notFound}>
-        <Text style={styles.notFoundText}>Sessão de avaliação inválida.</Text>
+      <TugCollectScreen
+        patient={patient}
+        patientId={patientId ?? ''}
+        instrumentCode={instrumentCode}
+      />
+    );
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={tokens.colors.primary} />
+        <Text style={styles.loadingText}>Preparando avaliação…</Text>
+      </View>
+    );
+  }
+
+  if (loadError || !instrumentMeta || !definition || !patient) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.notFoundText}>{loadError ?? 'Sessão de avaliação inválida.'}</Text>
       </View>
     );
   }
@@ -96,22 +173,36 @@ export default function AssessmentCollectScreen() {
     router.back();
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (!isPageComplete(pageItems, answers)) {
       setPageError('Preencha a pontuação de todos os itens desta página para continuar.');
       return;
     }
 
     if (isLastPage) {
-      const session = getQuestionnaireSession();
-      router.push({
-        pathname: '/(main)/assessments/[instrumentCode]/result',
-        params: {
-          instrumentCode,
-          patientId,
-          startedAt: String(session?.startedAt ?? Date.now()),
-        },
-      } as Href);
+      setSubmitting(true);
+      setPageError(null);
+
+      try {
+        await syncQuestionnaireDraftPayload(answers);
+        const session = getQuestionnaireSession();
+        router.push({
+          pathname: '/(main)/assessments/[instrumentCode]/result',
+          params: {
+            instrumentCode,
+            patientId,
+            startedAt: String(session?.startedAt ?? Date.now()),
+          },
+        } as Href);
+      } catch (error) {
+        if (error instanceof ApiError) {
+          setPageError(error.message);
+        } else {
+          setPageError('Não foi possível salvar as respostas. Tente novamente.');
+        }
+      } finally {
+        setSubmitting(false);
+      }
       return;
     }
 
@@ -169,7 +260,8 @@ export default function AssessmentCollectScreen() {
           backLabel="Voltar"
           actionLabel={isLastPage ? 'Finalizar Teste' : 'Próximo'}
           onBack={handleBack}
-          onAction={handleNext}
+          onAction={() => void handleNext()}
+          actionDisabled={submitting}
         />
       </View>
     </View>
@@ -180,6 +272,18 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: tokens.colors.pageBackground,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: tokens.colors.pageBackground,
+    padding: tokens.spacing.lg,
+    gap: tokens.spacing.md,
+  },
+  loadingText: {
+    ...tokens.typography.body,
+    color: tokens.colors.textMuted,
   },
   progressRow: {
     flexDirection: 'row',
@@ -220,15 +324,9 @@ const styles = StyleSheet.create({
     borderTopColor: tokens.colors.border,
     backgroundColor: tokens.colors.pageBackground,
   },
-  notFound: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: tokens.colors.pageBackground,
-    padding: tokens.spacing.lg,
-  },
   notFoundText: {
     ...tokens.typography.body,
     color: tokens.colors.textMuted,
+    textAlign: 'center',
   },
 });

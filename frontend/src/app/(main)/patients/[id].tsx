@@ -5,7 +5,16 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { PatientProfileHeader } from '@/components/patients/PatientProfileHeader';
 import { PatientRegistrationSection } from '@/components/patients/PatientRegistrationSection';
 import { PatientTestsSection } from '@/components/patients/PatientTestsSection';
-import { getPatientByIdRequest, PatientRecord } from '@/features/patients/api';
+import {
+  getPatientByIdRequest,
+  listPatientAssessmentsRequest,
+  PatientAssessmentSummary,
+  PatientRecord,
+} from '@/features/patients/api';
+import {
+  formatRelativeWhen,
+  mapPatientAssessmentSummary,
+} from '@/features/patients/assessment-history';
 import { getGenderLabel, getSchoolingLabel } from '@/features/patients/constants';
 import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
@@ -16,12 +25,14 @@ export default function PatientProfileScreen() {
   const patientId = id ?? '';
 
   const [patient, setPatient] = useState<PatientRecord | null>(null);
+  const [assessments, setAssessments] = useState<PatientAssessmentSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const loadPatient = useCallback(async () => {
     if (!patientId) {
       setPatient(null);
+      setAssessments([]);
       setLoadError('Paciente não encontrado.');
       setLoading(false);
       return;
@@ -31,10 +42,24 @@ export default function PatientProfileScreen() {
     setLoadError(null);
 
     try {
-      const response = await getPatientByIdRequest(patientId);
-      setPatient(response);
+      const [patientResponse, assessmentsResponse] = await Promise.all([
+        getPatientByIdRequest(patientId),
+        listPatientAssessmentsRequest(patientId),
+      ]);
+
+      setPatient(patientResponse);
+      setAssessments(
+        assessmentsResponse.data.map((item) => {
+          const summary = mapPatientAssessmentSummary(item);
+          return {
+            ...summary,
+            relativeWhen: formatRelativeWhen(item.finalizedAt),
+          };
+        }),
+      );
     } catch (error) {
       setPatient(null);
+      setAssessments([]);
       if (error instanceof ApiError && error.statusCode === 404) {
         setLoadError('Paciente não encontrado.');
       } else if (error instanceof ApiError && error.statusCode === 401) {
@@ -111,7 +136,7 @@ export default function PatientProfileScreen() {
         />
 
         <PatientTestsSection
-          assessments={[]}
+          assessments={assessments}
           patientName={patient.fullName}
           onStartTest={handleStartTest}
           onAddTest={handleStartTest}

@@ -4,11 +4,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ActivityCard, activityToneForIndex } from '@/components/main/ActivityCard';
 import { AssessmentListItem } from '@/components/patients/AssessmentListItem';
 import { Button } from '@/components/ui/Button';
-import { MockAssessment } from '@/features/patients/mock-patients';
+import type { PatientAssessmentSummary } from '@/features/patients/api';
 import { tokens } from '@/theme/tokens';
 
 type PatientTestsSectionProps = {
-  assessments: MockAssessment[];
+  assessments: PatientAssessmentSummary[];
   patientName: string;
   onStartTest: () => void;
   onAddTest?: () => void;
@@ -70,6 +70,7 @@ export function PatientTestsSection({
                 key={item.id}
                 instrumentName={item.instrumentName}
                 displayDate={item.displayDate}
+                resultSummary={item.resultSummary}
                 onPress={() => onOpenAssessment(item.id)}
               />
             ))

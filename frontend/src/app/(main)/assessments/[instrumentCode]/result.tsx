@@ -1,78 +1,182 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Href, router, useLocalSearchParams } from 'expo-router';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssessmentCollectHeader } from '@/components/assessments/AssessmentCollectHeader';
 import { EvolutionChart } from '@/components/assessments/EvolutionChart';
 import { ButtonRow } from '@/components/ui/Button';
 import {
-  buildDisplayResult,
+  finalizeAssessmentRequest,
+  getTimeseriesRequest,
+} from '@/features/assessments/api';
+import {
+  CHART_EMPTY_MESSAGE,
+  CHART_IMPROVEMENT_HINT,
+  getChartMaxValue,
+  isChartInstrumentCode,
+  mapTimeseriesToChartPoints,
+} from '@/features/assessments/chart-config';
+import {
   formatAssessmentDate,
   formatDurationMs,
-  MOCK_EVOLUTION_POINTS,
 } from '@/features/assessments/display-result';
 import {
-  averageTugTrials,
-  classifyTugAverage,
-  formatTrialSeconds,
-  TUG_TRIALS,
-} from '@/features/assessments/tug/constants';
+  getAssessmentInstrument,
+  isQuestionnaireInstrumentCode,
+} from '@/features/assessments/instruments';
+import { mapAssessmentResultToDisplay } from '@/features/assessments/map-result';
 import { getQuestionnaireDefinition } from '@/features/assessments/questionnaires';
 import { clearQuestionnaireSession, getQuestionnaireSession } from '@/features/assessments/session';
-import { getMockPatientById } from '@/features/patients/mock-patients';
+import { formatTrialSeconds, TUG_TRIALS } from '@/features/assessments/tug/constants';
+import type { DisplayResult } from '@/features/assessments/types';
+import { getPatientByIdRequest, PatientRecord } from '@/features/patients/api';
+import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
-/** Gráfico mock TUG — médias em segundos (RF012). */
-const MOCK_TUG_EVOLUTION_POINTS = [
-  { label: 'Out', value: 14 },
-  { label: 'Nov', value: 13 },
-  { label: 'Dez', value: 12 },
-  { label: 'Jan', value: 11 },
-  { label: 'Fev', value: 10 },
-  { label: 'Mar', value: 9 },
-];
-
-/** Figma — Resultado RF011 (prévia Fase A; API finalize na Fase D). */
+/** Figma — Resultado RF011 + gráfico evolutivo RF012 (≥2 avaliações). */
 export default function AssessmentResultScreen() {
   const insets = useSafeAreaInsets();
-  const { instrumentCode, patientId, startedAt } = useLocalSearchParams<{
+  const { instrumentCode, patientId } = useLocalSearchParams<{
     instrumentCode: string;
     patientId: string;
-    startedAt?: string;
   }>();
 
-  const patient = getMockPatientById(patientId ?? '');
   const session = getQuestionnaireSession();
   const isTug = instrumentCode === 'tug';
-  const definition = isTug ? undefined : getQuestionnaireDefinition(instrumentCode ?? '');
+  const isQuestionnaire = instrumentCode ? isQuestionnaireInstrumentCode(instrumentCode) : false;
+  const instrumentMeta = getAssessmentInstrument(instrumentCode ?? '');
+  const definition = isQuestionnaire ? getQuestionnaireDefinition(instrumentCode) : undefined;
 
-  if (!patient || !session || session.instrumentCode !== instrumentCode) {
+  const [patient, setPatient] = useState<PatientRecord | null>(null);
+  const [display, setDisplay] = useState<DisplayResult | null>(null);
+  const [chartPoints, setChartPoints] = useState<ReturnType<typeof mapTimeseriesToChartPoints>>([]);
+  const [canShowChart, setCanShowChart] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [finalizedAssessmentId, setFinalizedAssessmentId] = useState<string | null>(null);
+  const [applicationDurationMs, setApplicationDurationMs] = useState<number | null>(null);
+  const [assessmentDate, setAssessmentDate] = useState<Date>(new Date());
+
+  useEffect(() => {
+    if (!patientId || !instrumentCode || !session?.assessmentId) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const patientRecord = await getPatientByIdRequest(patientId);
+        if (cancelled) {
+          return;
+        }
+        setPatient(patientRecord);
+
+        const finalized = await finalizeAssessmentRequest(session.assessmentId!);
+        if (cancelled) {
+          return;
+        }
+        if (!finalized.result) {
+          setLoadError('Resultado indisponível. Refaça a avaliação.');
+          return;
+        }
+
+        setDisplay(mapAssessmentResultToDisplay(instrumentCode, finalized.result));
+        setFinalizedAssessmentId(finalized.id);
+
+        const finalizedAt = finalized.finalizedAt
+          ? new Date(finalized.finalizedAt)
+          : new Date();
+        const started = new Date(finalized.startedAt);
+        setAssessmentDate(finalizedAt);
+        setApplicationDurationMs(Math.max(0, finalizedAt.getTime() - started.getTime()));
+
+        const timeseries = await getTimeseriesRequest(patientId, instrumentCode);
+        if (cancelled) {
+          return;
+        }
+        setChartPoints(mapTimeseriesToChartPoints(timeseries.points));
+        setCanShowChart(timeseries.canShowChart);
+      } catch (error) {
+        if (cancelled) {
+          return;
+        }
+        if (error instanceof ApiError) {
+          setLoadError(error.message);
+        } else {
+          setLoadError('Não foi possível finalizar a avaliação.');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [patientId, instrumentCode, session?.assessmentId]);
+
+  const progressLabel = useMemo(() => {
+    if (isTug) {
+      return '03/03';
+    }
+    if (definition) {
+      const total = String(definition.items.length).padStart(2, '0');
+      return `${total}/${total}`;
+    }
+    return '';
+  }, [definition, isTug]);
+
+  const screenTitle = useMemo(() => {
+    if (isTug) {
+      return 'TUG — Resultado';
+    }
+    return definition?.name ?? instrumentMeta?.name ?? 'Resultado';
+  }, [definition, instrumentMeta, isTug]);
+
+  const chartMaxValue = useMemo(() => {
+    if (!instrumentCode || !isChartInstrumentCode(instrumentCode)) {
+      return 90;
+    }
+    return getChartMaxValue(instrumentCode, chartPoints);
+  }, [chartPoints, instrumentCode]);
+
+  if (!session || session.instrumentCode !== instrumentCode) {
     return (
-      <View style={styles.notFound}>
+      <View style={styles.centered}>
         <Text style={styles.notFoundText}>Resultado indisponível. Refaça a avaliação.</Text>
       </View>
     );
   }
 
-  if (!isTug && !definition) {
+  if (loading) {
     return (
-      <View style={styles.notFound}>
-        <Text style={styles.notFoundText}>Resultado indisponível. Refaça a avaliação.</Text>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={tokens.colors.primary} />
+        <Text style={styles.loadingText}>Calculando resultado…</Text>
       </View>
     );
   }
 
-  const started = Number(startedAt ?? session.startedAt);
-  const finishedAt = new Date();
+  if (loadError || !patient || !display) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.notFoundText}>{loadError ?? 'Resultado indisponível. Refaça a avaliação.'}</Text>
+      </View>
+    );
+  }
+
   const tugTrials = session.tugTrials ?? [null, null, null];
-  const tugAverage = averageTugTrials(tugTrials);
-  const display = definition
-    ? buildDisplayResult(definition, session.answers, patient.schoolingBand)
-    : null;
-  const progressLabel = isTug
-    ? '03/03'
-    : `${String(definition!.items.length).padStart(2, '0')}/${String(definition!.items.length).padStart(2, '0')}`;
+  const improvementHint =
+    instrumentCode && isChartInstrumentCode(instrumentCode)
+      ? CHART_IMPROVEMENT_HINT[instrumentCode]
+      : '';
 
   function handleReapply() {
     clearQuestionnaireSession();
@@ -83,12 +187,8 @@ export default function AssessmentResultScreen() {
   }
 
   function handleSave() {
-    Alert.alert(
-      'Resultado salvo (demonstração)',
-      'Na Fase D, o resultado será persistido via POST .../finalize na API.',
-      [{ text: 'OK', onPress: () => router.replace('/(main)/(tabs)' as Href) }],
-    );
     clearQuestionnaireSession();
+    router.replace('/(main)/(tabs)' as Href);
   }
 
   return (
@@ -101,8 +201,8 @@ export default function AssessmentResultScreen() {
       />
 
       <View style={styles.progressRow}>
-        <Text style={styles.instrumentName} accessibilityRole="header">
-          {isTug ? 'TUG — Resultado' : 'Resultado'}
+        <Text style={styles.instrumentName} accessibilityRole="header" numberOfLines={2}>
+          {screenTitle}
         </Text>
         <Text style={styles.progress}>{progressLabel}</Text>
       </View>
@@ -114,97 +214,71 @@ export default function AssessmentResultScreen() {
         ]}
         showsVerticalScrollIndicator={false}>
         {isTug ? (
-          <>
-            <View style={styles.trialList}>
-              {TUG_TRIALS.map((trial, index) => {
-                const seconds = tugTrials[index];
-                return (
-                  <View key={trial.index} style={styles.trialCard}>
-                    <View style={styles.trialText}>
-                      <Text style={styles.trialLabel}>{trial.label}</Text>
-                      <Text style={styles.trialTime}>
-                        {seconds !== null ? formatTrialSeconds(seconds) : '—'}
-                      </Text>
-                    </View>
-                    {seconds !== null ? (
-                      <View style={styles.checkCircle}>
-                        <Ionicons name="checkmark" size={18} color={tokens.colors.onPrimary} />
-                      </View>
-                    ) : null}
+          <View style={styles.trialList}>
+            {TUG_TRIALS.map((trial, index) => {
+              const seconds = tugTrials[index];
+              return (
+                <View key={trial.index} style={styles.trialCard}>
+                  <View style={styles.trialText}>
+                    <Text style={styles.trialLabel}>{trial.label}</Text>
+                    <Text style={styles.trialTime}>
+                      {seconds !== null ? formatTrialSeconds(seconds) : '—'}
+                    </Text>
                   </View>
-                );
-              })}
-            </View>
+                  {seconds !== null ? (
+                    <View style={styles.checkCircle}>
+                      <Ionicons name="checkmark" size={18} color={tokens.colors.onPrimary} />
+                    </View>
+                  ) : null}
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
 
-            <View style={styles.metaRow}>
-              <Text style={styles.metaText}>
-                Data de Avaliação: {formatAssessmentDate(finishedAt)}
-              </Text>
-              <Text style={styles.metaText}>
-                Tempo Total de Aplicação: {formatDurationMs(finishedAt.getTime() - started)}
-              </Text>
-            </View>
+        <View style={styles.scoreCard}>
+          <View style={styles.scoreColumn}>
+            <Text style={styles.scoreLabel}>{display.scoreLabel}</Text>
+            <Text
+              style={styles.scoreValue}
+              accessibilityLabel={`${display.scoreValue} de ${display.maxScore}`}>
+              {display.scoreValue}
+              <Text style={styles.scoreMax}> / {display.maxScore}</Text>
+            </Text>
+          </View>
+          <View style={styles.interpretationColumn}>
+            <Text style={styles.scoreLabel}>{display.classificationLabel}</Text>
+            <Text style={styles.interpretation}>{display.interpretation}</Text>
+          </View>
+        </View>
 
-            <View style={styles.scoreCard}>
-              <View style={styles.scoreColumn}>
-                <Text style={styles.scoreLabel}>Média</Text>
-                <Text style={styles.scoreValue}>
-                  {tugAverage.toFixed(1)}
-                  <Text style={styles.scoreMax}> s</Text>
-                </Text>
-              </View>
-              <View style={styles.interpretationColumn}>
-                <Text style={styles.scoreLabel}>Interpretação</Text>
-                <Text style={styles.interpretation}>{classifyTugAverage(tugAverage)}</Text>
-              </View>
-            </View>
-          </>
-        ) : (
-          <>
-            <View style={styles.scoreCard}>
-              <View style={styles.scoreColumn}>
-                <Text style={styles.scoreLabel}>{display!.scoreLabel}</Text>
-                <Text style={styles.scoreValue} accessibilityLabel={`${display!.scoreValue} de ${display!.maxScore}`}>
-                  {display!.scoreValue}
-                  <Text style={styles.scoreMax}> / {display!.maxScore}</Text>
-                </Text>
-              </View>
-              <View style={styles.interpretationColumn}>
-                <Text style={styles.scoreLabel}>{display!.classificationLabel}</Text>
-                <Text style={styles.interpretation}>{display!.interpretation}</Text>
-              </View>
-            </View>
-
-            <View style={styles.metaRow}>
-              <Text style={styles.metaText}>
-                Data de Avaliação: {formatAssessmentDate(finishedAt)}
-              </Text>
-              <Text style={styles.metaText}>
-                Tempo de Aplicação: {formatDurationMs(finishedAt.getTime() - started)}
-              </Text>
-            </View>
-          </>
-        )}
+        <View style={styles.metaRow}>
+          <Text style={styles.metaText}>Data de Avaliação: {formatAssessmentDate(assessmentDate)}</Text>
+          <Text style={styles.metaText}>
+            Tempo de Aplicação:{' '}
+            {applicationDurationMs !== null ? formatDurationMs(applicationDurationMs) : '—'}
+          </Text>
+        </View>
 
         <View style={styles.chartSection}>
           <Text style={styles.chartTitle} accessibilityRole="header">
             Gráfico
           </Text>
           <View style={styles.chartCard}>
-            <EvolutionChart
-              points={isTug ? MOCK_TUG_EVOLUTION_POINTS : MOCK_EVOLUTION_POINTS}
-              maxValue={isTug ? 20 : 90}
-            />
+            {canShowChart && chartPoints.length >= 2 ? (
+              <EvolutionChart
+                points={chartPoints}
+                maxValue={chartMaxValue}
+                highlightedPointId={finalizedAssessmentId ?? undefined}
+              />
+            ) : (
+              <Text style={styles.chartEmpty}>{CHART_EMPTY_MESSAGE}</Text>
+            )}
           </View>
-          <Text style={styles.chartHint}>
-            Curva ilustrativa com dados mock. Com integração API (RF012), o gráfico usa histórico real
-            do paciente.
-          </Text>
+          {canShowChart && improvementHint ? (
+            <Text style={styles.chartHint}>{improvementHint}</Text>
+          ) : null}
         </View>
-
-        <Text style={styles.phaseHint}>
-          Prévia local (Fase A). Classificação oficial virá do servidor no finalize (Fase D).
-        </Text>
       </ScrollView>
 
       <View style={[styles.footer, { paddingBottom: insets.bottom + tokens.spacing.md }]}>
@@ -224,17 +298,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: tokens.colors.pageBackground,
   },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: tokens.colors.pageBackground,
+    padding: tokens.spacing.lg,
+    gap: tokens.spacing.md,
+  },
+  loadingText: {
+    ...tokens.typography.body,
+    color: tokens.colors.textMuted,
+  },
   progressRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     paddingHorizontal: tokens.spacing.lg,
     paddingVertical: tokens.spacing.md,
+    gap: tokens.spacing.sm,
   },
   instrumentName: {
     ...tokens.typography.body,
     fontWeight: '600',
     color: tokens.colors.text,
+    flex: 1,
   },
   progress: {
     ...tokens.typography.body,
@@ -306,15 +394,18 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.lg,
     padding: tokens.spacing.md,
     alignItems: 'center',
+    minHeight: 180,
+    justifyContent: 'center',
+  },
+  chartEmpty: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
+    textAlign: 'center',
+    paddingHorizontal: tokens.spacing.md,
   },
   chartHint: {
     ...tokens.typography.caption,
     color: tokens.colors.textMuted,
-  },
-  phaseHint: {
-    ...tokens.typography.caption,
-    color: tokens.colors.textMuted,
-    textAlign: 'center',
   },
   footer: {
     paddingHorizontal: tokens.spacing.lg,
@@ -322,13 +413,6 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: tokens.colors.border,
     backgroundColor: tokens.colors.pageBackground,
-  },
-  notFound: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: tokens.colors.pageBackground,
-    padding: tokens.spacing.lg,
   },
   notFoundText: {
     ...tokens.typography.body,

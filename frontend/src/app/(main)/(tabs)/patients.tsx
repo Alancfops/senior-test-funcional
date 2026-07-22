@@ -1,11 +1,17 @@
 import { Href, router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { PatientListItem } from '@/components/patients/PatientListItem';
+import { PatientListFilterSheet } from '@/components/main/PatientListFilterSheet';
 import { SearchBar } from '@/components/main/SearchBar';
 import { TabBlueHeader } from '@/components/main/TabBlueHeader';
+import {
+  countActivePatientFilters,
+  DEFAULT_PATIENT_LIST_FILTERS,
+  PatientListFilters,
+} from '@/features/filters/patient-list-filters';
 import { listPatientsRequest, PatientRecord } from '@/features/patients/api';
 import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
@@ -13,57 +19,95 @@ import { tokens } from '@/theme/tokens';
 /** Figma — Lista de Pacientes (RF005). */
 export default function PatientsTabScreen() {
   const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState<PatientListFilters>(DEFAULT_PATIENT_LIST_FILTERS);
+  const [draftFilters, setDraftFilters] = useState<PatientListFilters>(DEFAULT_PATIENT_LIST_FILTERS);
+  const [filterSheetVisible, setFilterSheetVisible] = useState(false);
   const [patients, setPatients] = useState<PatientRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const loadPatients = useCallback(async (query: string) => {
-    setLoading(true);
-    setLoadError(null);
-    try {
-      const response = await listPatientsRequest({
-        search: query,
-        limit: 50,
-      });
-      setPatients(response.data);
-    } catch (error) {
-      if (error instanceof ApiError && error.statusCode === 401) {
-        setLoadError('Sessão expirada. Saia e faça login novamente.');
-      } else if (error instanceof ApiError) {
-        setLoadError(error.message);
-      } else {
-        setLoadError('Não foi possível carregar os pacientes.');
-      }
-      setPatients([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
-      void loadPatients(search);
-    }, [loadPatients, search]),
+      let cancelled = false;
+      setLoading(true);
+      setLoadError(null);
+
+      void (async () => {
+        try {
+          const response = await listPatientsRequest({
+            search,
+            limit: 50,
+            sortBy: filters.sortBy,
+            sortOrder: filters.sortOrder,
+            gender: filters.gender ?? undefined,
+          });
+          if (cancelled) {
+            return;
+          }
+          setPatients(response.data);
+        } catch (error) {
+          if (cancelled) {
+            return;
+          }
+          if (error instanceof ApiError && error.statusCode === 401) {
+            setLoadError('Sessão expirada. Saia e faça login novamente.');
+          } else if (error instanceof ApiError) {
+            setLoadError(error.message);
+          } else {
+            setLoadError('Não foi possível carregar os pacientes.');
+          }
+          setPatients([]);
+        } finally {
+          if (!cancelled) {
+            setLoading(false);
+          }
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
+    }, [filters, search]),
   );
 
   const emptyMessage = useMemo(() => {
     if (loadError) {
       return loadError;
     }
-    if (search.trim()) {
+    if (search.trim() || countActivePatientFilters(filters) > 0) {
       return 'Nenhum registro encontrado';
     }
     return 'Nenhum paciente cadastrado';
-  }, [loadError, search]);
+  }, [filters, loadError, search]);
 
-  function handleFilter() {
-    Alert.alert('Em breve', 'Filtros avançados de pacientes virão na Fase D.');
+  const hasActiveFilters = countActivePatientFilters(filters) > 0;
+
+  function openFilterSheet() {
+    setDraftFilters(filters);
+    setFilterSheetVisible(true);
+  }
+
+  function applyFilters() {
+    setFilters(draftFilters);
+    setFilterSheetVisible(false);
+  }
+
+  function clearFilters() {
+    setDraftFilters(DEFAULT_PATIENT_LIST_FILTERS);
+    setFilters(DEFAULT_PATIENT_LIST_FILTERS);
+    setFilterSheetVisible(false);
   }
 
   return (
     <View style={styles.root}>
       <TabBlueHeader title="Paciente">
-        <SearchBar value={search} onChangeText={setSearch} onFilterPress={handleFilter} />
+        <SearchBar
+          value={search}
+          onChangeText={setSearch}
+          onFilterPress={openFilterSheet}
+          filterActive={hasActiveFilters}
+          placeholder="Buscar paciente…"
+        />
       </TabBlueHeader>
 
       <ScrollView
@@ -110,6 +154,15 @@ export default function PatientsTabScreen() {
           )}
         </View>
       </ScrollView>
+
+      <PatientListFilterSheet
+        visible={filterSheetVisible}
+        draftFilters={draftFilters}
+        onChangeDraft={setDraftFilters}
+        onClose={() => setFilterSheetVisible(false)}
+        onApply={applyFilters}
+        onClear={clearFilters}
+      />
     </View>
   );
 }
