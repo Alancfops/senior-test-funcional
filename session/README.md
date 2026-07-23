@@ -26,6 +26,9 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-07-23 16:40 | [2026-07-23_16-40.md](2026-07-23_16-40.md) | RF013 PDF (API+app+protótipo); revisão LGPD §12; explicação aviso/retenção/DPO para analisar depois |
+| 2026-07-22 16:55 | [2026-07-22_16-55.md](2026-07-22_16-55.md) | Avaliações clínicas API+app (histórico, gráfico, filtros, atividades); review+fixes; commit amend+push `4863e1c` |
+| 2026-07-21 17:44 | [2026-07-21_17-44.md](2026-07-21_17-44.md) | Integração pacientes API (lista/perfil/foto); fix e2e apagando DB; escolaridade obrigatória; commit+push `2731704`; branch feature removida |
 | 2026-07-21 17:01 | [2026-07-21_17-01.md](2026-07-21_17-01.md) | Auth RF001–RF003 Gmail projeto; erro RF003 Figma; **RF004 POST /patients** + isolamento; sem domínio (TCC) |
 | 2026-07-21 15:50 | [2026-07-21_15-50.md](2026-07-21_15-50.md) | **Sem domínio** (TCC); RF003 Gmail dedicado; decisão em `docs/engineering/project-decisions.md` |
 | 2026-07-16 16:23 | [2026-07-16_16-23.md](2026-07-16_16-23.md) | TUG+cronômetro; Lista Pacientes+Config Figma; Informações do Sistema (Erika, Alan Cristian); **sem commit** |

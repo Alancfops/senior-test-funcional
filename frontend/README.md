@@ -1,56 +1,47 @@
-# Welcome to your Expo app 👋
+# Frontend — Sênior Teste Funcional
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App **Expo + React Native + Expo Router** do projeto Sênior Teste Funcional.
 
-## Get started
+## Início rápido
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Na **raiz do monorepo** (recomendado):
 
 ```bash
-npm run reset-project
+make setup      # primeira vez: deps, .env, Postgres
+make migrate    # migrations (backend)
+make start      # instala deps + Postgres + API + Expo
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Só o Expo:
 
-### Other setup steps
+```bash
+make start-frontend
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Configuração
 
-## Learn more
+Arquivo `frontend/.env` (criado por `make setup`):
 
-To learn more about developing your project with Expo, look at the following resources:
+| Variável | Uso |
+|----------|-----|
+| `EXPO_PUBLIC_API_URL` | URL da API — `http://localhost:3000` (web/emulador) ou `http://SEU_IP:3000` (celular) |
+| `EXPO_PUBLIC_MOCK_AUTH` | `false` = API real (padrão em `.env.example`) |
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Após alterar `.env`, reinicie o Expo.
 
-## Join the community
+## Scripts npm (nesta pasta)
 
-Join our community of developers creating universal apps.
+| Comando | Descrição |
+|---------|-----------|
+| `npm run start` | Expo dev server |
+| `npm run lint` | ESLint |
+| `npx tsc --noEmit` | Checagem TypeScript |
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Documentação
+
+| Tema | Onde |
+|------|------|
+| Arquitetura e fluxos do app | [docs/frontend/README.md](../docs/frontend/README.md) |
+| Mapa Figma ↔ rotas ↔ RFs | [docs/frontend/figma-map.md](../docs/frontend/figma-map.md) |
+| Instalação completa + Makefile | [README.md](../README.md) na raiz |
+| Figma oficial | [Senior Teste Funcional](https://www.figma.com/design/mtMbhRez2Xy2k414cfzcFm/Senior-Test-Funcional?node-id=1-11490) |

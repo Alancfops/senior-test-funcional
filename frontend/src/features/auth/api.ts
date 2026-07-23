@@ -31,6 +31,13 @@ export async function forgotPasswordRequest(email: string) {
   });
 }
 
+export async function verifyResetCodeRequest(email: string, token: string) {
+  return apiRequest<{ message: string }>('/auth/verify-reset-code', {
+    method: 'POST',
+    body: { email, token },
+  });
+}
+
 export async function resetPasswordRequest(
   email: string,
   token: string,

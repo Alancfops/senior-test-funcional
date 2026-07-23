@@ -55,8 +55,11 @@ export default function ForgotPasswordNewPasswordScreen() {
       if (error instanceof ApiError && error.statusCode === 401) {
         pushForgotPasswordError(router, {
           errorName: 'Código inválido',
-          errorMessage: error.message || 'Código inválido ou expirado. Solicite um novo e-mail.',
+          errorMessage:
+            error.message ||
+            'Código inválido ou expirado. Se você pediu reenvio, use apenas o código do e-mail mais recente.',
           email,
+          errorKind: 'invalid-code',
         });
         return;
       }

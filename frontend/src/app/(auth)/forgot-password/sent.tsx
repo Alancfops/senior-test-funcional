@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { AuthScreenLayout } from '@/components/auth/AuthScreenLayout';
@@ -26,6 +26,10 @@ export default function ForgotPasswordSentScreen() {
     setResending(true);
     try {
       await forgotPasswordRequest(email);
+      Alert.alert(
+        'Novo código enviado',
+        'Ignore e-mails anteriores e use apenas o código do e-mail mais recente.',
+      );
     } catch (error) {
       pushForgotPasswordError(router, {
         ...resolveForgotPasswordSendError(error),

@@ -24,8 +24,8 @@ senior-test-funcional/
 │   ├── engineering/
 │   ├── clinical-protocols/instruments/
 │   └── contracts/
-├── backend/                           # NestJS + Prisma (Fase B→C)
-├── frontend/                          # Expo + RN (Fase A; integração Fase D)
+├── frontend/                          # Expo + RN (Fase A concluída; integração Fase D)
+├── backend/                           # NestJS + Prisma (Fases B–C concluídas)
 └── packages/                          # Opcional: shared-contracts (Zod)
 ```
 
@@ -74,25 +74,35 @@ Quando a equipe for **implementar a tela de um RF**, a ordem **atual** é:
 
 ## 3. Fases A→E — roteiro adotado
 
-### Fase A — Frontend UI (Figma + mocks) — **em andamento**
+> **Status atual (jul/2026)**
+>
+> | Fase | Situação |
+> |------|----------|
+> | **A** — Telas Figma + navegação | Concluída |
+> | **B** — Auth + pacientes + OpenAPI | Concluída |
+> | **C** — Instrumentos + PDF (RF007–RF013) | Concluída |
+> | **D** — Integração app ↔ API | **Em andamento** — `EXPO_PUBLIC_MOCK_AUTH=false`; ver [figma-map](../frontend/figma-map.md) |
+> | **E** — Polish visual | Pendente |
+
+### Fase A — Frontend UI (Figma + mocks) — concluída
 
 - Telas dos RFs conforme arquivo Figma oficial (`mtMbhRez2Xy2k414cfzcFm`).
 - Navegação `(auth)` / `(main)`, tab bar, formulários com validação client-side.
-- **Mocks controlados:** auth (`EXPO_PUBLIC_MOCK_AUTH`), listas, cadastros — dados estáticos ou memória local, **sem** fingir scoring/PDF.
+- **Mocks controlados (legado):** auth via `EXPO_PUBLIC_MOCK_AUTH=true` — padrão atual é API real.
 - Tokens, componentes reutilizáveis, WCAG 2 AA baseline ([frontend README §12](../frontend/README.md)).
 
-**Entrega esperada:** app navegável e fiel ao Figma; produto demonstrável **sem** backend.
+**Entrega:** app navegável e fiel ao Figma (concluída).
 
-### Fase B — Backend fundação (`RF001`–`RF005`)
+### Fase B — Backend fundação (`RF001`–`RF005`) — concluída
 
 - Schema PostgreSQL inicial ([data-model.md](./data-model.md)).
 - Registro, login e recuperação (token TTL, invalidações — [`RF003`](../product/requirements.md)).
 - CRUD de pacientes vinculado ao terapeuta; campos MEEM no cadastro.
 - Swagger/OpenAPI em desenvolvimento **ou** `openapi.yaml` versionado pela build CI.
 
-**Entrega esperada:** servidor homologável via Postman/Insomnia **sem** depender do app.
+**Entrega:** servidor homologável via Postman/Insomnia e Swagger `/api/docs` (concluída).
 
-### Fase C — Avaliações no servidor (`RF007`–`RF013`)
+### Fase C — Avaliações no servidor (`RF007`–`RF013`) — concluída
 
 Instrumentos na ordem acordada; **padrão** costuma iniciar pelo **TUG** (payload mais contido antes de Katz/Berg/Tinetti/**MEEM**).
 
@@ -100,12 +110,11 @@ Instrumentos na ordem acordada; **padrão** costuma iniciar pelo **TUG** (payloa
 - Recálculo de pontuações e cortes sempre **pelo servidor** ao finalizar a sessão.
 - Séries temporais para gráfico e geração de PDF com semânticas estáveis.
 
-**Saída:** contrato público para integração dos fluxos de avaliação já desenhados no app (Fase A).
+**Saída:** contrato HTTP para avaliações, timeseries e PDF (concluída).
 
-### Fase D — Integração frontend ↔ API
+### Fase D — Integração frontend ↔ API — **em andamento**
 
-- Substituir mocks por chamadas reais, RF a RF (auth → pacientes → wizard → finalize → PDF).
-- TanStack Query, tratamento de 401, loading/vazio/erro rede.
+- Substituir resquícios de mock por chamadas reais; TanStack Query onde aplicável; tratamento de 401, loading, vazio e erro de rede.
 - Alinhar tipos/forms ao OpenAPI (ou `packages/shared-contracts`).
 
 **Entrega esperada:** app em produção interna usando API como fonte da verdade.

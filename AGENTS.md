@@ -1,8 +1,8 @@
-Contexto técnico e de produto estão em **`docs/`** (repositório de **documentação**, sem código de API/app).
+Contexto técnico e de produto estão em **`docs/`**. A **implementação** vive em **`backend/`** (API NestJS) e **`frontend/`** (app Expo).
 
-Comece por **[docs/README.md](docs/README.md)** e **[docs/engineering/architecture.md](docs/engineering/architecture.md)**.
+Comece por **[README.md](README.md)** (instalação local), **[docs/README.md](docs/README.md)** e **[docs/engineering/architecture.md](docs/engineering/architecture.md)**.
 
-**Ordem de entrega (2026):** **Fase A** — telas Figma no app (mocks); **Fases B–C** — backend; **Fase D** — integração. Detalhe: [docs/engineering/repository-and-workflow.md](docs/engineering/repository-and-workflow.md).
+**Status (jul/2026):** Fases A–C concluídas (telas Figma, API RF001–RF013). **Fase D** em andamento — app integrado à API com `EXPO_PUBLIC_MOCK_AUTH=false`. Detalhe: [docs/engineering/repository-and-workflow.md](docs/engineering/repository-and-workflow.md).
 
 | Camada | Documentação |
 |--------|----------------|

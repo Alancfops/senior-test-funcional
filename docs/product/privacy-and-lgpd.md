@@ -200,4 +200,57 @@ Antes de merge que introduza novo dado ou integração:
 
 ---
 
+## 12. Revisão LGPD — RF013 (relatório PDF) · 2026-07-23
+
+**Escopo:** implementação de `POST /reports/assessments/:assessmentId`, builder PDF no servidor e botão “Gerar relatório PDF” no detalhe da avaliação (perfil RF006).
+
+**Classificação:** dados **pessoais** (nome, idade, sexo do paciente e fisio) + **sensíveis de saúde** (resultados funcionais, interpretação, evolução gráfica, observações clínicas opcionais, escolaridade no MEEM).
+
+**Finalidade:** documento clínico para arquivo/prontuário do **profissional responsável**, emitido após avaliação presencial (RF013).
+
+### Checklist §10 (engenharia)
+
+| Item | Status | Evidência / nota |
+|------|--------|------------------|
+| Categoria LGPD identificada | ✅ | §3 deste arquivo — linha “Relatório PDF” |
+| Finalidade em requirements/PRD | ✅ | RF013 · [requirements.md](./requirements.md) · [PRD.md](./PRD.md) |
+| Base legal (controlador) | ⏳ | Hipótese usual: art. 11 (assistência/tutela da saúde) — **validar com jurídico/DPO** |
+| Autorização `therapist_id` | ✅ | Query com `therapistId` do JWT; e2e `reports.e2e-spec.ts` (404 cross-tenant) |
+| Novo subprocessador | ✅ N/A | Mesmos operadores da API/Postgres; **sem** S3/cache PDF no MVP |
+| Retenção | ✅ (MVP) | Servidor **não persiste** PDF; app grava cópia **transitória** em cache local só para share/download |
+| Aviso de privacidade institucional | ⏳ | Controlador deve mencionar geração de PDF e destino (arquivo do profissional) |
+
+### Minimização aplicada na implementação
+
+| Dado | Incluído no PDF? | Motivo |
+|------|------------------|--------|
+| Nome, idade, sexo do paciente | Sim | RF013 — identificação |
+| Escolaridade | **Só MEEM** | RF013 — valor efetivo da sessão; omitida nos demais instrumentos |
+| Contato / e-mail / foto do paciente | **Não** | Minimização |
+| E-mail do fisio | **Não** | Minimização |
+| Payload bruto (`Assessment.payload`) | **Não** | Só resultado oficial pós-`finalize` |
+| Observações (`notesObservation`) | Só se preenchidas | Opcional na sessão |
+| Gráfico de evolução | Só se ≥ 2 do mesmo instrumento | RF012/RF013 |
+| PDF multi-instrumento | **Não** | Decisão de produto (§3) |
+
+### Controles técnicos verificados
+
+- Geração **somente no servidor** (app não monta PDF institucional).
+- Avaliação deve estar **FINALIZED**; rascunho não gera relatório.
+- Sem log de payload clínico ou bytes do PDF no backend.
+- HTTPS obrigatório em produção (§5).
+- Titular paciente: exportação parcial via PDF por instrumento (portabilidade parcial — §6).
+
+### Pendências para o controlador (não substituídas por engenharia)
+
+1. Confirmar **base legal** art. 11 (ou outra) para relatório PDF de saúde.
+2. Atualizar **aviso de privacidade** institucional (CESMAC/clínica) citando PDF e responsabilidade do profissional.
+3. Definir política de **retenção** de PDFs salvos pelo fisio **fora** do app (impressão, WhatsApp, nuvem pessoal).
+4. Indicar **DPO/encarregado** e contratos art. 41 com operadores (§8), se produção institucional.
+5. **CREFITO** — se incluído no cadastro futuro, revisar necessidade no PDF.
+
+**Conclusão engenharia:** implementação **aprovada para testes/piloto** com ressalvas jurídicas acima. **Não** considerar “produção institucional” sem ok do controlador/DPO.
+
+---
+
 *Revisar este arquivo quando houver novos fluxos (integração prontuário, analytics, conta gestor, armazenamento de foto em nuvem dedicada, etc.).*

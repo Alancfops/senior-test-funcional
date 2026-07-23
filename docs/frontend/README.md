@@ -1,6 +1,6 @@
 # Frontend — documentação de arquitetura
 
-> **Só documentação** em `docs/frontend/`. Explica **contexto**, **stack com porquês**, **como o app deve funcionar**, **telas e fluxos**, **integração com a API**, **privacidade no dispositivo** e **limites**. Não há código neste repositório.
+> **Especificação** em `docs/frontend/` — contexto, stack, fluxos e LGPD. **Código** em `frontend/` na raiz do monorepo.
 
 **Leitura relacionada:** [backend](../backend/README.md) (API) · [architecture](../engineering/architecture.md) · [requirements](../product/requirements.md) · [PRD](../product/PRD.md).
 
@@ -17,7 +17,7 @@
 7. [Gráficos e PDF no app](#7-gráficos-e-pdf-no-app)  
 8. [Dados no dispositivo e LGPD](#8-dados-no-dispositivo-e-lgpd)  
 9. [Integração com a API](#9-integração-com-a-api)  
-10. [Organização do código (quando existir)](#10-organização-do-código-quando-existir)  
+10. [Organização do código](#10-organização-do-código)  
 11. [Anti-padrões](#11-anti-padrões)  
 12. [Fases A–E e entrega](#12-fases-ae-e-entrega)  
 13. [Mapa Figma (telas e rotas)](figma-map.md)
@@ -332,7 +332,9 @@ Evita perfil desatualizado após novo teste.
 
 ---
 
-## 10. Organização do código (quando existir)
+## 10. Organização do código
+
+Implementação em `frontend/` na raiz do monorepo:
 
 ```
 frontend/
@@ -340,30 +342,25 @@ frontend/
 │   ├── (auth)/
 │   │   ├── login.tsx
 │   │   ├── register.tsx
-│   │   └── forgot-password.tsx
+│   │   └── forgot-password/     # RF003 — fluxo em várias telas
 │   ├── (main)/
-│   │   ├── index.tsx              # lista pacientes
-│   │   ├── patients/[id].tsx      # perfil RF006
-│   │   └── assessment/
-│   │       ├── instrument.tsx     # RF007
-│   │       ├── patient.tsx        # RF008
-│   │       ├── tutorial.tsx       # RF009
-│   │       ├── execute/[code].tsx # RF010 por instrumento
-│   │       └── feedback.tsx       # RF011
+│   │   ├── (tabs)/              # home, pacientes, histórico, configurações
+│   │   ├── patients/
+│   │   │   ├── new.tsx          # RF004
+│   │   │   └── [id]/            # RF006 + detalhe de avaliação
+│   │   └── assessments/         # RF007–RF011 — apply, tutorial, collect, result
 │   └── _layout.tsx
-└── src/
-    ├── config/env.ts
-    ├── lib/api.ts
-    ├── providers/query-provider.tsx
-    ├── stores/assessment-wizard.ts
-    ├── features/
-    │   ├── patients/
-    │   ├── instruments/
-    │   └── assessments/
-    └── components/
+├── src/
+│   ├── components/
+│   ├── features/                # api, auth, patients, assessments, reports
+│   ├── lib/                     # client HTTP, env, auth storage
+│   └── theme/
+└── .env                         # EXPO_PUBLIC_API_URL, EXPO_PUBLIC_MOCK_AUTH
 ```
 
-`execute/[code].tsx` pode ramificar para subcomponentes `TugForm`, `BergForm`, etc. — um arquivo por instrumento mantém complexidade isolada.
+Instalação e Makefile: [README na raiz](../../README.md).
+
+Rotas detalhadas e status de integração: [figma-map.md](figma-map.md).
 
 ---
 
@@ -372,7 +369,7 @@ frontend/
 | Anti-padrão | Consequência |
 |-------------|--------------|
 | Mock fixo de classificação em dev | Engana QA e profissional — **proibido** mesmo na Fase A |
-| Mock de auth/lista/cadastro sem rotular | Confunde integração na Fase D — marcar em `figma-map` e env |
+| Mock de auth/lista/cadastro sem rotular | Confunde quem testa — marcar em `figma-map` e env |
 | AsyncStorage para JWT sem secure | Risco em dispositivo comprometido |
 | Recharts no RN | Não roda nativamente como na web |
 | Gráfico com 1 ponto inventado | Engana o profissional |
@@ -387,14 +384,14 @@ frontend/
 
 Roteiro completo: [repository-and-workflow](../engineering/repository-and-workflow.md) §3.
 
-| Fase | Objetivo no app | Quando |
-|------|-----------------|--------|
-| **A** | Telas Figma, navegação, tokens, **mocks** (auth, listas, forms) | **Agora** — validar UX antes da API |
-| **B–C** | *(backend)* — sem mudança obrigatória no app | Servidor RF001–RF013 |
-| **D** | Integração API real; loading, vazio, erro, 401 | Substituir mocks RF a RF |
-| **E** | Polish, animações, microcopy | Sem alterar payloads HTTP |
+| Fase | Objetivo no app | Situação (jul/2026) |
+|------|-----------------|---------------------|
+| **A** | Telas Figma, navegação, tokens | Concluída |
+| **B–C** | Backend RF001–RF013 | Concluída |
+| **D** | Integração API real; loading, vazio, erro, 401 | **Em andamento** |
+| **E** | Polish, animações, microcopy | Pendente |
 
-**Mocks na Fase A:** permitidos para auth, cadastro e listas **desde que** não simulem scoring clínico, classificação oficial ou PDF. Rotular no código e em [figma-map.md](figma-map.md). Desligar com `EXPO_PUBLIC_MOCK_AUTH=false` quando auth real existir (Fase D).
+**Auth mock:** `EXPO_PUBLIC_MOCK_AUTH=true` ainda disponível para demo offline; padrão em `.env.example` é `false` (API real).
 
 **Acessibilidade:** WCAG 2 AA desde a Fase A — não postergar para a Fase E.
 

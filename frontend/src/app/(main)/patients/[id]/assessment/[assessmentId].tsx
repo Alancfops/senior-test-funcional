@@ -1,10 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { EvolutionChart } from '@/components/assessments/EvolutionChart';
 import { ActivityCard, activityToneForIndex } from '@/components/main/ActivityCard';
 import { PatientProfileHeader } from '@/components/patients/PatientProfileHeader';
+import { Button } from '@/components/ui/Button';
 import {
   CHART_EMPTY_MESSAGE,
   CHART_IMPROVEMENT_HINT,
@@ -23,6 +24,9 @@ import {
   getPatientByIdRequest,
   PatientRecord,
 } from '@/features/patients/api';
+import { generateAssessmentReportRequest } from '@/features/reports/api';
+import { buildAssessmentReportFilename } from '@/features/reports/report-filename';
+import { openAssessmentReportPdf } from '@/features/reports/open-report-pdf';
 import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
@@ -45,6 +49,7 @@ export default function PatientAssessmentDetailScreen() {
   const [canShowChart, setCanShowChart] = useState(false);
   const [instrumentCode, setInstrumentCode] = useState('');
   const [applicationDurationMs, setApplicationDurationMs] = useState<number | null>(null);
+  const [generatingReport, setGeneratingReport] = useState(false);
 
   useEffect(() => {
     if (!patientId || !assessmentUuid) {
@@ -152,6 +157,34 @@ export default function PatientAssessmentDetailScreen() {
     ? CHART_IMPROVEMENT_HINT[instrumentCode]
     : '';
 
+  async function handleGenerateReport() {
+    if (!assessmentUuid || generatingReport) {
+      return;
+    }
+
+    setGeneratingReport(true);
+
+    try {
+      const fallbackFilename = buildAssessmentReportFilename(patient.fullName);
+      const { buffer, filename } = await generateAssessmentReportRequest(
+        assessmentUuid,
+        fallbackFilename,
+      );
+      await openAssessmentReportPdf(buffer, filename);
+    } catch (error) {
+      const message =
+        error instanceof ApiError
+          ? error.message
+          : error instanceof Error
+            ? error.message
+            : 'Não foi possível gerar o relatório.';
+
+      Alert.alert('Relatório PDF', message);
+    } finally {
+      setGeneratingReport(false);
+    }
+  }
+
   return (
     <View style={styles.root}>
       <PatientProfileHeader
@@ -214,6 +247,13 @@ export default function PatientAssessmentDetailScreen() {
           {canShowChart && improvementHint ? (
             <Text style={styles.chartHint}>{improvementHint}</Text>
           ) : null}
+
+          <Button
+            label="Gerar relatório PDF"
+            onPress={handleGenerateReport}
+            loading={generatingReport}
+            accessibilityHint="Gera e abre o relatório PDF desta avaliação com os dados do paciente e do profissional"
+          />
         </View>
       </ScrollView>
     </View>

@@ -6,6 +6,7 @@ export type ForgotPasswordErrorParams = {
   errorName: string;
   errorMessage: string;
   email?: string;
+  errorKind?: 'invalid-code' | 'send-failure' | 'generic';
 };
 
 export function pushForgotPasswordError(
@@ -18,6 +19,7 @@ export function pushForgotPasswordError(
       errorName: params.errorName,
       errorMessage: params.errorMessage,
       ...(params.email ? { email: params.email } : {}),
+      ...(params.errorKind ? { errorKind: params.errorKind } : {}),
     },
   });
 }

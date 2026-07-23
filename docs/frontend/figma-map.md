@@ -22,44 +22,32 @@
 
 ---
 
-## Tabela Frame Figma — auth (implementado)
+## Tabela Frame Figma — auth e fluxo principal
 
 | Frame Figma | RF | Rota implementada | Status |
 |-------------|-----|-------------------|--------|
-| Login / Bem-Vindo | RF002 | `src/app/(auth)/login.tsx` | implementado |
-| Esqueceu a Senha? | RF003 | `src/app/(auth)/forgot-password/index.tsx` | UI; API pendente |
-| Email enviado | RF003 | `src/app/(auth)/forgot-password/sent.tsx` | UI; API pendente |
-| Digite o código | RF003 | `src/app/(auth)/forgot-password/code.tsx` | UI; API pendente |
-| Nova Senha | RF003 | `src/app/(auth)/forgot-password/new-password.tsx` | UI; API pendente |
-| Erro (recuperação) | RF003 | `src/app/(auth)/forgot-password/error.tsx` | implementado |
-| Criar Conta / Cadastro fisio | RF001 | `src/app/(auth)/register.tsx` | implementado |
-| Lista de Pacientes | RF005 | `src/app/(main)/(tabs)/patients.tsx` | header azul + busca; UI mock |
-| Configurações | RF002 ext. | `src/app/(main)/(tabs)/settings.tsx` | perfil + menus; logout funcional |
-| Informações do Sistema | — | `src/app/(main)/system-info.tsx` | créditos CESMAC; versão |
-| Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | UI mock; API pendente |
-| Perfil de Paciente (sem testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `maria-de-luordes` |
-| Perfil de Paciente (com testes) | RF006 | `src/app/(main)/patients/[id].tsx` | mock `albertino-silva` |
-| Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | UI mock |
-| Aplicar Teste | RF007 + RF008 | `src/app/(main)/assessments/apply.tsx` | UI mock; Katz, Berg, Tinetti, MEEM |
-| Tutorial (passo 1 e 2) | RF009 | `src/app/(main)/assessments/tutorial.tsx` | todos os instrumentos incl. TUG |
-| Coleta questionário | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | Berg, Katz, Tinetti, MEEM |
-| Coleta TUG (cronômetro) | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | 3 ensaios + diagramas |
-| Resultado avaliação | RF011 | `src/app/(main)/assessments/[instrumentCode]/result.tsx` | prévia Fase A; API Fase D |
+| Login / Bem-Vindo | RF002 | `src/app/(auth)/login.tsx` | integrado |
+| Esqueceu a Senha? | RF003 | `src/app/(auth)/forgot-password/index.tsx` | integrado |
+| E-mail enviado | RF003 | `src/app/(auth)/forgot-password/sent.tsx` | integrado |
+| Digite o código | RF003 | `src/app/(auth)/forgot-password/code.tsx` | integrado |
+| Nova Senha | RF003 | `src/app/(auth)/forgot-password/new-password.tsx` | integrado |
+| Erro (recuperação) | RF003 | `src/app/(auth)/forgot-password/error.tsx` | integrado |
+| Criar Conta / Cadastro fisio | RF001 | `src/app/(auth)/register.tsx` | integrado |
+| Início / Home | RF005 | `src/app/(main)/(tabs)/index.tsx` | integrado |
+| Histórico | RF005 | `src/app/(main)/(tabs)/history.tsx` | integrado |
+| Lista de Pacientes | RF005 | `src/app/(main)/(tabs)/patients.tsx` | integrado |
+| Configurações | RF002 ext. | `src/app/(main)/(tabs)/settings.tsx` | integrado |
+| Informações do Sistema | — | `src/app/(main)/system-info.tsx` | integrado |
+| Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | integrado |
+| Perfil de Paciente | RF006 | `src/app/(main)/patients/[id].tsx` | integrado |
+| Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | integrado (+ PDF RF013) |
+| Aplicar Teste | RF007 + RF008 | `src/app/(main)/assessments/apply.tsx` | integrado |
+| Tutorial (passo 1 e 2) | RF009 | `src/app/(main)/assessments/tutorial.tsx` | integrado |
+| Coleta questionário | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | integrado |
+| Coleta TUG (cronômetro) | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | integrado |
+| Resultado avaliação | RF011 | `src/app/(main)/assessments/[instrumentCode]/result.tsx` | integrado |
 
----
-
-## Mapa RF → rota Expo Router (alvo)
-
-| RF | Nome funcional | Rota Expo (alvo) | Fluxo / pré-requisito |
-|----|----------------|------------------|------------------------|
-| RF001 | Cadastro fisioterapeuta | `app/(auth)/register.tsx` | → home após sucesso |
-| RF002 | Login | `app/(auth)/login.tsx` | → home; link reset |
-| RF003 | Recuperar senha | `app/(auth)/forgot-password/*` | token 6 dígitos, nova senha |
-| RF004 | Cadastro paciente | modal/rota em `(main)/` ou `patients/new` | campos MEEM escolaridade |
-| RF005 | Lista + busca pacientes | `app/(main)/(tabs)/patients.tsx` | lista mock |
-| RF006 | Perfil / histórico paciente | `app/(main)/patients/[id].tsx` | vazio ou lista mock |
-
-**Legenda de status (Fase A):** `UI mock` = tela Figma + dados simulados; `integrado` = API real (Fase D).
+**Legenda:** `integrado` = consome API real com `EXPO_PUBLIC_MOCK_AUTH=false`. Auth mock (`features/auth/mock.ts`) permanece disponível só se `EXPO_PUBLIC_MOCK_AUTH=true`.
 
 ---
 

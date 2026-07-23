@@ -1,7 +1,7 @@
 # Arquitetura do sistema — Sênior Teste Funcional
 
 **Público:** engenharia, produto técnico e implementação (incluindo agentes automatizados).  
-**Status:** stack e desenho **oficiais** — **Fase A (frontend Figma + mocks) em andamento**; especificação do backend **fechada** para implementação nas Fases B–C. Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
+**Status:** stack e desenho **oficiais**. Implementação em `backend/` e `frontend/` ativa; **Fase D** (integração) em andamento (jul/2026). Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
 
 **Alinhamento:** [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), [data-model.md](./data-model.md). Fases de entrega: [repository-and-workflow.md](./repository-and-workflow.md).
 
@@ -350,9 +350,9 @@ Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
 | 6 | Git: `develop` + branch `feature/backend-*` | [repository-and-workflow §6](./repository-and-workflow.md) |
 | 7 | Rules Cursor backend ativas | `.cursor/rules/backend-*.mdc` |
 
-**Fase C** (avaliações) só após Fase B homologável via HTTP (Postman/Insomnia).
+**Fase C** (avaliações) concluída — homologável via HTTP e app integrado.
 
-**Fase A (frontend)** pode avançar em paralelo ou **antes** do backend — ver [repository-and-workflow.md](./repository-and-workflow.md) §3.
+**Fase D** em andamento — ver [repository-and-workflow.md](./repository-and-workflow.md) §3.
 
 ---
 

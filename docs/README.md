@@ -1,23 +1,21 @@
 # Documentação — Sênior Teste Funcional
 
-Índice canônico. Conteúdo em **português**; pastas e arquivos em **inglês**.
+Índice canônico da **especificação** do produto. Conteúdo em **português**; pastas e arquivos em **inglês**.
 
-Este repositório é **documentação do produto e da arquitetura** — a implementação vive em `backend/` e `frontend/` (monorepo previsto; ver [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md)).
+O monorepo contém **`docs/`** (o quê/por quê), **`backend/`** (API) e **`frontend/`** (app). Instalação e Makefile: [README na raiz](../README.md).
 
-**Status da arquitetura (2026):** **Fase A em andamento** — frontend (telas Figma + mocks no Expo); backend (Fases B–C) e integração (Fase D) conforme [repository-and-workflow.md](engineering/repository-and-workflow.md).
-
-Visão resumida: [README na raiz](../README.md).
+**Status (jul/2026):** Fases **A–C** concluídas; **Fase D** (integração app ↔ API) em andamento. Roteiro: [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md).
 
 | Pasta em `docs/` | Conteúdo |
 |------------------|----------|
 | [product/](product/) | PRD, requisitos (RF), LGPD |
-| [backend/](backend/) | Arquitetura da API: contexto, stack, porquês, fluxos, dados, LGPD (sem código) |
-| [frontend/](frontend/) | Arquitetura do app: contexto, stack, telas, gráficos, PDF, LGPD (sem código) |
-| [engineering/](engineering/) | Arquitetura global, modelo de dados, fluxo A→E |
+| [backend/](backend/) | Comportamento da API — contexto, stack, fluxos, dados, LGPD |
+| [frontend/](frontend/) | Comportamento do app — telas, gráficos, PDF, LGPD |
+| [engineering/](engineering/) | Arquitetura global, modelo de dados, fases A→E |
 | [clinical-protocols/](clinical-protocols/) | Roteiros de aplicação (não substituem RF) |
-| [contracts/](contracts/) | OpenAPI / schemas (quando existirem) |
+| [contracts/](contracts/) | Snapshots OpenAPI (Swagger ao vivo em `/api/docs`) |
 
-**Princípio:** `product/` = o que o software **obriga**; `clinical-protocols/` = como **aplicar** o teste; `backend/` e `frontend/` = **papel e comportamento** de cada camada, sem código.
+**Princípio:** `product/` = o que o software **obriga**; `clinical-protocols/` = como **aplicar** o teste; `backend/` e `frontend/` em `docs/` = **comportamento** de cada camada; código em `backend/` e `frontend/` na raiz.
 
 ---
 

@@ -28,7 +28,12 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
     tutorial: {
       step1: {
         body:
-          'A Escala de Equilíbrio de Berg (EEB) é um teste clínico padrão-ouro na fisioterapia para avaliar o equilíbrio estático e dinâmico, além do risco de quedas. O teste é composto por 14 tarefas do cotidiano (como sentar, levantar e alcançar objetos), com pontuações de 0 a 4 para cada uma.',
+          'A Escala de Equilíbrio de Berg (EEB) é um teste padrão-ouro na fisioterapia para avaliar equilíbrio estático e dinâmico e o risco de quedas.',
+        bullets: [
+          'Composta por 14 tarefas do cotidiano (sentar, levantar, alcançar objetos, etc.).',
+          'Cada tarefa recebe pontuação de 0 a 4 conforme o desempenho observado.',
+          'Quanto menor o escore total, maior o risco de quedas.',
+        ],
       },
       step2: {
         body: 'A nota máxima é 56 pontos, e quanto menor o escore, maior o risco de quedas:',
@@ -46,7 +51,12 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
     tutorial: {
       step1: {
         body:
-          'O Índice de Katz avalia a independência do paciente em Atividades Básicas de Vida Diária (ABVD). São seis domínios: banho, vestir-se, uso do vaso sanitário, transferência, continência e alimentação. Para cada item, registra-se se o paciente é Independente, necessita de Assistência ou é Dependente.',
+          'O Índice de Katz avalia a independência do paciente em Atividades Básicas de Vida Diária (ABVD).',
+        bullets: [
+          'Seis domínios: banho, vestir-se, uso do vaso sanitário, transferência, continência e alimentação.',
+          'Para cada item, registre se o paciente é Independente, necessita de Assistência ou é Dependente.',
+          'A classificação final considera apenas as atividades marcadas como Dependente.',
+        ],
       },
       step2: {
         body:
@@ -69,7 +79,12 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
     tutorial: {
       step1: {
         body:
-          'O Teste de Tinetti (Performance-Oriented Mobility Assessment — POMA) avalia equilíbrio e marcha em ambiente supervisionado. Compõe-se de duas partes: equilíbrio (9 itens, até 16 pontos) e marcha (7 itens, até 12 pontos). Cada item é pontuado conforme o desempenho observado, de 0 até 1 ou 2 pontos.',
+          'O Teste de Tinetti (Performance-Oriented Mobility Assessment — POMA) avalia equilíbrio e marcha em ambiente supervisionado.',
+        bullets: [
+          'Parte de equilíbrio: 9 itens, até 16 pontos.',
+          'Parte de marcha: 7 itens, até 12 pontos.',
+          'Cada item é pontuado conforme o desempenho observado (0, 1 ou 2 pontos).',
+        ],
       },
       step2: {
         body: 'O escore total máximo é 28 pontos (equilíbrio + marcha). A classificação de risco de queda segue:',
@@ -87,7 +102,12 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
     tutorial: {
       step1: {
         body:
-          'O Mini Exame do Estado Mental (MEEM) é um instrumento de triagem cognitiva que avalia orientação temporal e espacial, registro, atenção e cálculo, memória de evocação e linguagem. A pontuação total máxima é 30 pontos. Confirme a escolaridade do paciente no início da sessão — ela define o corte interpretativo.',
+          'O Mini Exame do Estado Mental (MEEM) é um instrumento de triagem cognitiva aplicado de forma padronizada.',
+        bullets: [
+          'Avalia orientação temporal e espacial, registro, atenção e cálculo, memória de evocação e linguagem.',
+          'A pontuação total máxima é 30 pontos.',
+          'Confirme a escolaridade do paciente no início da sessão — ela define o corte interpretativo.',
+        ],
       },
       step2: {
         body:
@@ -123,7 +143,12 @@ export const TUG_INSTRUMENT: TutorialInstrument = {
   tutorial: {
     step1: {
       body:
-        'O TUG (Timed Up and Go) avalia mobilidade, equilíbrio dinâmico e risco de quedas pelo tempo para levantar de uma cadeira, caminhar 3 metros, girar, retornar e sentar. São necessários três ensaios reais após uma tentativa prática, com cronômetro integrado.',
+        'O TUG (Timed Up and Go) avalia mobilidade, equilíbrio dinâmico e risco de quedas pelo tempo de locomoção.',
+      bullets: [
+        'O paciente levanta de uma cadeira, caminha 3 metros, gira, retorna e senta.',
+        'Realize uma tentativa prática antes dos três ensaios cronometrados.',
+        'Use o cronômetro integrado do aplicativo para registrar cada ensaio.',
+      ],
     },
     step2: {
       body: 'O resultado bruto é a média aritmética dos três ensaios. A interpretação de triagem segue:',

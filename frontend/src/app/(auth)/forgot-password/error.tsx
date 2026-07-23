@@ -7,10 +7,11 @@ import { tokens } from '@/theme/tokens';
 
 /** Figma — Erro no fluxo de recuperação (RF003). */
 export default function ForgotPasswordErrorScreen() {
-  const { errorName, errorMessage, email } = useLocalSearchParams<{
+  const { errorName, errorMessage, email, errorKind } = useLocalSearchParams<{
     errorName?: string;
     errorMessage?: string;
     email?: string;
+    errorKind?: 'invalid-code' | 'send-failure' | 'generic';
   }>();
 
   const title = errorName?.trim() || 'Falha no envio';
@@ -19,6 +20,14 @@ export default function ForgotPasswordErrorScreen() {
     'Não foi possível concluir a recuperação de senha. Tente novamente.';
 
   function handleDismiss() {
+    if (errorKind === 'invalid-code' && email) {
+      router.replace({
+        pathname: '/(auth)/forgot-password/sent',
+        params: { email },
+      });
+      return;
+    }
+
     if (email) {
       router.replace({
         pathname: '/(auth)/forgot-password',

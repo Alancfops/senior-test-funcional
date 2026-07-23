@@ -1,16 +1,25 @@
 # Contratos de interface (machine-readable)
 
-Pasta destinada a **artefatos consumíveis automaticamente** por ferramentas: geração de tipos de cliente (TypeScript/outros), checagens de conformidade sob CI ou referência rápida sem depender apenas de servidor em execução.
+Pasta para **artefatos consumíveis automaticamente**: tipos de cliente, checagens de conformidade em CI ou referência offline.
 
-**Situação atual:** estrutura mínima intencional enquanto o servidor não publica primeira OpenAPI oficial; não indica menor prioridade técnica para **contratos explícitos** — apenas ausência física momento zero.
+## Situação atual
+
+| Fonte | Onde | Uso |
+|-------|------|-----|
+| **Swagger (ao vivo)** | `http://localhost:3000/api/docs` com API em execução | Referência principal na Fase D |
+| **Snapshots versionados** | `docs/contracts/openapi/` (quando publicados) | Diff revisível antes de rupturas semver |
+
+A API NestJS já expõe OpenAPI via `@nestjs/swagger` em `/api/docs`. Snapshots em disco são **opcionais** — úteis para CI sem subir o servidor.
+
+## Estrutura sugerida (futuro)
 
 ```
-openapi/openapi-v1.yaml        # Exemplo típico: snapshot Swagger/Nest bundle CI
-schemas/minimal/request/*.json # Exemplos de payload paralelos Zod opcionais QA
+docs/contracts/
+├── openapi/
+│   └── openapi-v1.yaml    # export periódico do Swagger
+└── schemas/               # exemplos JSON opcionais para QA
 ```
 
-**Propagação sugerida**
+**Propagação:** artefatos dinâmicos vêm do `backend/`; esta pasta acumula apenas **snapshots** quando a equipe quiser versioná-los explicitamente.
 
-- Artefatos **dinâmicos** primários ficam junto código gerador servidor (`backend/`) sempre que servidor rodar ou build exportar swagger.  
-- **`docs/contracts/`** acumula **snapshots versionados** apenas quando institucionalmente útil antes de rupturas semver da API (**diff público revisível**).
-
+Instalação e execução local: [README na raiz](../../README.md).
