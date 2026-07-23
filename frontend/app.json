@@ -37,7 +37,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Permita acesso às fotos para adicionar a imagem do paciente."
+          "photosPermission": "Permita acesso às fotos para adicionar a imagem do paciente.",
+          "cameraPermission": "Permita acesso à câmera para fotografar o paciente."
         }
       ]
     ],

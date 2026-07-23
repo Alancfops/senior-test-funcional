@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { Href, router } from 'expo-router';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SettingsMenuItem, SettingsSection } from '@/components/settings/SettingsMenuItem';
@@ -8,11 +8,7 @@ import { useSessionUser } from '@/hooks/use-session-user';
 import { clearAccessToken } from '@/lib/auth/storage';
 import { tokens } from '@/theme/tokens';
 
-function showSoon(label: string) {
-  Alert.alert('Em breve', `${label} será disponibilizado em uma próxima versão.`);
-}
-
-/** Figma — Configurações (cores adaptadas ao design system #3666E0 / #F6F7FC). */
+/** Figma — Configurações (menu enxuto: legal, informações, sair). */
 export default function SettingsTabScreen() {
   const insets = useSafeAreaInsets();
   const sessionUser = useSessionUser();
@@ -57,29 +53,20 @@ export default function SettingsTabScreen() {
           ) : null}
         </View>
 
-        <SettingsSection title="Geral">
-          <SettingsMenuItem label="Editar perfil" onPress={() => showSoon('Editar perfil')} />
+        <SettingsSection title="Legal e informações">
           <SettingsMenuItem
-            label="Gerenciar preferências"
-            onPress={() => showSoon('Gerenciar preferências')}
-          />
-        </SettingsSection>
-
-        <SettingsSection title="Segurança e privacidade">
-          <SettingsMenuItem
-            label="Permissões de Usuário"
-            onPress={() => showSoon('Permissões de Usuário')}
+            label="LGPD e Termos de uso"
+            onPress={() => router.push('/(main)/privacy-terms' as Href)}
           />
           <SettingsMenuItem
             label="Informações do Sistema"
             onPress={() => router.push('/(main)/system-info' as Href)}
           />
-          <SettingsMenuItem
-            label="LGPD e Termos de uso"
-            onPress={() => showSoon('LGPD e Termos de uso')}
-          />
-          <SettingsMenuItem label="Mudar senha" onPress={() => showSoon('Mudar senha')} />
         </SettingsSection>
+
+        <Text style={styles.hint}>
+          Para alterar a senha, saia da conta e use &quot;Esqueci minha senha&quot; na tela de login.
+        </Text>
 
         <Pressable
           accessibilityRole="button"
@@ -157,6 +144,12 @@ const styles = StyleSheet.create({
     ...tokens.typography.caption,
     color: tokens.colors.textMuted,
     textAlign: 'center',
+  },
+  hint: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 20,
   },
   logout: {
     minHeight: tokens.touchTargetMin,

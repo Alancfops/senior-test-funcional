@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { tokens } from '@/theme/tokens';
 
@@ -17,9 +17,31 @@ type ProfilePhotoFieldProps = {
   error?: string;
 };
 
-/** RF004 — foto opcional (galeria → API). */
+const PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
+  mediaTypes: ['images'],
+  allowsEditing: true,
+  aspect: [1, 1],
+  quality: 0.6,
+  base64: true,
+};
+
+function assetToSelection(asset: ImagePicker.ImagePickerAsset): PatientAvatarSelection | null {
+  if (!asset.base64) {
+    return null;
+  }
+
+  const mimeType = asset.mimeType === 'image/png' ? 'image/png' : 'image/jpeg';
+
+  return {
+    uri: asset.uri,
+    mimeType,
+    base64: asset.base64,
+  };
+}
+
+/** RF004 — foto opcional; permissões de câmera/galeria só ao escolher a foto. */
 export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldProps) {
-  async function handlePickPhoto() {
+  async function pickFromLibrary() {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
       Alert.alert(
@@ -29,26 +51,49 @@ export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldP
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.6,
-      base64: true,
-    });
-
-    if (result.canceled || !result.assets[0]?.base64) {
+    const result = await ImagePicker.launchImageLibraryAsync(PICKER_OPTIONS);
+    if (result.canceled || !result.assets[0]) {
       return;
     }
 
-    const asset = result.assets[0];
-    const mimeType = asset.mimeType === 'image/png' ? 'image/png' : 'image/jpeg';
+    const selection = assetToSelection(result.assets[0]);
+    if (selection) {
+      onChange?.(selection);
+    }
+  }
 
-    onChange?.({
-      uri: asset.uri,
-      mimeType,
-      base64: asset.base64,
-    });
+  async function pickFromCamera() {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert(
+        'Permissão necessária',
+        'Permita acesso à câmera para fotografar o paciente.',
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync(PICKER_OPTIONS);
+    if (result.canceled || !result.assets[0]) {
+      return;
+    }
+
+    const selection = assetToSelection(result.assets[0]);
+    if (selection) {
+      onChange?.(selection);
+    }
+  }
+
+  function handlePickPhoto() {
+    if (Platform.OS === 'web') {
+      void pickFromLibrary();
+      return;
+    }
+
+    Alert.alert('Foto do paciente', 'Como deseja adicionar a foto?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Tirar foto', onPress: () => void pickFromCamera() },
+      { text: 'Escolher da galeria', onPress: () => void pickFromLibrary() },
+    ]);
   }
 
   function handleRemovePhoto() {
@@ -61,7 +106,7 @@ export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldP
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={value ? 'Alterar foto de perfil' : 'Adicionar foto de perfil'}
-        accessibilityHint="Abre a galeria para escolher uma foto JPG ou PNG"
+        accessibilityHint="Abre câmera ou galeria para escolher uma foto JPG ou PNG"
         onPress={handlePickPhoto}
         onLongPress={value ? handleRemovePhoto : undefined}
         style={({ pressed }) => [styles.photoWrap, pressed && styles.pressed]}>
@@ -81,7 +126,9 @@ export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldP
           ) : null}
         </View>
       </Pressable>
-      <Text style={styles.hint}>{value ? 'Toque para trocar · segure para remover' : 'Adicionar foto'}</Text>
+      <Text style={styles.hint}>
+        {value ? 'Toque para trocar · segure para remover' : 'Adicionar foto (câmera ou galeria)'}
+      </Text>
       {error ? (
         <Text style={styles.error} accessibilityRole="alert" accessibilityLiveRegion="polite">
           {error}

@@ -142,7 +142,7 @@ Registrar em `requirements.md` quando priorizar fluxos formais de exclusão/expo
 |------|-------------------------------------|--------------|
 | Avaliações finalizadas | Enquanto relação de cuidado + prazos legais/archivamento institucional | Backup de Postgres replica retenção |
 | Rascunhos de avaliação | Política curta ou limpeza periódica | Campo `status = DRAFT` |
-| Tokens recuperação | Até expirar ou consumir | RF003 |
+| Tokens recuperação | Expiram em 10 min (RF003); removidos do banco quando expiram ou após 24h | RF003 |
 | Logs | Prazo mínimo necessário | Evitar logar payload clínico completo |
 | PDF em cache S3 | TTL alinhado ao controlador | Opcional no MVP |
 

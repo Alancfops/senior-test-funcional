@@ -36,7 +36,8 @@
 | Início / Home | RF005 | `src/app/(main)/(tabs)/index.tsx` | integrado |
 | Histórico | RF005 | `src/app/(main)/(tabs)/history.tsx` | integrado |
 | Lista de Pacientes | RF005 | `src/app/(main)/(tabs)/patients.tsx` | integrado |
-| Configurações | RF002 ext. | `src/app/(main)/(tabs)/settings.tsx` | integrado |
+| Configurações | RF002 ext. | `src/app/(main)/(tabs)/settings.tsx` | integrado (LGPD, info, sair) |
+| LGPD e Termos de uso | — | `src/app/(main)/privacy-terms.tsx` | integrado |
 | Informações do Sistema | — | `src/app/(main)/system-info.tsx` | integrado |
 | Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | integrado |
 | Perfil de Paciente | RF006 | `src/app/(main)/patients/[id].tsx` | integrado |
