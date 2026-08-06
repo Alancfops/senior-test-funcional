@@ -39,8 +39,13 @@ export const patientSchema = z.object({
   phone: z
     .string()
     .trim()
-    .min(1, 'Informe o telefone.')
-    .regex(BRAZIL_MOBILE_PHONE_DISPLAY_REGEX, 'Digite um telefone celular válido.'),
+    .min(1, 'Informe e-mail ou telefone.')
+    .refine(
+      (value) =>
+        BRAZIL_MOBILE_PHONE_DISPLAY_REGEX.test(value) ||
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      'Informe um e-mail ou telefone celular válido.',
+    ),
 });
 
 export type PatientFormValues = {

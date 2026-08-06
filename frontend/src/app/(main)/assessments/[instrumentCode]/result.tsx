@@ -196,6 +196,7 @@ export default function AssessmentResultScreen() {
       <AssessmentCollectHeader
         fullName={patient.fullName}
         age={patient.age}
+        avatarUrl={patient.avatarUrl}
         screenTitle="Resultado"
         onBack={() => router.back()}
       />

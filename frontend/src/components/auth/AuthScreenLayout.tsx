@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -35,16 +36,40 @@ export function AuthScreenLayout({
   bodyFlex = 3,
   scrollable = true,
 }: AuthScreenLayoutProps) {
+  const [keyboardInset, setKeyboardInset] = useState(0);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSub = Keyboard.addListener(showEvent, (event) => {
+      setKeyboardInset(event.endCoordinates.height);
+    });
+    const hideSub = Keyboard.addListener(hideEvent, () => {
+      setKeyboardInset(0);
+    });
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  const bottomPad = tokens.spacing.xl + (Platform.OS === 'android' ? keyboardInset : 0);
+
   if (variant === 'plain') {
     return (
       <SafeAreaView style={styles.plainRoot} edges={['top', 'bottom']}>
         <KeyboardAvoidingView
           style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
           <ScrollView
             style={styles.flex}
-            contentContainerStyle={styles.plainScrollContent}
+            contentContainerStyle={[styles.plainScrollContent, { paddingBottom: bottomPad }]}
             keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
             showsVerticalScrollIndicator={false}>
             {title ? (
               <View style={styles.headerBlock}>
@@ -86,12 +111,15 @@ export function AuthScreenLayout({
       <View style={[styles.body, { flex: bodyFlex }]}>
         <KeyboardAvoidingView
           style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
           {scrollable ? (
             <ScrollView
               style={styles.flex}
-              contentContainerStyle={styles.scrollContent}
+              contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomPad }]}
               keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
+              automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
               showsVerticalScrollIndicator={false}>
               {brandedContent}
             </ScrollView>
@@ -113,7 +141,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: tokens.spacing.lg,
     paddingTop: tokens.spacing.lg,
-    paddingBottom: tokens.spacing.xl,
   },
   plainTitle: {
     ...tokens.typography.title,
@@ -138,7 +165,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: tokens.spacing.lg,
     paddingTop: tokens.spacing.lg,
-    paddingBottom: tokens.spacing.xl,
   },
   headerBlock: {
     marginBottom: tokens.spacing.lg,

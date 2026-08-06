@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     ...tokens.typography.body,
     fontWeight: '600',
-    color: tokens.colors.primary,
+    color: tokens.colors.error,
     textAlign: 'center',
   },
   emptyHint: {

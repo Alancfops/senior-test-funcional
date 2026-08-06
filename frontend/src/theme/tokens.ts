@@ -30,6 +30,13 @@ export const tokens = {
     accentTeal: '#7CC5B4',
     checkOk: '#3666E0',
     pageBackground: '#F6F7FC',
+    /** Splash / loading — Figma (cores de referência 2026-08-06). */
+    splashBackground: '#F6F7FC',
+    splashGradientStart: '#FFFFFF',
+    /** Faixa clara longa no topo (mock: ~40–50% antes do azul). */
+    splashGradientSoft: '#F6F7FC',
+    splashGradientMid: '#5C9FC3',
+    splashGradientEnd: '#4983D1',
     cardShadow: 'rgba(15, 23, 42, 0.08)',
     activityPrimary: '#3666E0',
     activitySecondary: '#7CC5B4',

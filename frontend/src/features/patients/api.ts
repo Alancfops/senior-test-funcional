@@ -93,6 +93,17 @@ export async function createPatientRequest(payload: CreatePatientPayload) {
   });
 }
 
+export type UpdatePatientPayload = CreatePatientPayload;
+
+export async function updatePatientRequest(patientId: string, payload: UpdatePatientPayload) {
+  const token = await getAccessToken();
+  return apiRequest<PatientRecord>(`/patients/${patientId}`, {
+    method: 'PATCH',
+    token,
+    body: payload,
+  });
+}
+
 export type PatientAssessmentSummary = {
   id: string;
   instrumentCode: string;

@@ -6,9 +6,11 @@ export default function MainLayout() {
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="assessments" />
       <Stack.Screen name="patients/new" />
+      <Stack.Screen name="patients/[id]/edit" />
       <Stack.Screen name="patients/[id]" />
       <Stack.Screen name="patients/[id]/assessment/[assessmentId]" />
       <Stack.Screen name="system-info" />
+      <Stack.Screen name="privacy-terms" />
     </Stack>
   );
 }

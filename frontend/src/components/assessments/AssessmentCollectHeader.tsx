@@ -1,13 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { PatientAvatar } from '@/components/patients/PatientAvatar';
 import { tokens } from '@/theme/tokens';
 
 type AssessmentCollectHeaderProps = {
   fullName: string;
   age: number;
+  avatarUrl?: string | null;
   screenTitle?: string;
   onBack: () => void;
   onEditPatient?: () => void;
@@ -17,6 +18,7 @@ type AssessmentCollectHeaderProps = {
 export function AssessmentCollectHeader({
   fullName,
   age,
+  avatarUrl,
   screenTitle = 'Aplicar Teste',
   onBack,
   onEditPatient,
@@ -41,14 +43,13 @@ export function AssessmentCollectHeader({
       </View>
 
       <View style={styles.profileRow}>
-        <View style={styles.avatarRing}>
-          <Image
-            source={require('@/assets/images/brand/seniortest-logo-circle.png')}
-            style={styles.avatar}
-            contentFit="cover"
-            accessibilityIgnoresInvertColors
-          />
-        </View>
+        <PatientAvatar
+          fullName={fullName}
+          avatarUrl={avatarUrl}
+          size={64}
+          shape="circle"
+          tone="onPrimary"
+        />
         <View style={styles.identity}>
           <Text style={styles.name}>{fullName}</Text>
           <Text style={styles.age}>{age} Anos</Text>
@@ -59,7 +60,7 @@ export function AssessmentCollectHeader({
             accessibilityLabel="Editar paciente"
             onPress={onEditPatient}
             style={({ pressed }) => [styles.editButton, pressed && styles.pressed]}>
-            <Ionicons name="pencil" size={18} color={tokens.colors.primary} />
+            <Ionicons name="pencil-outline" size={18} color={tokens.colors.primary} />
           </Pressable>
         ) : (
           <View style={styles.editPlaceholder} />
@@ -103,19 +104,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: tokens.spacing.md,
-  },
-  avatarRing: {
-    width: 64,
-    height: 64,
-    borderRadius: tokens.radius.full,
-    backgroundColor: 'rgba(255,255,255,0.35)',
-    padding: 3,
-    overflow: 'hidden',
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
-    borderRadius: tokens.radius.full,
   },
   identity: {
     flex: 1,

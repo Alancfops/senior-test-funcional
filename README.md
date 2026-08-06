@@ -65,11 +65,11 @@ Verifique o e-mail: `make mail-check`
 |----------|------------------------|
 | Web / simulador iOS | `http://localhost:3000` |
 | Emulador Android | `http://localhost:3000` (o app converte para `10.0.2.2`) |
-| Celular físico (Expo Go) | `http://SEU_IP_LAN:3000` — ex.: `http://192.168.1.10:3000` |
+| Celular físico (Expo Go) | **`make start` detecta o IP LAN automaticamente** e grava em `frontend/.env` |
 
-Descubra o IP da máquina: `hostname -I` (Linux) ou `ipconfig` (Windows). Celular e PC devem estar na **mesma rede Wi‑Fi**.
+Celular e PC devem estar na **mesma rede Wi‑Fi**. Ao mudar de rede (casa ↔ escritório), rode **`make start` de novo** — o IP é atualizado antes do Expo subir.
 
-Após alterar `.env`, **reinicie o Expo** (`make start` de novo ou `r` no terminal).
+Para forçar só a sincronização: `make sync-frontend-api-url`. IP manual: edite `EXPO_PUBLIC_API_URL` e reinicie o Expo.
 
 ---
 
@@ -124,7 +124,7 @@ Swagger da API (dev): [http://localhost:3000/api/docs](http://localhost:3000/api
 
 | Sintoma | O que verificar |
 |---------|-----------------|
-| Lista de pacientes carregando infinito | `EXPO_PUBLIC_API_URL` com IP errado; reinicie Expo após corrigir |
+| Lista de pacientes carregando infinito | IP da API desatualizado — rode `make start` (sincroniza IP) ou `make sync-frontend-api-url`; celular na mesma Wi‑Fi que o PC |
 | `ECONNREFUSED` / sem conexão | API rodando? `curl http://localhost:3000/health` |
 | Código de senha não chega | Spam; e-mail cadastrado? `make mail-check`; ou `MAIL_PROVIDER=console` |
 | Código inválido após reenvio | Usar código do **último** e-mail, não de tentativas anteriores |

@@ -123,6 +123,9 @@ export default function PatientProfileScreen() {
         fullName={patient.fullName}
         age={patient.age}
         avatarUrl={patient.avatarUrl}
+        onEditPatient={() => {
+          router.push(`/(main)/patients/${patient.id}/edit` as Href);
+        }}
       />
 
       <ScrollView

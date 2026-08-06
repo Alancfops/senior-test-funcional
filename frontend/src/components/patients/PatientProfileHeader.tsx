@@ -1,22 +1,26 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { resolvePatientAvatarUrl } from '@/features/patients/avatar-url';
+import { PatientAvatar } from '@/components/patients/PatientAvatar';
 import { tokens } from '@/theme/tokens';
 
 type PatientProfileHeaderProps = {
   fullName: string;
   age: number;
   avatarUrl?: string | null;
+  onEditPatient?: () => void;
 };
 
-/** Figma — Perfil de Paciente: header azul, avatar, nome e idade. */
-export function PatientProfileHeader({ fullName, age, avatarUrl }: PatientProfileHeaderProps) {
+/** Figma — Perfil de Paciente: header azul, avatar/iniciais, nome/idade e lápis. */
+export function PatientProfileHeader({
+  fullName,
+  age,
+  avatarUrl,
+  onEditPatient,
+}: PatientProfileHeaderProps) {
   const insets = useSafeAreaInsets();
-  const resolvedAvatar = resolvePatientAvatarUrl(avatarUrl);
 
   return (
     <View style={[styles.wrap, { paddingTop: insets.top }]}>
@@ -36,22 +40,27 @@ export function PatientProfileHeader({ fullName, age, avatarUrl }: PatientProfil
       </View>
 
       <View style={styles.profileRow}>
-        <View style={styles.avatarRing}>
-          <Image
-            source={
-              resolvedAvatar
-                ? { uri: resolvedAvatar }
-                : require('@/assets/images/brand/seniortest-logo-circle.png')
-            }
-            style={styles.avatar}
-            contentFit="cover"
-            accessibilityIgnoresInvertColors
-          />
-        </View>
+        <PatientAvatar
+          fullName={fullName}
+          avatarUrl={avatarUrl}
+          size={72}
+          shape="circle"
+          tone="onPrimary"
+        />
         <View style={styles.identity}>
           <Text style={styles.name}>{fullName}</Text>
           <Text style={styles.age}>{age} Anos</Text>
         </View>
+        {onEditPatient ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Editar paciente"
+            accessibilityHint="Abre o formulário para alterar os dados cadastrais"
+            onPress={onEditPatient}
+            style={({ pressed }) => [styles.editButton, pressed && styles.pressed]}>
+            <Ionicons name="pencil-outline" size={18} color={tokens.colors.primary} />
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );
@@ -95,19 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: tokens.spacing.md,
   },
-  avatarRing: {
-    width: 72,
-    height: 72,
-    borderRadius: tokens.radius.full,
-    backgroundColor: 'rgba(255,255,255,0.35)',
-    padding: 3,
-    overflow: 'hidden',
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
-    borderRadius: tokens.radius.full,
-  },
   identity: {
     flex: 1,
     gap: 2,
@@ -121,5 +117,13 @@ const styles = StyleSheet.create({
   age: {
     ...tokens.typography.subtitle,
     color: 'rgba(255,255,255,0.92)',
+  },
+  editButton: {
+    width: 40,
+    height: 40,
+    borderRadius: tokens.radius.full,
+    backgroundColor: tokens.colors.onPrimary,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -1,8 +1,7 @@
-import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { resolvePatientAvatarUrl } from '@/features/patients/avatar-url';
+import { PatientAvatar } from '@/components/patients/PatientAvatar';
 import { tokens } from '@/theme/tokens';
 
 type PatientListItemProps = {
@@ -14,8 +13,6 @@ type PatientListItemProps = {
 
 /** Figma — card da lista de pacientes (RF005). */
 export function PatientListItem({ fullName, age, avatarUrl, onPress }: PatientListItemProps) {
-  const resolvedAvatar = resolvePatientAvatarUrl(avatarUrl);
-
   return (
     <Pressable
       accessibilityRole="button"
@@ -23,18 +20,7 @@ export function PatientListItem({ fullName, age, avatarUrl, onPress }: PatientLi
       accessibilityHint="Abre o perfil do paciente"
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
-      <View style={styles.photoWrap}>
-        <Image
-          source={
-            resolvedAvatar
-              ? { uri: resolvedAvatar }
-              : require('@/assets/images/brand/seniortest-logo-circle.png')
-          }
-          style={styles.photo}
-          contentFit="cover"
-          accessibilityIgnoresInvertColors
-        />
-      </View>
+      <PatientAvatar fullName={fullName} avatarUrl={avatarUrl} size={52} shape="rounded" tone="light" />
       <View style={styles.body}>
         <Text style={styles.name}>{fullName}</Text>
         <Text style={styles.age}>{age} Anos</Text>
@@ -60,17 +46,6 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.92,
-  },
-  photoWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: tokens.radius.md,
-    overflow: 'hidden',
-    backgroundColor: '#EEF3FF',
-  },
-  photo: {
-    width: '100%',
-    height: '100%',
   },
   body: {
     flex: 1,

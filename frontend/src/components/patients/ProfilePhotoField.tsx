@@ -3,6 +3,7 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { getPatientInitials } from '@/features/patients/initials';
 import { tokens } from '@/theme/tokens';
 
 export type PatientAvatarSelection = {
@@ -14,6 +15,10 @@ export type PatientAvatarSelection = {
 type ProfilePhotoFieldProps = {
   value?: PatientAvatarSelection | null;
   onChange?: (value: PatientAvatarSelection | null) => void;
+  /** URI já salva no servidor (modo edição), exibida até o usuário escolher outra. */
+  existingUri?: string | null;
+  /** Nome para iniciais quando não há foto. */
+  fullName?: string;
   error?: string;
 };
 
@@ -40,7 +45,16 @@ function assetToSelection(asset: ImagePicker.ImagePickerAsset): PatientAvatarSel
 }
 
 /** RF004 — foto opcional; permissões de câmera/galeria só ao escolher a foto. */
-export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldProps) {
+export function ProfilePhotoField({
+  value,
+  onChange,
+  existingUri,
+  fullName = '',
+  error,
+}: ProfilePhotoFieldProps) {
+  const previewUri = value?.uri ?? existingUri ?? null;
+  const hasPhoto = Boolean(previewUri);
+  const initials = getPatientInitials(fullName);
   async function pickFromLibrary() {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
@@ -105,21 +119,23 @@ export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldP
       <Text style={styles.label}>Foto de perfil</Text>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={value ? 'Alterar foto de perfil' : 'Adicionar foto de perfil'}
+        accessibilityLabel={hasPhoto ? 'Alterar foto de perfil' : 'Adicionar foto de perfil'}
         accessibilityHint="Abre câmera ou galeria para escolher uma foto JPG ou PNG"
         onPress={handlePickPhoto}
         onLongPress={value ? handleRemovePhoto : undefined}
         style={({ pressed }) => [styles.photoWrap, pressed && styles.pressed]}>
         <View style={styles.avatarShell}>
           <View style={styles.circle}>
-            {value ? (
-              <Image source={{ uri: value.uri }} style={styles.preview} contentFit="cover" />
+            {previewUri ? (
+              <Image source={{ uri: previewUri }} style={styles.preview} contentFit="cover" />
             ) : (
-              <Ionicons name="person-outline" size={48} color={tokens.colors.textMuted} />
+              <Text style={styles.initials} importantForAccessibility="no">
+                {initials}
+              </Text>
             )}
           </View>
 
-          {!value ? (
+          {!hasPhoto ? (
             <View style={styles.addBadge} pointerEvents="none">
               <Ionicons name="add" size={16} color={tokens.colors.onPrimary} />
             </View>
@@ -127,7 +143,11 @@ export function ProfilePhotoField({ value, onChange, error }: ProfilePhotoFieldP
         </View>
       </Pressable>
       <Text style={styles.hint}>
-        {value ? 'Toque para trocar · segure para remover' : 'Adicionar foto (câmera ou galeria)'}
+        {value
+          ? 'Toque para trocar · segure para remover'
+          : hasPhoto
+            ? 'Toque para trocar a foto'
+            : 'Adicionar foto (câmera ou galeria)'}
       </Text>
       {error ? (
         <Text style={styles.error} accessibilityRole="alert" accessibilityLiveRegion="polite">
@@ -174,6 +194,13 @@ const styles = StyleSheet.create({
   preview: {
     width: '100%',
     height: '100%',
+  },
+  initials: {
+    fontSize: 36,
+    fontWeight: '700',
+    lineHeight: 42,
+    letterSpacing: 1,
+    color: tokens.colors.primary,
   },
   addBadge: {
     position: 'absolute',

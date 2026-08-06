@@ -10,7 +10,7 @@ COMPOSE := docker compose
 
 .DEFAULT_GOAL := install
 
-.PHONY: help install setup env secrets mail-check db-up db-down db-logs db-reset start start-backend start-frontend stop lint test migrate generate prisma-studio
+.PHONY: help install setup env secrets mail-check sync-frontend-api-url db-up db-down db-logs db-reset start start-backend start-frontend stop lint test migrate generate prisma-studio
 
 help:
 	@echo "Senior Teste Funcional — alvos Make"
@@ -20,7 +20,8 @@ help:
 	@echo "  make secrets         Gera JWT_ACCESS_SECRET aleatório (copie para backend/.env)"
 	@echo "  make mail-check      Verifica configuração Resend no backend/.env"
 	@echo "  make start           Instala deps, .env, Postgres, API (:3000) e Expo"
-	@echo "  make start-frontend  Apenas Expo"
+	@echo "  make start-frontend  Apenas Expo (sincroniza IP LAN da API antes)"
+	@echo "  make sync-frontend-api-url  Atualiza EXPO_PUBLIC_API_URL com IP LAN do PC"
 	@echo "  make start-backend   Postgres + API NestJS (watch)"
 	@echo "  make db-up           Sobe PostgreSQL via Docker Compose"
 	@echo "  make db-down         Para containers Docker"
@@ -88,6 +89,9 @@ env:
 		echo ">> Criado $(BACKEND_DIR)/.env"; \
 	fi
 
+sync-frontend-api-url: env
+	@bash scripts/sync-frontend-api-url.sh
+
 db-up:
 	@if command -v docker >/dev/null 2>&1; then \
 		echo ">> Subindo PostgreSQL (Docker)..."; \
@@ -110,7 +114,7 @@ db-reset:
 	@$(COMPOSE) down -v
 	@$(COMPOSE) up -d --wait postgres 2>/dev/null || $(COMPOSE) up -d postgres
 
-start: install env db-up
+start: install env db-up sync-frontend-api-url
 	@set -euo pipefail; \
 	trap 'kill 0' INT TERM; \
 	if [ -f "$(BACKEND_DIR)/package.json" ]; then \
@@ -123,7 +127,7 @@ start: install env db-up
 	(cd "$(FRONTEND_DIR)" && npm run start) & \
 	wait
 
-start-frontend:
+start-frontend: sync-frontend-api-url
 	@cd $(FRONTEND_DIR) && npm run start
 
 start-backend: db-up

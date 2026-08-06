@@ -1,6 +1,6 @@
 import { Href, router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AssessmentCollectHeader } from '@/components/assessments/AssessmentCollectHeader';
@@ -215,10 +215,11 @@ export default function AssessmentCollectScreen() {
       <AssessmentCollectHeader
         fullName={patient.fullName}
         age={patient.age}
+        avatarUrl={patient.avatarUrl}
         onBack={handleBack}
-        onEditPatient={() =>
-          Alert.alert('Em breve', 'Edição rápida do paciente durante a sessão virá na Fase D.')
-        }
+        onEditPatient={() => {
+          router.push(`/(main)/patients/${patientId}/edit` as Href);
+        }}
       />
 
       <View style={styles.progressRow}>

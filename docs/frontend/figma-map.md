@@ -26,6 +26,7 @@
 
 | Frame Figma | RF | Rota implementada | Status |
 |-------------|-----|-------------------|--------|
+| Splash / Loading (abertura) | — | `SplashLoadingScreen` em `_layout.tsx` + `index.tsx` | integrado (handoff screenshot 2026-08-06) |
 | Login / Bem-Vindo | RF002 | `src/app/(auth)/login.tsx` | integrado |
 | Esqueceu a Senha? | RF003 | `src/app/(auth)/forgot-password/index.tsx` | integrado |
 | E-mail enviado | RF003 | `src/app/(auth)/forgot-password/sent.tsx` | integrado |
@@ -40,6 +41,7 @@
 | LGPD e Termos de uso | — | `src/app/(main)/privacy-terms.tsx` | integrado |
 | Informações do Sistema | — | `src/app/(main)/system-info.tsx` | integrado |
 | Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | integrado |
+| Editar Paciente | RF004 | `src/app/(main)/patients/[id]/edit.tsx` | integrado (mesmo layout Figma do cadastro; lápis na coleta/perfil) |
 | Perfil de Paciente | RF006 | `src/app/(main)/patients/[id].tsx` | integrado |
 | Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | integrado (+ PDF RF013) |
 | Aplicar Teste | RF007 + RF008 | `src/app/(main)/assessments/apply.tsx` | integrado |
