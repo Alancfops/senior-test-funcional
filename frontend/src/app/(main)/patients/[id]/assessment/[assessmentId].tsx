@@ -203,6 +203,7 @@ export default function PatientAssessmentDetailScreen() {
 
         <ActivityCard
           patientName={patient.fullName}
+          patientGender={patient.gender}
           description={instrumentName}
           when={relativeWhen || displayDate}
           tone={activityToneForIndex(0)}

@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -55,7 +55,6 @@ function PatientFormBody({
   onSubmit,
 }: PatientFormBodyProps) {
   const { ensureFocusedVisible } = useKeyboardFormScroll();
-  const fullName = useWatch({ control, name: 'fullName' }) ?? '';
 
   function handleFieldFocus() {
     // Teclado pode ainda estar subindo — reforça o scroll em alguns frames.
@@ -77,7 +76,6 @@ function PatientFormBody({
         value={avatar}
         onChange={setAvatar}
         existingUri={!avatar ? existingAvatarUrl : null}
-        fullName={fullName}
       />
 
       <View style={styles.form}>

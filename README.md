@@ -30,10 +30,12 @@ cd senior-test-funcional
 
 make setup      # instala deps, cria .env e sobe Postgres
 make migrate    # aplica migrations Prisma (primeira vez)
-make start      # instala deps, sobe Postgres + API (:3000) + Expo
+make start      # sobe Postgres + API (:3000) + Expo
 ```
 
-O comando `make start` **instala dependências que faltam** (`npm install` em `frontend/` e `backend/`), cria os `.env` a partir dos exemplos (se ainda não existirem), sobe o Postgres e inicia API + Expo. Abre **dois processos** (API e Expo). Para encerrar: **Ctrl+C** no terminal. Para parar só o Postgres: `make stop`.
+O comando `make start` cria os `.env` a partir dos exemplos (se ainda não existirem), sobe o Postgres, sincroniza o IP da API no frontend e inicia API + Expo. Abre **dois processos** (API e Expo). Para encerrar: **Ctrl+C** no terminal. Para parar só o Postgres: `make stop`.
+
+Dependências novas ou primeira vez no projeto: `make` ou `make install` antes de `make start`.
 
 ---
 
@@ -81,7 +83,7 @@ Execute `make help` para listar todos os alvos.
 |---------|-----------|
 | `make` / `make install` | `npm install` em `frontend/` e `backend/` |
 | `make setup` | install + copia `.env` + `make db-up` |
-| `make start` | Instala deps + `.env` + Postgres + API NestJS (`:3000`) + Expo |
+| `make start` | `.env` + Postgres + API NestJS (`:3000`) + Expo |
 | `make start-backend` | Postgres + só a API (watch) |
 | `make start-frontend` | Só o Expo |
 | `make stop` | Para containers Docker |

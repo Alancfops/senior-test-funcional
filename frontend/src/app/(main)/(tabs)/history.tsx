@@ -126,6 +126,7 @@ export default function HistoryTabScreen() {
               <ActivityCard
                 key={item.id}
                 patientName={item.patientName}
+                patientGender={item.patientGender}
                 description={item.instrumentDisplayName}
                 when={formatRelativeWhen(item.finalizedAt)}
                 tone={activityToneForIndex(index)}

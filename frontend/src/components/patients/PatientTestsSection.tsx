@@ -2,28 +2,31 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ActivityCard, activityToneForIndex } from '@/components/main/ActivityCard';
-import { AssessmentListItem } from '@/components/patients/AssessmentListItem';
 import { Button } from '@/components/ui/Button';
 import type { PatientAssessmentSummary } from '@/features/patients/api';
+import { groupAssessmentsByInstrument } from '@/features/patients/assessment-history';
 import { tokens } from '@/theme/tokens';
 
 type PatientTestsSectionProps = {
   assessments: PatientAssessmentSummary[];
   patientName: string;
+  patientGender?: string | null;
   onStartTest: () => void;
   onAddTest?: () => void;
-  onOpenAssessment: (assessmentId: string) => void;
+  onOpenInstrumentCategory: (instrumentCode: string) => void;
 };
 
-/** Figma — seção Testes: vazio (Iniciar Teste) ou lista de avaliações. */
+/** Figma — seção Testes: vazio (Iniciar Teste) ou categorias por instrumento. */
 export function PatientTestsSection({
   assessments,
   patientName,
+  patientGender,
   onStartTest,
   onAddTest,
-  onOpenAssessment,
+  onOpenInstrumentCategory,
 }: PatientTestsSectionProps) {
   const hasAssessments = assessments.length > 0;
+  const categories = groupAssessmentsByInstrument(assessments);
 
   return (
     <View style={styles.section}>
@@ -56,25 +59,17 @@ export function PatientTestsSection({
         </View>
       ) : (
         <View style={styles.list}>
-          {assessments.length === 1 ? (
+          {categories.map((category, index) => (
             <ActivityCard
+              key={category.instrumentCode}
               patientName={patientName}
-              description={assessments[0].instrumentName}
-              when={assessments[0].relativeWhen ?? assessments[0].displayDate}
-              tone={activityToneForIndex(0)}
-              onPress={() => onOpenAssessment(assessments[0].id)}
+              patientGender={patientGender}
+              description={category.instrumentName}
+              when={category.relativeWhen}
+              tone={activityToneForIndex(index)}
+              onPress={() => onOpenInstrumentCategory(category.instrumentCode)}
             />
-          ) : (
-            assessments.map((item) => (
-              <AssessmentListItem
-                key={item.id}
-                instrumentName={item.instrumentName}
-                displayDate={item.displayDate}
-                resultSummary={item.resultSummary}
-                onPress={() => onOpenAssessment(item.id)}
-              />
-            ))
-          )}
+          ))}
         </View>
       )}
     </View>

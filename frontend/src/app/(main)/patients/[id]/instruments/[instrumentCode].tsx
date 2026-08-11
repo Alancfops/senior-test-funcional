@@ -1,10 +1,10 @@
 import { Href, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { PatientInstrumentSessionsSection } from '@/components/patients/PatientInstrumentSessionsSection';
 import { PatientProfileHeader } from '@/components/patients/PatientProfileHeader';
-import { PatientRegistrationSection } from '@/components/patients/PatientRegistrationSection';
-import { PatientTestsSection } from '@/components/patients/PatientTestsSection';
+import { getAssessmentInstrument } from '@/features/assessments/instruments';
 import {
   getPatientByIdRequest,
   listPatientAssessmentsRequest,
@@ -15,25 +15,26 @@ import {
   formatRelativeWhen,
   mapPatientAssessmentSummary,
 } from '@/features/patients/assessment-history';
-import { getGenderLabel, getSchoolingLabel } from '@/features/patients/constants';
 import { ApiError } from '@/lib/api/client';
 import { tokens } from '@/theme/tokens';
 
-/** Figma — Perfil de Paciente (RF006). */
-export default function PatientProfileScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+/** RF006 — sessões de um instrumento no perfil (sem dados cadastrais). */
+export default function PatientInstrumentSessionsScreen() {
+  const { id, instrumentCode } = useLocalSearchParams<{ id: string; instrumentCode: string }>();
   const patientId = id ?? '';
+  const normalizedCode = (instrumentCode ?? '').toLowerCase();
+  const instrumentMeta = getAssessmentInstrument(normalizedCode);
 
   const [patient, setPatient] = useState<PatientRecord | null>(null);
   const [assessments, setAssessments] = useState<PatientAssessmentSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const loadPatient = useCallback(async () => {
-    if (!patientId) {
+  const loadData = useCallback(async () => {
+    if (!patientId || !normalizedCode) {
       setPatient(null);
       setAssessments([]);
-      setLoadError('Paciente não encontrado.');
+      setLoadError('Instrumento não encontrado.');
       setLoading(false);
       return;
     }
@@ -49,13 +50,16 @@ export default function PatientProfileScreen() {
 
       setPatient(patientResponse);
       setAssessments(
-        assessmentsResponse.data.map((item) => {
-          const summary = mapPatientAssessmentSummary(item);
-          return {
-            ...summary,
-            relativeWhen: formatRelativeWhen(item.finalizedAt),
-          };
-        }),
+        assessmentsResponse.data
+          .map((item) => {
+            const summary = mapPatientAssessmentSummary(item);
+            return {
+              ...summary,
+              relativeWhen: formatRelativeWhen(item.finalizedAt),
+            };
+          })
+          .filter((item) => item.instrumentCode === normalizedCode)
+          .sort((a, b) => new Date(b.finalizedAt).getTime() - new Date(a.finalizedAt).getTime()),
       );
     } catch (error) {
       setPatient(null);
@@ -67,18 +71,25 @@ export default function PatientProfileScreen() {
       } else if (error instanceof ApiError) {
         setLoadError(error.message);
       } else {
-        setLoadError('Não foi possível carregar o paciente.');
+        setLoadError('Não foi possível carregar as avaliações.');
       }
     } finally {
       setLoading(false);
     }
-  }, [patientId]);
+  }, [patientId, normalizedCode]);
 
   useFocusEffect(
     useCallback(() => {
-      void loadPatient();
-    }, [loadPatient]),
+      void loadData();
+    }, [loadData]),
   );
+
+  const instrumentName = useMemo(() => {
+    if (assessments[0]?.instrumentName) {
+      return assessments[0].instrumentName;
+    }
+    return instrumentMeta?.name ?? normalizedCode.toUpperCase();
+  }, [assessments, instrumentMeta?.name, normalizedCode]);
 
   function handleStartTest() {
     if (!patient) {
@@ -87,22 +98,22 @@ export default function PatientProfileScreen() {
 
     router.push({
       pathname: '/(main)/assessments/apply',
-      params: { patientId: patient.id },
+      params: { patientId: patient.id, instrumentCode: normalizedCode },
     } as Href);
   }
 
-  function handleOpenInstrumentCategory(instrumentCode: string) {
+  function handleOpenAssessment(assessmentId: string) {
     if (!patient) {
       return;
     }
 
-    router.push(`/(main)/patients/${patient.id}/instruments/${instrumentCode}` as Href);
+    router.push(`/(main)/patients/${patient.id}/assessment/${assessmentId}` as Href);
   }
 
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color={tokens.colors.primary} accessibilityLabel="Carregando paciente" />
+        <ActivityIndicator color={tokens.colors.primary} accessibilityLabel="Carregando avaliações" />
       </View>
     );
   }
@@ -112,6 +123,16 @@ export default function PatientProfileScreen() {
       <View style={styles.centered}>
         <Text style={styles.notFoundText} accessibilityRole="alert">
           {loadError ?? 'Paciente não encontrado.'}
+        </Text>
+      </View>
+    );
+  }
+
+  if (!instrumentMeta && assessments.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.notFoundText} accessibilityRole="alert">
+          Instrumento não encontrado.
         </Text>
       </View>
     );
@@ -132,19 +153,11 @@ export default function PatientProfileScreen() {
         style={styles.scroll}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}>
-        <PatientRegistrationSection
-          genderLabel={getGenderLabel(patient.gender)}
-          contact={patient.contact}
-          schoolingLabel={getSchoolingLabel(patient.schoolingBand)}
-        />
-
-        <PatientTestsSection
+        <PatientInstrumentSessionsSection
+          instrumentName={instrumentName}
           assessments={assessments}
-          patientName={patient.fullName}
-          patientGender={patient.gender}
-          onStartTest={handleStartTest}
           onAddTest={handleStartTest}
-          onOpenInstrumentCategory={handleOpenInstrumentCategory}
+          onOpenAssessment={handleOpenAssessment}
         />
       </ScrollView>
     </View>

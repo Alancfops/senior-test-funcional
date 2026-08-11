@@ -23,7 +23,44 @@ export function mapPatientAssessmentSummary(item: {
     displayDate: formatAssessmentDate(new Date(item.finalizedAt)),
     resultSummary: item.result?.rawLabel ?? '—',
     classificationLabel: item.result?.classificationLabel ?? '',
+    finalizedAt: item.finalizedAt,
   };
+}
+
+export type InstrumentCategorySummary = {
+  instrumentCode: string;
+  instrumentName: string;
+  relativeWhen: string;
+  sessionCount: number;
+};
+
+/** Agrupa avaliações finalizadas por instrumento (categoria) — perfil RF006. */
+export function groupAssessmentsByInstrument(
+  assessments: PatientAssessmentSummary[],
+): InstrumentCategorySummary[] {
+  const byCode = new Map<string, PatientAssessmentSummary[]>();
+
+  for (const item of assessments) {
+    const list = byCode.get(item.instrumentCode) ?? [];
+    list.push(item);
+    byCode.set(item.instrumentCode, list);
+  }
+
+  return Array.from(byCode.entries())
+    .map(([instrumentCode, items]) => {
+      const sorted = [...items].sort(
+        (a, b) => new Date(b.finalizedAt).getTime() - new Date(a.finalizedAt).getTime(),
+      );
+      const latest = sorted[0];
+
+      return {
+        instrumentCode,
+        instrumentName: latest.instrumentName,
+        relativeWhen: latest.relativeWhen ?? latest.displayDate,
+        sessionCount: items.length,
+      };
+    })
+    .sort((a, b) => a.instrumentName.localeCompare(b.instrumentName, 'pt-BR'));
 }
 
 export function formatRelativeWhen(finalizedAt: string) {

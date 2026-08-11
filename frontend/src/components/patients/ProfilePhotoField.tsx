@@ -3,7 +3,6 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { getPatientInitials } from '@/features/patients/initials';
 import { tokens } from '@/theme/tokens';
 
 export type PatientAvatarSelection = {
@@ -17,8 +16,6 @@ type ProfilePhotoFieldProps = {
   onChange?: (value: PatientAvatarSelection | null) => void;
   /** URI já salva no servidor (modo edição), exibida até o usuário escolher outra. */
   existingUri?: string | null;
-  /** Nome para iniciais quando não há foto. */
-  fullName?: string;
   error?: string;
 };
 
@@ -26,12 +23,25 @@ const PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
   mediaTypes: ['images'],
   allowsEditing: true,
   aspect: [1, 1],
-  quality: 0.6,
+  /** Mais baixo para caber no limite da API (~250 KB / 350k chars base64). */
+  quality: 0.4,
   base64: true,
 };
 
+/** Alinhado ao `avatarImageSchema` do backend. */
+const MAX_AVATAR_BASE64_LENGTH = 350_000;
+
 function assetToSelection(asset: ImagePicker.ImagePickerAsset): PatientAvatarSelection | null {
   if (!asset.base64) {
+    Alert.alert('Foto inválida', 'Não foi possível ler a imagem. Tente outra foto.');
+    return null;
+  }
+
+  if (asset.base64.length > MAX_AVATAR_BASE64_LENGTH) {
+    Alert.alert(
+      'Foto muito grande',
+      'A imagem ultrapassa o tamanho permitido (~250 KB). Aproxime o enquadramento ou escolha outra foto.',
+    );
     return null;
   }
 
@@ -45,16 +55,9 @@ function assetToSelection(asset: ImagePicker.ImagePickerAsset): PatientAvatarSel
 }
 
 /** RF004 — foto opcional; permissões de câmera/galeria só ao escolher a foto. */
-export function ProfilePhotoField({
-  value,
-  onChange,
-  existingUri,
-  fullName = '',
-  error,
-}: ProfilePhotoFieldProps) {
+export function ProfilePhotoField({ value, onChange, existingUri, error }: ProfilePhotoFieldProps) {
   const previewUri = value?.uri ?? existingUri ?? null;
   const hasPhoto = Boolean(previewUri);
-  const initials = getPatientInitials(fullName);
   async function pickFromLibrary() {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
@@ -129,9 +132,7 @@ export function ProfilePhotoField({
             {previewUri ? (
               <Image source={{ uri: previewUri }} style={styles.preview} contentFit="cover" />
             ) : (
-              <Text style={styles.initials} importantForAccessibility="no">
-                {initials}
-              </Text>
+              <Ionicons name="person-outline" size={48} color={tokens.colors.textMuted} />
             )}
           </View>
 
@@ -194,13 +195,6 @@ const styles = StyleSheet.create({
   preview: {
     width: '100%',
     height: '100%',
-  },
-  initials: {
-    fontSize: 36,
-    fontWeight: '700',
-    lineHeight: 42,
-    letterSpacing: 1,
-    color: tokens.colors.primary,
   },
   addBadge: {
     position: 'absolute',

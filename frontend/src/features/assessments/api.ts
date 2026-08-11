@@ -111,6 +111,7 @@ export type RecentActivityRecord = {
   id: string;
   patientId: string;
   patientName: string;
+  patientGender: string;
   instrumentCode: string;
   instrumentDisplayName: string;
   finalizedAt: string;

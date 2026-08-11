@@ -43,6 +43,7 @@
 | Adicionar Paciente | RF004 | `src/app/(main)/patients/new.tsx` | integrado |
 | Editar Paciente | RF004 | `src/app/(main)/patients/[id]/edit.tsx` | integrado (mesmo layout Figma do cadastro; lápis na coleta/perfil) |
 | Perfil de Paciente | RF006 | `src/app/(main)/patients/[id].tsx` | integrado |
+| Sessões por instrumento (perfil) | RF006 | `src/app/(main)/patients/[id]/instruments/[instrumentCode].tsx` | integrado (handoff screenshot 2026-08-06; sem dados cadastrais) |
 | Detalhe / resultado teste | RF006 | `src/app/(main)/patients/[id]/assessment/[assessmentId].tsx` | integrado (+ PDF RF013) |
 | Aplicar Teste | RF007 + RF008 | `src/app/(main)/assessments/apply.tsx` | integrado |
 | Tutorial (passo 1 e 2) | RF009 | `src/app/(main)/assessments/tutorial.tsx` | integrado |

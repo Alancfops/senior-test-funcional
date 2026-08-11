@@ -1,7 +1,7 @@
 # Senior Teste Funcional — desenvolvimento local
 # make          → instala dependências
 # make setup    → install + .env + Postgres (Docker)
-# make start    → install + .env + Postgres + API NestJS + Expo
+# make start    → .env + Postgres + API NestJS + Expo (sem npm install)
 
 SHELL := /bin/bash
 BACKEND_DIR := backend
@@ -19,7 +19,7 @@ help:
 	@echo "  make setup           install + arquivos .env + Postgres (Docker)"
 	@echo "  make secrets         Gera JWT_ACCESS_SECRET aleatório (copie para backend/.env)"
 	@echo "  make mail-check      Verifica configuração Resend no backend/.env"
-	@echo "  make start           Instala deps, .env, Postgres, API (:3000) e Expo"
+	@echo "  make start           Sobe .env, Postgres, API (:3000) e Expo (sem instalar deps)"
 	@echo "  make start-frontend  Apenas Expo (sincroniza IP LAN da API antes)"
 	@echo "  make sync-frontend-api-url  Atualiza EXPO_PUBLIC_API_URL com IP LAN do PC"
 	@echo "  make start-backend   Postgres + API NestJS (watch)"
@@ -114,7 +114,7 @@ db-reset:
 	@$(COMPOSE) down -v
 	@$(COMPOSE) up -d --wait postgres 2>/dev/null || $(COMPOSE) up -d postgres
 
-start: install env db-up sync-frontend-api-url
+start: env db-up sync-frontend-api-url
 	@set -euo pipefail; \
 	trap 'kill 0' INT TERM; \
 	if [ -f "$(BACKEND_DIR)/package.json" ]; then \

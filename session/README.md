@@ -26,6 +26,10 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-08-11 17:00 | [2026-08-11_17-00.md](2026-08-11_17-00.md) | Categorias perfil + tela sessões; ícones por sexo; fix PATCH foto; make start sem install; commit/push; próximo: gerenciador web |
+| 2026-08-06 18:01 | [2026-08-06_18-01.md](2026-08-06_18-01.md) | Ícone perfil no form; fix PATCH+foto (body 1mb); plano categorias no histórico (não implementado) |
+| 2026-08-06 17:07 | [2026-08-06_17-07.md](2026-08-06_17-07.md) | Edit paciente + splash + iniciais; empty vermelho; sync IP; commit/push `5c358fa` em `develop` |
+| 2026-08-03 17:25 | [2026-08-03_17-25.md](2026-08-03_17-25.md) | Loading infinito = IP LAN; `make start` + sync-frontend-api-url; sem commit na época |
 | 2026-07-23 16:40 | [2026-07-23_16-40.md](2026-07-23_16-40.md) | RF013 PDF (API+app+protótipo); revisão LGPD §12; explicação aviso/retenção/DPO para analisar depois |
 | 2026-07-22 16:55 | [2026-07-22_16-55.md](2026-07-22_16-55.md) | Avaliações clínicas API+app (histórico, gráfico, filtros, atividades); review+fixes; commit amend+push `4863e1c` |
 | 2026-07-21 17:44 | [2026-07-21_17-44.md](2026-07-21_17-44.md) | Integração pacientes API (lista/perfil/foto); fix e2e apagando DB; escolaridade obrigatória; commit+push `2731704`; branch feature removida |

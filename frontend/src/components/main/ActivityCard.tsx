@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { ActivityCardIcon } from '@/components/main/ActivityCardIcon';
 import { tokens } from '@/theme/tokens';
 
 export type ActivityTone = 'primary' | 'secondary';
@@ -9,6 +10,8 @@ type ActivityCardProps = {
   patientName: string;
   description: string;
   when: string;
+  /** Sexo cadastrado do paciente — define silhueta no ícone. */
+  patientGender?: string | null;
   /** Revezamento Figma: ímpar = principal (#3666E0), par = secundária (#7CC5B4). */
   tone?: ActivityTone;
   onPress?: () => void;
@@ -29,6 +32,7 @@ export function ActivityCard({
   patientName,
   description,
   when,
+  patientGender,
   tone = 'primary',
   onPress,
 }: ActivityCardProps) {
@@ -41,7 +45,7 @@ export function ActivityCard({
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
       <View style={[styles.iconWrap, { backgroundColor: palette.bg }]}>
-        <Ionicons name="walk-outline" size={24} color={palette.icon} />
+        <ActivityCardIcon gender={patientGender} color={palette.icon} />
       </View>
 
       <View style={styles.content}>

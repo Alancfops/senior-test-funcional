@@ -112,6 +112,7 @@ export type PatientAssessmentSummary = {
   resultSummary: string;
   classificationLabel: string;
   relativeWhen?: string;
+  finalizedAt: string;
 };
 
 export type PatientAssessmentsListResponse = {

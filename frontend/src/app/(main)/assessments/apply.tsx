@@ -13,7 +13,8 @@ import { tokens } from '@/theme/tokens';
 
 /** Figma — Aplicar Teste (RF007 + RF008). Pacientes da API; questionários integrados. */
 export default function ApplyAssessmentScreen() {
-  const { patientId: preselectedPatientId } = useLocalSearchParams<{ patientId?: string }>();
+  const { patientId: preselectedPatientId, instrumentCode: preselectedInstrumentCode } =
+    useLocalSearchParams<{ patientId?: string; instrumentCode?: string }>();
 
   const [patientOptions, setPatientOptions] = useState<{ value: string; label: string }[]>([]);
   const [loadingPatients, setLoadingPatients] = useState(true);
@@ -46,6 +47,8 @@ export default function ApplyAssessmentScreen() {
     }
   }, []);
 
+  const instrumentOptions = useMemo(() => ALL_ASSESSMENT_INSTRUMENT_OPTIONS, []);
+
   useEffect(() => {
     void loadPatients();
   }, [loadPatients]);
@@ -56,7 +59,14 @@ export default function ApplyAssessmentScreen() {
     }
   }, [preselectedPatientId, patientOptions]);
 
-  const instrumentOptions = useMemo(() => ALL_ASSESSMENT_INSTRUMENT_OPTIONS, []);
+  useEffect(() => {
+    if (
+      preselectedInstrumentCode &&
+      instrumentOptions.some((option) => option.value === preselectedInstrumentCode.toLowerCase())
+    ) {
+      setInstrumentCode(preselectedInstrumentCode.toLowerCase());
+    }
+  }, [preselectedInstrumentCode, instrumentOptions]);
 
   function handleStart() {
     if (!patientId || !instrumentCode) {
