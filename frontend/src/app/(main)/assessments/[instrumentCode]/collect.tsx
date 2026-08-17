@@ -120,6 +120,15 @@ export default function AssessmentCollectScreen() {
     setPageError(null);
   }, []);
 
+  const handlePartChange = useCallback((partId: string, value: number) => {
+    setAnswers((prev) => {
+      const next = { ...prev, [partId]: value };
+      updateQuestionnaireAnswers({ [partId]: value });
+      return next;
+    });
+    setPageError(null);
+  }, []);
+
   if (isTug) {
     if (loading) {
       return (
@@ -244,7 +253,9 @@ export default function AssessmentCollectScreen() {
               key={item.id}
               item={item}
               value={answers[item.id] ?? null}
+              answers={answers}
               onChange={(value) => handleAnswerChange(item.id, value)}
+              onPartChange={handlePartChange}
             />
           ))}
         </View>

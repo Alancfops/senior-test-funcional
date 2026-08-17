@@ -1,9 +1,35 @@
+import { TINETTI_11_PART_IDS } from '@/features/assessments/score-labels';
 import type { AssessmentResultRecord } from '@/features/assessments/api';
 import type {
   DisplayResult,
   QuestionnaireAnswers,
   QuestionnaireInstrumentCode,
 } from '@/features/assessments/types';
+
+const UI_ONLY_ANSWER_KEYS = new Set<string>(TINETTI_11_PART_IDS);
+
+export function buildQuestionnairePayload(answers: QuestionnaireAnswers) {
+  const payload: Record<string, number | string> = {};
+
+  for (const [key, value] of Object.entries(answers)) {
+    if (UI_ONLY_ANSWER_KEYS.has(key)) {
+      continue;
+    }
+    if (value === null || value === undefined || value === '') {
+      continue;
+    }
+    payload[key] = value;
+  }
+
+  if (TINETTI_11_PART_IDS.every((key) => typeof answers[key] === 'number')) {
+    payload.tinetti_11 = TINETTI_11_PART_IDS.reduce(
+      (total, key) => total + (answers[key] as number),
+      0,
+    );
+  }
+
+  return payload;
+}
 
 const MAX_SCORE: Record<QuestionnaireInstrumentCode, string> = {
   katz: '6',
@@ -18,19 +44,6 @@ const SCORE_LABEL: Record<QuestionnaireInstrumentCode, string> = {
   tinetti: 'Pontuação',
   meem: 'Pontuação',
 };
-
-export function buildQuestionnairePayload(answers: QuestionnaireAnswers) {
-  const payload: Record<string, number | string> = {};
-
-  for (const [key, value] of Object.entries(answers)) {
-    if (value === null || value === undefined || value === '') {
-      continue;
-    }
-    payload[key] = value;
-  }
-
-  return payload;
-}
 
 export function buildTugPayload(trials: readonly (number | null)[]) {
   if (trials.length !== 3) {

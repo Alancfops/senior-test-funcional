@@ -1,10 +1,19 @@
 export type QuestionnaireInstrumentCode = 'katz' | 'berg' | 'tinetti' | 'meem';
 
+export type ScoringGuideEntry = {
+  score: string;
+  description: string;
+};
+
 export type TutorialStep = {
   /** Parágrafo introdutório ou texto antes dos bullets. */
   body: string;
   /** Bullets opcionais (passo 2 — classificação / interpretação). */
   bullets?: readonly string[];
+  /** Guia resumido de pontuação por nível (complemento ao protocolo). */
+  scoringGuide?: readonly ScoringGuideEntry[];
+  /** Nota opcional abaixo do guia de pontuação. */
+  scoringGuideNote?: string;
 };
 
 export type TutorialInstrument = {
@@ -34,6 +43,15 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
           'Cada tarefa recebe pontuação de 0 a 4 conforme o desempenho observado.',
           'Quanto menor o escore total, maior o risco de quedas.',
         ],
+        scoringGuide: [
+          { score: '0', description: 'Incapaz de completar a tarefa ou necessita ajuda máxima.' },
+          { score: '1', description: 'Executa com ajuda mínima ou de forma muito limitada.' },
+          { score: '2', description: 'Completa com dificuldade, supervisão ou várias tentativas.' },
+          { score: '3', description: 'Completa com uso das mãos ou supervisão leve.' },
+          { score: '4', description: 'Execução independente e segura (desempenho máximo do item).' },
+        ],
+        scoringGuideNote:
+          'Cada um dos 14 itens usa esta escala 0–4 conforme o protocolo Berg (Miyamoto et al., 2004).',
       },
       step2: {
         body: 'A nota máxima é 56 pontos, e quanto menor o escore, maior o risco de quedas:',
@@ -57,6 +75,16 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
           'Para cada item, registre se o paciente é Independente, necessita de Assistência ou é Dependente.',
           'A classificação final considera apenas as atividades marcadas como Dependente.',
         ],
+        scoringGuide: [
+          { score: 'Independente', description: 'Realiza a atividade sem ajuda de outra pessoa.' },
+          {
+            score: 'Assistência',
+            description: 'Precisa de supervisão ou ajuda parcial em parte da atividade.',
+          },
+          { score: 'Dependente', description: 'Precisa de ajuda total ou não realiza a atividade.' },
+        ],
+        scoringGuideNote:
+          'O estrato final (0–6) conta somente os domínios classificados como Dependente.',
       },
       step2: {
         body:
@@ -85,6 +113,13 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
           'Parte de marcha: 7 itens, até 12 pontos.',
           'Cada item é pontuado conforme o desempenho observado (0, 1 ou 2 pontos).',
         ],
+        scoringGuide: [
+          { score: '0', description: 'Ausência ou incapacidade na habilidade observada.' },
+          { score: '1', description: 'Desempenho parcial ou com compensações.' },
+          { score: '2', description: 'Desempenho adequado e seguro.' },
+        ],
+        scoringGuideNote:
+          'Alguns itens usam escala 0–1 ou 0–4 conforme o protocolo Tinetti — o app limita as opções por item.',
       },
       step2: {
         body: 'O escore total máximo é 28 pontos (equilíbrio + marcha). A classificação de risco de queda segue:',
@@ -108,6 +143,18 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
           'A pontuação total máxima é 30 pontos.',
           'Confirme a escolaridade do paciente no início da sessão — ela define o corte interpretativo.',
         ],
+        scoringGuide: [
+          {
+            score: '0',
+            description: 'Resposta incorreta, ausente ou bloco sem pontos naquele domínio.',
+          },
+          {
+            score: '1+',
+            description: 'Pontos parciais ou totais conforme acertos em cada bloco (máx. varia por item).',
+          },
+        ],
+        scoringGuideNote:
+          'Itens de orientação valem 0 ou 1 ponto; blocos como Registro (0–3) e Atenção (0–5) somam conforme acertos.',
       },
       step2: {
         body:
@@ -149,6 +196,14 @@ export const TUG_INSTRUMENT: TutorialInstrument = {
         'Realize uma tentativa prática antes dos três ensaios cronometrados.',
         'Use o cronômetro integrado do aplicativo para registrar cada ensaio.',
       ],
+      scoringGuide: [
+        { score: 'Ensaio 1–3', description: 'Registre o tempo em segundos de cada um dos três ensaios.' },
+        {
+          score: 'Resultado',
+          description: 'A média aritmética dos três tempos compõe o escore bruto do teste.',
+        },
+      ],
+      scoringGuideNote: 'Tempos mais altos indicam maior dificuldade na locomoção funcional.',
     },
     step2: {
       body: 'O resultado bruto é a média aritmética dos três ensaios. A interpretação de triagem segue:',

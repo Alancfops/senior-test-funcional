@@ -1,16 +1,83 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ScoreStepper } from '@/components/assessments/ScoreStepper';
-import type { QuestionnaireItem } from '@/features/assessments/types';
+import type { QuestionnaireAnswers, QuestionnaireItem } from '@/features/assessments/types';
 import { tokens } from '@/theme/tokens';
 
 type QuestionnaireItemCardProps = {
   item: QuestionnaireItem;
   value: number | string | null;
+  answers: QuestionnaireAnswers;
   onChange: (value: number | string) => void;
+  onPartChange: (partId: string, value: number) => void;
 };
 
-export function QuestionnaireItemCard({ item, value, onChange }: QuestionnaireItemCardProps) {
+export function QuestionnaireItemCard({
+  item,
+  value,
+  answers,
+  onChange,
+  onPartChange,
+}: QuestionnaireItemCardProps) {
+  if (item.config.kind === 'composite_sum') {
+    const partTotal = item.config.parts.reduce((sum, part) => {
+      const partValue = answers[part.id];
+      return sum + (typeof partValue === 'number' ? partValue : 0);
+    }, 0);
+    const allPartsAnswered = item.config.parts.every(
+      (part) => typeof answers[part.id] === 'number',
+    );
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.compositeHeader}>
+          <View style={styles.textBlock}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.instructions}>{item.instructions}</Text>
+          </View>
+          <View style={styles.compositeTotal} accessibilityLabel={`Pontuação total ${partTotal} de ${item.config.max}`}>
+            <Text style={styles.compositeTotalLabel}>Total</Text>
+            <Text style={styles.compositeTotalValue}>
+              {allPartsAnswered ? partTotal : '—'}/{item.config.max}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.compositeParts}>
+          {item.config.parts.map((part) => {
+            const partValue = answers[part.id];
+            return (
+              <View key={part.id} style={styles.compositePart}>
+                <Text style={styles.partTitle}>{part.title}</Text>
+                <View style={styles.options}>
+                  {part.options.map((option) => {
+                    const selected = partValue === option.value;
+                    return (
+                      <Pressable
+                        key={option.value}
+                        accessibilityRole="radio"
+                        accessibilityState={{ selected }}
+                        onPress={() => onPartChange(part.id, option.value)}
+                        style={({ pressed }) => [
+                          styles.option,
+                          selected && styles.optionSelected,
+                          pressed && styles.pressed,
+                        ]}>
+                        <Text style={[styles.optionText, selected && styles.optionTextSelected]}>
+                          {option.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.mainRow}>
@@ -24,6 +91,7 @@ export function QuestionnaireItemCard({ item, value, onChange }: QuestionnaireIt
             value={typeof value === 'number' ? value : null}
             min={item.config.min}
             max={item.config.max}
+            scoreLabels={item.config.scoreLabels}
             onChange={onChange}
           />
         ) : null}
@@ -72,6 +140,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: tokens.spacing.sm,
     alignItems: 'flex-start',
+  },
+  compositeHeader: {
+    flexDirection: 'row',
+    gap: tokens.spacing.sm,
+    alignItems: 'flex-start',
+  },
+  compositeTotal: {
+    alignItems: 'center',
+    minWidth: 52,
+    paddingTop: 2,
+  },
+  compositeTotalLabel: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
+  },
+  compositeTotalValue: {
+    ...tokens.typography.body,
+    fontWeight: '700',
+    color: tokens.colors.primary,
+  },
+  compositeParts: {
+    gap: tokens.spacing.sm,
+  },
+  compositePart: {
+    gap: tokens.spacing.xs,
+  },
+  partTitle: {
+    ...tokens.typography.caption,
+    fontWeight: '600',
+    color: tokens.colors.text,
   },
   textBlock: {
     flex: 1,

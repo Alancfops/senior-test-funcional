@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { getScoreLabelForValue } from '@/features/assessments/score-labels';
 import { tokens } from '@/theme/tokens';
 
 type ScoreStepperProps = {
@@ -8,10 +9,11 @@ type ScoreStepperProps = {
   min: number;
   max: number;
   onChange: (value: number) => void;
+  scoreLabels?: readonly { score: number; label: string }[];
 };
 
 /** Seletor numérico — Figma pontuação com setas. */
-export function ScoreStepper({ value, min, max, onChange }: ScoreStepperProps) {
+export function ScoreStepper({ value, min, max, onChange, scoreLabels }: ScoreStepperProps) {
   function decrement() {
     if (value === null) {
       onChange(min);
@@ -29,6 +31,9 @@ export function ScoreStepper({ value, min, max, onChange }: ScoreStepperProps) {
   }
 
   const display = value === null ? '—' : String(value);
+  const atMin = value !== null && value <= min;
+  const atMax = value !== null && value >= max;
+  const activeLabel = getScoreLabelForValue(scoreLabels, value);
 
   return (
     <View style={styles.wrap}>
@@ -38,9 +43,17 @@ export function ScoreStepper({ value, min, max, onChange }: ScoreStepperProps) {
           accessibilityRole="button"
           accessibilityLabel="Diminuir pontuação"
           onPress={decrement}
-          disabled={value !== null && value <= min}
-          style={({ pressed }) => [styles.chevron, pressed && styles.pressed]}>
-          <Ionicons name="chevron-back" size={18} color={tokens.colors.primary} />
+          disabled={atMin}
+          style={({ pressed }) => [
+            styles.chevron,
+            atMin && styles.chevronDisabled,
+            pressed && !atMin && styles.pressed,
+          ]}>
+          <Ionicons
+            name="chevron-back"
+            size={18}
+            color={atMin ? tokens.colors.textMuted : tokens.colors.primary}
+          />
         </Pressable>
         <View style={styles.valueCircle} accessibilityLabel={`Pontuação ${display}`}>
           <Text style={styles.valueText}>{display}</Text>
@@ -49,11 +62,24 @@ export function ScoreStepper({ value, min, max, onChange }: ScoreStepperProps) {
           accessibilityRole="button"
           accessibilityLabel="Aumentar pontuação"
           onPress={increment}
-          disabled={value !== null && value >= max}
-          style={({ pressed }) => [styles.chevron, pressed && styles.pressed]}>
-          <Ionicons name="chevron-forward" size={18} color={tokens.colors.primary} />
+          disabled={atMax}
+          style={({ pressed }) => [
+            styles.chevron,
+            atMax && styles.chevronDisabled,
+            pressed && !atMax && styles.pressed,
+          ]}>
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={atMax ? tokens.colors.textMuted : tokens.colors.primary}
+          />
         </Pressable>
       </View>
+      {activeLabel ? (
+        <Text style={styles.scoreHint} accessibilityLiveRegion="polite">
+          {activeLabel}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -63,6 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 4,
     minWidth: 112,
+    maxWidth: 148,
   },
   label: {
     ...tokens.typography.caption,
@@ -78,6 +105,9 @@ const styles = StyleSheet.create({
     minHeight: 32,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  chevronDisabled: {
+    opacity: 0.45,
   },
   pressed: {
     opacity: 0.75,
@@ -96,5 +126,12 @@ const styles = StyleSheet.create({
     ...tokens.typography.body,
     fontWeight: '600',
     color: tokens.colors.text,
+  },
+  scoreHint: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
+    textAlign: 'right',
+    lineHeight: 16,
+    marginTop: 2,
   },
 });

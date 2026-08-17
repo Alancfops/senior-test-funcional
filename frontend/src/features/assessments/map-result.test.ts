@@ -29,6 +29,17 @@ describe('buildQuestionnairePayload', () => {
       berg_1: 4,
     });
   });
+
+  it('agrega subitens do Tinetti 11 em tinetti_11', () => {
+    expect(
+      buildQuestionnairePayload({
+        tinetti_11_rd_len: 1,
+        tinetti_11_rd_hgt: 0,
+        tinetti_11_le_len: 1,
+        tinetti_11_le_hgt: 1,
+      }),
+    ).toEqual({ tinetti_11: 3 });
+  });
 });
 
 describe('buildTugPayload', () => {

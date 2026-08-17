@@ -2,6 +2,22 @@ export type NumericItemConfig = {
   kind: 'numeric';
   min: number;
   max: number;
+  /** Legenda da pontuação selecionada — exibida abaixo do stepper. */
+  scoreLabels?: readonly { score: number; label: string }[];
+};
+
+export type CompositeSumPart = {
+  id: string;
+  title: string;
+  options: readonly { value: number; label: string }[];
+};
+
+export type CompositeSumItemConfig = {
+  kind: 'composite_sum';
+  payloadKey: string;
+  min: number;
+  max: number;
+  parts: readonly CompositeSumPart[];
 };
 
 export type CategoricalItemConfig = {
@@ -9,7 +25,10 @@ export type CategoricalItemConfig = {
   options: readonly { value: string; label: string }[];
 };
 
-export type QuestionnaireItemConfig = NumericItemConfig | CategoricalItemConfig;
+export type QuestionnaireItemConfig =
+  | NumericItemConfig
+  | CompositeSumItemConfig
+  | CategoricalItemConfig;
 
 export type QuestionnaireItem = {
   id: string;

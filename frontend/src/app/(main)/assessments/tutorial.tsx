@@ -125,6 +125,25 @@ export default function AssessmentTutorialScreen() {
             <Text style={styles.bulletText}>{bullet}</Text>
           </View>
         ))}
+
+        {tutorialStep.scoringGuide && tutorialStep.scoringGuide.length > 0 ? (
+          <View style={styles.scoringSection} accessibilityRole="summary">
+            <Text style={styles.scoringTitle} accessibilityRole="header">
+              Como pontuar
+            </Text>
+            {tutorialStep.scoringGuide.map((entry) => (
+              <View key={entry.score} style={styles.scoringRow} accessibilityRole="text">
+                <View style={styles.scoringScoreWrap}>
+                  <Text style={styles.scoringScore}>{entry.score}</Text>
+                </View>
+                <Text style={styles.scoringDescription}>{entry.description}</Text>
+              </View>
+            ))}
+            {tutorialStep.scoringGuideNote ? (
+              <Text style={styles.scoringNote}>{tutorialStep.scoringGuideNote}</Text>
+            ) : null}
+          </View>
+        ) : null}
       </ScrollView>
 
       <View style={styles.footer}>
@@ -177,6 +196,47 @@ const styles = StyleSheet.create({
     ...tokens.typography.body,
     color: tokens.colors.text,
     flex: 1,
+  },
+  scoringSection: {
+    marginTop: tokens.spacing.sm,
+    padding: tokens.spacing.md,
+    borderRadius: tokens.radius.md,
+    backgroundColor: tokens.colors.background,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: tokens.colors.border,
+    gap: tokens.spacing.sm,
+  },
+  scoringTitle: {
+    ...tokens.typography.subtitle,
+    color: tokens.colors.text,
+  },
+  scoringRow: {
+    flexDirection: 'row',
+    gap: tokens.spacing.md,
+    alignItems: 'center',
+  },
+  scoringScoreWrap: {
+    width: 104,
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scoringScore: {
+    fontSize: 20,
+    fontWeight: '700',
+    lineHeight: 24,
+    color: tokens.colors.primary,
+    textAlign: 'center',
+  },
+  scoringDescription: {
+    ...tokens.typography.body,
+    color: tokens.colors.text,
+    flex: 1,
+    lineHeight: 22,
+  },
+  scoringNote: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
   },
   footer: {
     paddingHorizontal: tokens.spacing.lg,
