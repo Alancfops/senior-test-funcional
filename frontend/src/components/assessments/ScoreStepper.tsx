@@ -37,7 +37,6 @@ export function ScoreStepper({ value, min, max, onChange, scoreLabels }: ScoreSt
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.label}>Pontuação</Text>
       <View style={styles.controls}>
         <Pressable
           accessibilityRole="button"
@@ -55,8 +54,11 @@ export function ScoreStepper({ value, min, max, onChange, scoreLabels }: ScoreSt
             color={atMin ? tokens.colors.textMuted : tokens.colors.primary}
           />
         </Pressable>
-        <View style={styles.valueCircle} accessibilityLabel={`Pontuação ${display}`}>
-          <Text style={styles.valueText}>{display}</Text>
+        <View style={styles.valueColumn}>
+          <Text style={styles.label}>Pontuação</Text>
+          <View style={styles.valueCircle} accessibilityLabel={`Pontuação ${display}`}>
+            <Text style={styles.valueText}>{display}</Text>
+          </View>
         </View>
         <Pressable
           accessibilityRole="button"
@@ -88,16 +90,20 @@ const styles = StyleSheet.create({
   wrap: {
     alignItems: 'flex-end',
     gap: 4,
-    minWidth: 112,
     maxWidth: 148,
   },
   label: {
     ...tokens.typography.caption,
     color: tokens.colors.textMuted,
+    textAlign: 'center',
+  },
+  valueColumn: {
+    alignItems: 'center',
+    gap: 4,
   },
   controls: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     gap: 6,
   },
   chevron: {

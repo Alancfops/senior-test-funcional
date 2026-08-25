@@ -4,7 +4,13 @@ export const SYSTEM_INFO = {
   versionLabel: 'v.1.0.0-stable',
   lastUpdate: '16 Jul 2026',
   developedByLogo: require('@/assets/images/brand/cesmac-citec.png'),
-  professorsAndResearchers: ['Erika'],
+  professorsAndResearchers: [
+    'Érika Prado',
+    'Hugo Basilio',
+    'Kawanny Costa',
+    'Fernanda Jatobá',
+    'Lorena Saraiva',
+  ],
   developers: ['Alan Cristian'],
   designers: ['Dayane Pontes'],
 } as const;

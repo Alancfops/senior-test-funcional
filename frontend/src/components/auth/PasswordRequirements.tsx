@@ -1,42 +1,26 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+import { passwordRules } from '@/features/auth/password-rules';
 import { tokens } from '@/theme/tokens';
-
-type Rule = {
-  label: string;
-  met: boolean;
-};
 
 type PasswordRequirementsProps = {
   password: string;
 };
 
-function buildRules(password: string): Rule[] {
-  return [
-    { label: 'Mínimo de 8 caracteres', met: password.length >= 8 },
-    { label: 'Uma letra maiúscula', met: /[A-ZÀ-Ý]/.test(password) },
-    { label: 'Uma letra minúscula', met: /[a-zà-ÿ]/.test(password) },
-    { label: 'Um número', met: /\d/.test(password) },
-    {
-      label: 'Um caracter especial (@, #, %, &, $)',
-      met: /[@#%&$]/.test(password),
-    },
-  ];
-}
-
 export function PasswordRequirements({ password }: PasswordRequirementsProps) {
-  const rules = buildRules(password);
-
   return (
     <View style={styles.wrap} accessibilityRole="text">
-      {rules.map((rule) => (
-        <View key={rule.label} style={styles.row}>
-          <View style={[styles.bullet, rule.met && styles.bulletMet]}>
-            {rule.met ? <Text style={styles.check}>✓</Text> : null}
+      {passwordRules.map((rule) => {
+        const met = rule.test(password);
+        return (
+          <View key={rule.label} style={styles.row}>
+            <View style={[styles.bullet, met && styles.bulletMet]}>
+              {met ? <Text style={styles.check}>✓</Text> : null}
+            </View>
+            <Text style={[styles.text, met && styles.textMet]}>{rule.label}</Text>
           </View>
-          <Text style={[styles.text, rule.met && styles.textMet]}>{rule.label}</Text>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }

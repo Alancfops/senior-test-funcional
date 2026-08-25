@@ -1,16 +1,9 @@
-import { ReactNode, useEffect, useState } from 'react';
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ReactNode } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthHeader } from '@/components/auth/AuthHeader';
+import { KeyboardAwareScroll } from '@/components/ui/KeyboardAwareFormScroll';
 import { tokens } from '@/theme/tokens';
 
 type AuthScreenLayoutProps = {
@@ -23,8 +16,6 @@ type AuthScreenLayoutProps = {
   headerFlex?: number;
   /** Proporção da área branca (padrão 3 ≈ 60%). */
   bodyFlex?: number;
-  /** Formulário curto (login) — sem scroll quando couber na tela. */
-  scrollable?: boolean;
 };
 
 export function AuthScreenLayout({
@@ -34,73 +25,28 @@ export function AuthScreenLayout({
   variant = 'branded',
   headerFlex = 2,
   bodyFlex = 3,
-  scrollable = true,
 }: AuthScreenLayoutProps) {
-  const [keyboardInset, setKeyboardInset] = useState(0);
-
-  useEffect(() => {
-    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
-    const showSub = Keyboard.addListener(showEvent, (event) => {
-      setKeyboardInset(event.endCoordinates.height);
-    });
-    const hideSub = Keyboard.addListener(hideEvent, () => {
-      setKeyboardInset(0);
-    });
-
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
-
-  const bottomPad = tokens.spacing.xl + (Platform.OS === 'android' ? keyboardInset : 0);
+  const headerBlock = title ? (
+    <View style={styles.headerBlock}>
+      <Text
+        style={variant === 'plain' ? styles.plainTitle : styles.title}
+        accessibilityRole="header">
+        {title}
+      </Text>
+      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+    </View>
+  ) : null;
 
   if (variant === 'plain') {
     return (
       <SafeAreaView style={styles.plainRoot} edges={['top', 'bottom']}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
-          <ScrollView
-            style={styles.flex}
-            contentContainerStyle={[styles.plainScrollContent, { paddingBottom: bottomPad }]}
-            keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="on-drag"
-            automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-            showsVerticalScrollIndicator={false}>
-            {title ? (
-              <View style={styles.headerBlock}>
-                <Text style={styles.plainTitle} accessibilityRole="header">
-                  {title}
-                </Text>
-                {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
-              </View>
-            ) : null}
-
-            <View style={styles.form}>{children}</View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+        <KeyboardAwareScroll contentContainerStyle={styles.plainScrollContent}>
+          {headerBlock}
+          <View style={styles.form}>{children}</View>
+        </KeyboardAwareScroll>
       </SafeAreaView>
     );
   }
-
-  const brandedContent = (
-    <>
-      {title ? (
-        <View style={styles.headerBlock}>
-          <Text style={styles.title} accessibilityRole="header">
-            {title}
-          </Text>
-          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
-        </View>
-      ) : null}
-
-      <View style={styles.form}>{children}</View>
-    </>
-  );
 
   return (
     <View style={styles.root}>
@@ -109,24 +55,10 @@ export function AuthScreenLayout({
       </SafeAreaView>
 
       <View style={[styles.body, { flex: bodyFlex }]}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
-          {scrollable ? (
-            <ScrollView
-              style={styles.flex}
-              contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomPad }]}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag"
-              automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-              showsVerticalScrollIndicator={false}>
-              {brandedContent}
-            </ScrollView>
-          ) : (
-            <View style={[styles.flex, styles.scrollContent]}>{brandedContent}</View>
-          )}
-        </KeyboardAvoidingView>
+        <KeyboardAwareScroll contentContainerStyle={styles.scrollContent}>
+          {headerBlock}
+          <View style={styles.form}>{children}</View>
+        </KeyboardAwareScroll>
       </View>
     </View>
   );
@@ -157,9 +89,6 @@ const styles = StyleSheet.create({
     backgroundColor: tokens.colors.surface,
     borderTopLeftRadius: tokens.radius.cardTop,
     borderTopRightRadius: tokens.radius.cardTop,
-  },
-  flex: {
-    flex: 1,
   },
   scrollContent: {
     flexGrow: 1,

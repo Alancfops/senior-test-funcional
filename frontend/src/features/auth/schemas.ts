@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { passwordSchema } from '@/features/auth/password-rules';
+
 const fullNameSchema = z
   .string()
   .trim()
@@ -16,21 +18,7 @@ const emailSchema = z
   .min(1, 'Informe o e-mail.')
   .email('Digite um e-mail válido');
 
-export const passwordSchema = z
-  .string()
-  .min(8, 'A senha deve ter no mínimo 8 caracteres.')
-  .refine((value) => (value.match(/\d/g) ?? []).length >= 4, {
-    message: 'A senha deve ter pelo menos 4 números.',
-  })
-  .refine((value) => (value.match(/[A-Za-zÀ-ÿ]/g) ?? []).length >= 2, {
-    message: 'A senha deve ter pelo menos 2 letras.',
-  })
-  .refine((value) => /[A-ZÀ-Ý]/.test(value), {
-    message: 'A senha deve ter pelo menos 1 letra maiúscula.',
-  })
-  .refine((value) => /[a-zà-ÿ]/.test(value), {
-    message: 'A senha deve ter pelo menos 1 letra minúscula.',
-  });
+export { passwordSchema } from '@/features/auth/password-rules';
 
 export const loginSchema = z.object({
   email: emailSchema,

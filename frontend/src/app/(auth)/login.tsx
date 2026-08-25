@@ -58,7 +58,6 @@ export default function LoginScreen() {
     <AuthScreenLayout
       headerFlex={1.85}
       bodyFlex={3.15}
-      scrollable={false}
       title="Bem-Vindo"
       subtitle="Conecte-se e retome sua jornada no seu próprio ritmo.">
       <Controller

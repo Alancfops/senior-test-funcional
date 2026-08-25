@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { SplashLoadingScreen } from '@/components/brand/SplashLoadingScreen';
 import { getAccessToken } from '@/lib/auth/storage';
+import { AppKeyboardProvider } from '@/providers/keyboard-provider';
 import { QueryProvider } from '@/providers/query-provider';
 
 /**
@@ -25,7 +26,7 @@ function delay(ms: number) {
   });
 }
 
-export default function RootLayout() {
+function RootLayoutContent() {
   const [ready, setReady] = useState(false);
   const [splashPainted, setSplashPainted] = useState(false);
   const nativeHiddenRef = useRef(false);
@@ -106,5 +107,13 @@ export default function RootLayout() {
         <Stack.Screen name="(main)" />
       </Stack>
     </QueryProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AppKeyboardProvider>
+      <RootLayoutContent />
+    </AppKeyboardProvider>
   );
 }

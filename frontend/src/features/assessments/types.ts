@@ -9,7 +9,7 @@ export type NumericItemConfig = {
 export type CompositeSumPart = {
   id: string;
   title: string;
-  options: readonly { value: number; label: string }[];
+  options: readonly { value: number; label: string; description?: string }[];
 };
 
 export type CompositeSumItemConfig = {
@@ -20,9 +20,16 @@ export type CompositeSumItemConfig = {
   parts: readonly CompositeSumPart[];
 };
 
+export type CategoricalOption = {
+  value: string;
+  label: string;
+  /** Legenda exibida abaixo quando a opção está selecionada. */
+  description?: string;
+};
+
 export type CategoricalItemConfig = {
   kind: 'categorical';
-  options: readonly { value: string; label: string }[];
+  options: readonly CategoricalOption[];
 };
 
 export type QuestionnaireItemConfig =

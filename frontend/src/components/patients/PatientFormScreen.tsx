@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ProfilePhotoField, PatientAvatarSelection } from '@/components/patients/ProfilePhotoField';
 import { ButtonRow } from '@/components/ui/Button';
-import { KeyboardAwareFormScroll, useKeyboardFormScroll } from '@/components/ui/KeyboardAwareFormScroll';
+import { KeyboardAwareFormScroll } from '@/components/ui/KeyboardAwareFormScroll';
 import { SelectField } from '@/components/ui/SelectField';
 import { TextInput } from '@/components/ui/TextInput';
 import {
@@ -54,16 +54,6 @@ function PatientFormBody({
   submitting,
   onSubmit,
 }: PatientFormBodyProps) {
-  const { ensureFocusedVisible } = useKeyboardFormScroll();
-
-  function handleFieldFocus() {
-    // Teclado pode ainda estar subindo — reforça o scroll em alguns frames.
-    ensureFocusedVisible();
-    setTimeout(() => ensureFocusedVisible(), 120);
-    setTimeout(() => ensureFocusedVisible(), 280);
-    setTimeout(() => ensureFocusedVisible(), 450);
-  }
-
   return (
     <>
       <Text style={styles.subtitle}>
@@ -90,7 +80,6 @@ function PatientFormBody({
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
-              onFocus={handleFieldFocus}
               error={errors.fullName?.message}
               autoComplete="name"
               returnKeyType="next"
@@ -109,7 +98,6 @@ function PatientFormBody({
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
-              onFocus={handleFieldFocus}
               error={errors.age?.message}
               keyboardType="number-pad"
               returnKeyType="next"
@@ -162,7 +150,6 @@ function PatientFormBody({
                 onChange(text.includes('@') ? text.replace(/\s/g, '') : formatBrazilMobilePhone(text))
               }
               onBlur={onBlur}
-              onFocus={handleFieldFocus}
               error={errors.phone?.message}
               keyboardType={value.includes('@') ? 'email-address' : 'phone-pad'}
               autoComplete={value.includes('@') ? 'email' : 'tel'}

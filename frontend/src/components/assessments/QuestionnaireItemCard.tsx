@@ -1,6 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ScoreStepper } from '@/components/assessments/ScoreStepper';
+import {
+  getCategoricalDescriptionForValue,
+  getOptionDescriptionForValue,
+} from '@/features/assessments/score-labels';
 import type { QuestionnaireAnswers, QuestionnaireItem } from '@/features/assessments/types';
 import { tokens } from '@/theme/tokens';
 
@@ -46,6 +50,7 @@ export function QuestionnaireItemCard({
         <View style={styles.compositeParts}>
           {item.config.parts.map((part) => {
             const partValue = answers[part.id];
+            const partHint = getOptionDescriptionForValue(part.options, partValue);
             return (
               <View key={part.id} style={styles.compositePart}>
                 <Text style={styles.partTitle}>{part.title}</Text>
@@ -70,6 +75,11 @@ export function QuestionnaireItemCard({
                     );
                   })}
                 </View>
+                {partHint ? (
+                  <Text style={styles.selectionHint} accessibilityLiveRegion="polite">
+                    {partHint}
+                  </Text>
+                ) : null}
               </View>
             );
           })}
@@ -77,6 +87,11 @@ export function QuestionnaireItemCard({
       </View>
     );
   }
+
+  const categoricalHint =
+    item.config.kind === 'categorical'
+      ? getCategoricalDescriptionForValue(item.config.options, typeof value === 'string' ? value : null)
+      : null;
 
   return (
     <View style={styles.card}>
@@ -119,6 +134,12 @@ export function QuestionnaireItemCard({
             );
           })}
         </View>
+      ) : null}
+
+      {categoricalHint ? (
+        <Text style={styles.selectionHint} accessibilityLiveRegion="polite">
+          {categoricalHint}
+        </Text>
       ) : null}
     </View>
   );
@@ -211,5 +232,11 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.85,
+  },
+  selectionHint: {
+    ...tokens.typography.caption,
+    color: tokens.colors.textMuted,
+    lineHeight: 18,
+    paddingTop: 2,
   },
 });

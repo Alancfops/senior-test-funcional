@@ -39,7 +39,7 @@ export default function ForgotPasswordErrorScreen() {
   }
 
   return (
-    <AuthScreenLayout scrollable={false}>
+    <AuthScreenLayout>
       <View style={styles.headerBlock}>
         <Text
           style={styles.titleRow}
