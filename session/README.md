@@ -26,6 +26,8 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-09-08 14:24 | [2026-09-08_14-24.md](2026-09-08_14-24.md) | Commit em `feature/admin-access-request`: solicitação/aprovação admin + senha temp; próximos passos gerenciador/docs/LGPD; dúvidas TTL e bootstrap |
+| 2026-08-28 17:23 | [2026-08-28_17-23.md](2026-08-28_17-23.md) | Auditoria RF001–RF013 vs backend/frontend; gaps Fase D e docs; conflito portas 3000/8081 (anotaEst+Expo) — processos mortos |
 | 2026-08-11 17:00 | [2026-08-11_17-00.md](2026-08-11_17-00.md) | Categorias perfil + tela sessões; ícones por sexo; fix PATCH foto; make start sem install; commit/push; próximo: gerenciador web |
 | 2026-08-06 18:01 | [2026-08-06_18-01.md](2026-08-06_18-01.md) | Ícone perfil no form; fix PATCH+foto (body 1mb); plano categorias no histórico (não implementado) |
 | 2026-08-06 17:07 | [2026-08-06_17-07.md](2026-08-06_17-07.md) | Edit paciente + splash + iniciais; empty vermelho; sync IP; commit/push `5c358fa` em `develop` |
