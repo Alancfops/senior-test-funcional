@@ -348,7 +348,7 @@ Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
 | 4 | Isolamento `therapist_id` documentado | [backend README §7.2](../backend/README.md) |
 | 5 | LGPD checklist conhecido | [privacy-and-lgpd.md §10](../product/privacy-and-lgpd.md) |
 | 6 | Git: `develop` + branch `feature/backend-*` | [repository-and-workflow §6](./repository-and-workflow.md) |
-| 7 | Rules Cursor backend ativas | `.cursor/rules/backend-*.mdc` |
+| 7 | Rules backend ativas | `docs/rules/backend-*.md` |
 
 **Fase C** (avaliações) concluída — homologável via HTTP e app integrado.
 

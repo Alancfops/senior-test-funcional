@@ -159,6 +159,6 @@ O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/archi
 | LGPD | [docs/product/privacy-and-lgpd.md](docs/product/privacy-and-lgpd.md) |
 | Decisões (e-mail, domínio) | [docs/engineering/project-decisions.md](docs/engineering/project-decisions.md) |
 
-Entrada para agentes automatizados: [AGENTS.md](AGENTS.md)
+Entrada para agentes automatizados: [CLAUDE.md](CLAUDE.md)
 
 Especificação completa do produto: [docs/README.md](docs/README.md)

@@ -3,7 +3,7 @@
 > **Fonte canônica** do handoff visual: arquivo Figma oficial ↔ requisitos (RF) ↔ rotas Expo Router.  
 > Comportamento e regras de negócio: [requirements.md](../product/requirements.md). Arquitetura do app: [README.md](README.md).
 
-**Implementação:** skill Cursor `figma-to-frontend` (registry de components e checklists ficam em `.cursor/skills/figma-to-frontend/reference.md`).
+**Implementação:** skill `figma-to-frontend` (registry de components e checklists ficam em `.claude/skills/figma-to-frontend/reference.md`).
 
 ---
 

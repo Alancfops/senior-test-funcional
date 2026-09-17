@@ -26,6 +26,7 @@ Exemplo: `2026-06-03_15-42.md`
 
 | Data | Arquivo | Resumo |
 |------|---------|--------|
+| 2026-09-17 14:53 | [2026-09-17_14-53.md](2026-09-17_14-53.md) | Supabase (exploratório, sem mudança); fix inconsistências docs `.cursor`→`.claude`; upgrade Expo SDK 54→57 + fixes TS/tema; diagnóstico rede Wi-Fi (isolamento) |
 | 2026-09-08 14:24 | [2026-09-08_14-24.md](2026-09-08_14-24.md) | Commit em `feature/admin-access-request`: solicitação/aprovação admin + senha temp; próximos passos gerenciador/docs/LGPD; dúvidas TTL e bootstrap |
 | 2026-08-28 17:23 | [2026-08-28_17-23.md](2026-08-28_17-23.md) | Auditoria RF001–RF013 vs backend/frontend; gaps Fase D e docs; conflito portas 3000/8081 (anotaEst+Expo) — processos mortos |
 | 2026-08-11 17:00 | [2026-08-11_17-00.md](2026-08-11_17-00.md) | Categorias perfil + tela sessões; ícones por sexo; fix PATCH foto; make start sem install; commit/push; próximo: gerenciador web |

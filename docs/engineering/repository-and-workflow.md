@@ -49,7 +49,7 @@ Stack e monorepo leve descritos em **[architecture.md](./architecture.md)** (Bun
 
 **Invariantes (não mudam com a ordem de entrega):**
 
-- O comportamento **oficial** de negócio, scoring e PDF continua sendo do **servidor** quando a API existir ([backend-server-authority](../../.cursor/rules/backend-server-authority.mdc)).
+- O comportamento **oficial** de negócio, scoring e PDF continua sendo do **servidor** quando a API existir ([backend-server-authority](../rules/backend-server-authority.md)).
 - Mocks no app são **temporários** na Fase A: não simular classificação clínica, score parcial (MEEM/Katz) ou PDF montado no cliente.
 - A OpenAPI, quando publicada, passa a ser fonte técnica de verdade para integração (Fase D).
 
@@ -161,7 +161,7 @@ Fluxos com dados pessoais/saúde: coerência com **[privacy-and-lgpd.md](../prod
 
 ## 6. Gestão Git e integração contínua
 
-Fluxo **Git Flow simplificado** (skill Cursor `git-branching` em `.cursor/skills/git-branching/`).
+Fluxo **Git Flow simplificado** (skill `git-branching` em `.claude/skills/git-branching/`).
 
 | Branch | Papel |
 |--------|--------|
@@ -169,11 +169,11 @@ Fluxo **Git Flow simplificado** (skill Cursor `git-branching` em `.cursor/skills
 | **`develop`** | Integração do dia a dia; base para novas funcionalidades |
 | **`feature/*`** | Nova funcionalidade — ex.: `feature/mobile-home-rf005`, `feature/backend-auth-rf002` |
 | **`hotfix/*`** | Correção urgente em produção (base: `main`) |
-| **`docs/*`** | Só documentação (`docs/`, specs, AGENTS) |
+| **`docs/*`** | Só documentação (`docs/`, specs, CLAUDE.md) |
 | **`fix/*`** | Bug não urgente (base: `develop`) |
-| **`chore/*`** | Tooling, CI, deps, `.cursor/` |
+| **`chore/*`** | Tooling, CI, deps, `.claude/` |
 
-**Convenção de nome:** `<prefix>/<escopo>-<descricao-curta>` — inglês, kebab-case. Escopos sugeridos: `backend`, `frontend`, `mobile`, `auth`, `patients`, `assessments`, `contracts`, `cursor`.
+**Convenção de nome:** `<prefix>/<escopo>-<descricao-curta>` — inglês, kebab-case. Escopos sugeridos: `backend`, `frontend`, `mobile`, `auth`, `patients`, `assessments`, `contracts`, `claude`.
 
 **Regra:** trabalho de funcionalidade **não** commita direto em `develop`/`main` — abrir branch temática primeiro. Commits: Conventional Commits em inglês (skill `conventional-commits`).
 
