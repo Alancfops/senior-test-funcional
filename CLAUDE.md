@@ -36,7 +36,7 @@ senior-test-funcional/
 ├── CLAUDE.md              ← este arquivo (entrada global)
 ├── backend/               ← NestJS + Prisma + PostgreSQL
 │   └── CLAUDE.md          ← guia específico da API
-├── frontend/              ← Expo SDK 54 + React Native
+├── frontend/              ← Expo SDK 57 + React Native
 │   └── CLAUDE.md          ← guia específico do app
 ├── docs/                  ← especificação (fonte de produto)
 ├── session/               ← histórico local de conversas (não versionado)

@@ -1,4 +1,4 @@
-import type { Router } from 'expo-router';
+import type { ImperativeRouter } from 'expo-router';
 
 import { ApiError } from '@/lib/api/client';
 
@@ -10,7 +10,7 @@ export type ForgotPasswordErrorParams = {
 };
 
 export function pushForgotPasswordError(
-  router: Pick<Router, 'push'>,
+  router: Pick<ImperativeRouter, 'push'>,
   params: ForgotPasswordErrorParams,
 ) {
   router.push({

@@ -1,10 +1,10 @@
 # CLAUDE.md — Frontend (app Expo)
 
-App **Expo SDK 54** + React Native do Sênior Teste Funcional. Entrada global do monorepo: [../CLAUDE.md](../CLAUDE.md).
+App **Expo SDK 57** + React Native do Sênior Teste Funcional. Entrada global do monorepo: [../CLAUDE.md](../CLAUDE.md).
 
 ## Documentação Expo
 
-Leia a documentação **versionada** antes de escrever código: https://docs.expo.dev/versions/v54.0.0/
+Leia a documentação **versionada** antes de escrever código: https://docs.expo.dev/versions/v57.0.0/
 
 ## Fontes canônicas
 

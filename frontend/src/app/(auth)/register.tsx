@@ -35,14 +35,14 @@ export default function RegisterScreen() {
         const session = mockRegister(values.fullName, values.email);
         await saveAccessToken(session.accessToken);
         await saveSessionUser({ fullName: values.fullName, email: values.email });
-        router.replace('/(main)');
+        router.replace('/');
         return;
       }
 
       const { accessToken } = await registerRequest(values.fullName, values.email, values.password);
       await saveAccessToken(accessToken);
       await saveSessionUser({ fullName: values.fullName, email: values.email });
-      router.replace('/(main)');
+      router.replace('/');
     } catch (error) {
       if (error instanceof ApiError && error.statusCode === 409) {
         setFormError('Este e-mail já está cadastrado.');

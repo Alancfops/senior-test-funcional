@@ -213,13 +213,14 @@ export function PatientFormScreen({ mode, patientId }: PatientFormScreenProps) {
       return;
     }
 
+    const id = patientId;
     let cancelled = false;
 
     async function load() {
       setLoadingPatient(true);
       setFormError(null);
       try {
-        const patient = await getPatientByIdRequest(patientId);
+        const patient = await getPatientByIdRequest(id);
         if (cancelled) {
           return;
         }

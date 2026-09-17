@@ -174,7 +174,7 @@ export function getCategoricalDescriptionForValue(
 
 export function getOptionDescriptionForValue(
   options: readonly { value: number; label: string; description?: string }[],
-  value: number | null | undefined,
+  value: number | string | null | undefined,
 ): string | null {
   if (typeof value !== 'number') {
     return null;

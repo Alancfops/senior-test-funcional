@@ -64,6 +64,7 @@ export default function AssessmentResultScreen() {
       return;
     }
 
+    const assessmentId = session.assessmentId;
     let cancelled = false;
 
     async function load() {
@@ -74,7 +75,7 @@ export default function AssessmentResultScreen() {
         }
         setPatient(patientRecord);
 
-        const finalized = await finalizeAssessmentRequest(session.assessmentId!);
+        const finalized = await finalizeAssessmentRequest(assessmentId);
         if (cancelled) {
           return;
         }

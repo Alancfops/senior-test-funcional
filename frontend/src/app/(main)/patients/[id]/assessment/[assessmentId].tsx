@@ -158,7 +158,7 @@ export default function PatientAssessmentDetailScreen() {
     : '';
 
   async function handleGenerateReport() {
-    if (!assessmentUuid || generatingReport) {
+    if (!assessmentUuid || generatingReport || !patient) {
       return;
     }
 

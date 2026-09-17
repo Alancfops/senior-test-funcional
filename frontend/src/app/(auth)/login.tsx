@@ -33,14 +33,14 @@ export default function LoginScreen() {
         const session = mockLogin(values.email, values.password);
         await saveAccessToken(session.accessToken);
         await saveSessionUser({ fullName: session.fullName, email: session.email });
-        router.replace('/(main)');
+        router.replace('/');
         return;
       }
 
       const { accessToken, user } = await loginRequest(values.email, values.password);
       await saveAccessToken(accessToken);
       await saveSessionUser({ fullName: user.fullName, email: user.email });
-      router.replace('/(main)');
+      router.replace('/');
     } catch (error) {
       if (error instanceof MockAuthError || (error instanceof ApiError && error.statusCode === 401)) {
         setFormError('E-mail ou senha inválidos.');
