@@ -52,7 +52,7 @@ export function SplashLoadingScreen({ onDisplayReady }: SplashLoadingScreenProps
       onLayout={handleLayout}
       accessible
       accessibilityRole="image"
-      accessibilityLabel="SeniorTest Physio. Carregando aplicativo. CESMAC Centro Universitário."
+      accessibilityLabel="SêniorTeste. Carregando aplicativo. CESMAC Centro Universitário."
       accessibilityState={{ busy: true }}>
       <LinearGradient
         colors={[
@@ -78,10 +78,10 @@ export function SplashLoadingScreen({ onDisplayReady }: SplashLoadingScreenProps
           accessibilityIgnoresInvertColors
         />
 
-        {/* SeniorTest mais ao centro vertical (CESMAC permanece no topo). */}
+        {/* SêniorTeste mais ao centro vertical (CESMAC permanece no topo). */}
         <View style={styles.heroCenter}>
           <Image
-            source={require('@/assets/images/splash/hero-illustration.png')}
+            source={require('@/assets/images/splash/seniorteste-logo-splash.png')}
             style={styles.hero}
             contentFit="contain"
             cachePolicy="memory-disk"
@@ -99,11 +99,11 @@ const CESMAC_WIDTH = 112;
 const CESMAC_HEIGHT = Math.round(CESMAC_WIDTH / (104 / 30));
 
 /**
- * Logo principal SeniorTest — menor na splash.
- * Fonte Figma 147×174; arquivo em 3× para nitidez no Expo Go.
+ * Logo vertical SêniorTeste (seniorteste-logo-vertical.svg → PNG 600×536).
+ * Proporção 170×152; PNG em ~3,5× para nitidez no Expo Go.
  */
-const HERO_WIDTH = 132;
-const HERO_HEIGHT = Math.round(HERO_WIDTH / (147 / 174));
+const HERO_WIDTH = 170;
+const HERO_HEIGHT = Math.round(HERO_WIDTH / (170 / 152));
 
 const styles = StyleSheet.create({
   root: {

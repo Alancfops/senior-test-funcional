@@ -18,10 +18,10 @@ export function AuthHeader() {
       locations={[0, 0.55, 1]}
       style={styles.gradient}
       accessibilityRole="image"
-      accessibilityLabel="SeniorTest Physio">
+      accessibilityLabel="SêniorTeste">
       <View style={[styles.logoWrap, { width: LOGO_SIZE, height: LOGO_SIZE }]}>
         <Image
-          source={require('@/assets/images/brand/seniortest-logo-circle.png')}
+          source={require('@/assets/images/brand/seniorteste-logo-circular.svg')}
           style={styles.logo}
           contentFit="contain"
         />

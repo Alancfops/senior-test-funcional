@@ -41,7 +41,7 @@ export default function SettingsTabScreen() {
         <View style={styles.profileBlock}>
           <View style={styles.avatarRing}>
             <Image
-              source={require('@/assets/images/brand/seniortest-logo-circle.png')}
+              source={require('@/assets/images/brand/seniorteste-logo-circular.svg')}
               style={styles.avatar}
               contentFit="cover"
               accessibilityIgnoresInvertColors

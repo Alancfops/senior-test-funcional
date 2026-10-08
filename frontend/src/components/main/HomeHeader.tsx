@@ -30,10 +30,10 @@ export function HomeHeader({ userName, onProfilePress, searchSlot }: HomeHeaderP
       style={[styles.gradient, { paddingTop: insets.top + tokens.spacing.sm }]}>
       <View style={styles.topRow}>
         <Image
-          source={require('@/assets/images/brand/stp-home-wordmark.png')}
+          source={require('@/assets/images/brand/seniorteste-logo-nome.svg')}
           style={styles.logo}
           contentFit="contain"
-          accessibilityLabel="SeniorTest Physio"
+          accessibilityLabel="SêniorTeste"
         />
         <Pressable
           accessibilityRole="button"
@@ -59,9 +59,9 @@ export function HomeHeader({ userName, onProfilePress, searchSlot }: HomeHeaderP
   );
 }
 
-/** Proporção nativa do asset 93×28 (~3.32:1). */
+/** Proporção nativa do asset 660×140 (~4.71:1). */
 const LOGO_WIDTH = 108;
-const LOGO_HEIGHT = Math.round(LOGO_WIDTH / (93 / 28));
+const LOGO_HEIGHT = Math.round(LOGO_WIDTH / (660 / 140));
 
 const styles = StyleSheet.create({
   gradient: {
@@ -70,6 +70,8 @@ const styles = StyleSheet.create({
     gap: tokens.spacing.md,
   },
   topRow: {
+    // Desce o logo para fora do azul mais escuro do topo do gradiente (contraste).
+    marginTop: tokens.spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

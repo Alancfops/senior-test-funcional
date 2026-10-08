@@ -30,8 +30,8 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#F6F7FC",
-          "image": "./assets/images/splash/hero-illustration.png",
-          "imageWidth": 132
+          "image": "./assets/images/splash/seniorteste-logo-splash.png",
+          "imageWidth": 170
         }
       ],
       "expo-secure-store",
