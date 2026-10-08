@@ -117,7 +117,9 @@ db-reset:
 start: env db-up sync-frontend-api-url
 	@set -euo pipefail; \
 	trap 'kill 0' INT TERM; \
-	if [ -f "$(BACKEND_DIR)/package.json" ]; then \
+	if curl -sf -o /dev/null http://localhost:3000/health; then \
+		echo ">> API já está rodando em http://localhost:3000 — reaproveitando (só Expo)."; \
+	elif [ -f "$(BACKEND_DIR)/package.json" ]; then \
 		echo ">> Iniciando backend (http://localhost:3000)..."; \
 		(cd "$(BACKEND_DIR)" && npm run start:dev) & \
 	else \
