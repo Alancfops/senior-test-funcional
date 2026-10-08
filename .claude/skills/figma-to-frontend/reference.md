@@ -56,7 +56,7 @@ frontend/src/
 | Auth layout | welcome, form + back | `frontend/src/components/auth/AuthScreenLayout.tsx` | fundo branco |
 | Social login row | Google, Facebook, Apple | `frontend/src/components/auth/SocialLoginRow.tsx` | visual only (RF pendente) |
 | Welcome / Entrada | node `14081:424` | `frontend/src/app/(auth)/welcome.tsx` | botão pill + logo |
-| Logo STP | node `14182:516` | `frontend/src/components/brand/StpLogo.tsx` | `assets/images/brand/stp-logo.png` (export oficial) |
+| Logo SêniorTeste | — (SVG fornecido fora do Figma) | `frontend/src/components/brand/StpLogo.tsx` | `assets/images/brand/seniorteste-logo-vertical.svg` |
 | Cadastrar | node `12001:3` | `frontend/src/app/(auth)/register.tsx` | RF001 |
 | Entrar | node `14091:1132` | `frontend/src/app/(auth)/login.tsx` | RF002 |
 
