@@ -2,11 +2,11 @@ import type { TimeseriesPoint } from '@/features/assessments/api';
 
 export type ChartInstrumentCode = 'tug' | 'katz' | 'berg' | 'tinetti' | 'meem';
 
-/** Escala Y por instrumento (RF012 + layout Figma Berg até 90). */
+/** Escala Y por instrumento — pontuação máxima de cada escala (TUG é dinâmico). */
 export const CHART_MAX_VALUE: Record<ChartInstrumentCode, number> = {
   tug: 20,
   katz: 6,
-  berg: 90,
+  berg: 56,
   tinetti: 28,
   meem: 30,
 };
@@ -35,9 +35,11 @@ export function getChartMaxValue(code: ChartInstrumentCode, points: readonly { v
   return configured;
 }
 
+/** Divide o eixo em 3–5 faixas iguais com valores inteiros (ex.: Berg 0/14/28/42/56). */
 export function buildYAxisTicks(maxValue: number) {
-  const step = maxValue / 3;
-  return [0, step, step * 2, maxValue].map((value) => Math.round(value));
+  const segments = [3, 4, 5].find((count) => maxValue % count === 0) ?? 3;
+  const step = maxValue / segments;
+  return Array.from({ length: segments + 1 }, (_, index) => Math.round(step * index));
 }
 
 export function formatChartDateLabel(isoDate: string) {

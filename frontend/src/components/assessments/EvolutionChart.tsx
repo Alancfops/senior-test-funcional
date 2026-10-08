@@ -140,7 +140,7 @@ export function EvolutionChart({ points, maxValue, highlightedPointId }: Evoluti
           );
         })}
 
-        {coords.map((point) => (
+        {coords.map((point, index) => (
           <SvgText
             key={`${point.id}-label`}
             x={point.x}
@@ -148,7 +148,7 @@ export function EvolutionChart({ points, maxValue, highlightedPointId }: Evoluti
             fontSize={10}
             fill={point.id === highlightedPointId ? tokens.colors.primary : tokens.colors.textMuted}
             fontWeight={point.id === highlightedPointId ? '700' : '400'}
-            textAnchor="middle">
+            textAnchor={xLabelAnchor(index, coords.length)}>
             {point.label}
           </SvgText>
         ))}
@@ -212,3 +212,11 @@ const styles = StyleSheet.create({
     color: tokens.colors.onPrimary,
   },
 });
+
+/** Primeiro/último rótulo do eixo X alinhados à borda — evita corte no SVG estreito. */
+function xLabelAnchor(index: number, total: number): 'start' | 'middle' | 'end' {
+  if (total < 2) return 'middle';
+  if (index === 0) return 'start';
+  if (index === total - 1) return 'end';
+  return 'middle';
+}
