@@ -46,4 +46,4 @@ O monorepo contém **`docs/`** (o quê/por quê), **`backend/`** (API) e **`fron
 3. Decisões técnicas transversais → **`engineering/`**.  
 4. Texto clínico → **`clinical-protocols/`**.
 
-Legado Word: `docs/_legacy/` — use `product/requirements.md`.
+O Word original de requisitos não fica mais no repo (fonte oficial: `product/requirements.md`).
