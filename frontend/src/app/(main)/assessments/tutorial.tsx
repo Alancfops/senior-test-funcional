@@ -134,7 +134,17 @@ export default function AssessmentTutorialScreen() {
             {tutorialStep.scoringGuide.map((entry) => (
               <View key={entry.score} style={styles.scoringRow} accessibilityRole="text">
                 <View style={styles.scoringScoreWrap}>
-                  <Text style={styles.scoringScore}>{entry.score}</Text>
+                  <Text
+                    style={[
+                      styles.scoringScore,
+                      entry.score.length > 3 && styles.scoringScoreLabel,
+                    ]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.8}
+                  >
+                    {entry.score}
+                  </Text>
                 </View>
                 <Text style={styles.scoringDescription}>{entry.description}</Text>
               </View>
@@ -216,7 +226,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scoringScoreWrap: {
-    width: 104,
+    width: 112,
     flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center',
@@ -227,6 +237,10 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: tokens.colors.primary,
     textAlign: 'center',
+  },
+  scoringScoreLabel: {
+    fontSize: 15,
+    lineHeight: 20,
   },
   scoringDescription: {
     ...tokens.typography.body,
