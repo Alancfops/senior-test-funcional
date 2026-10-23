@@ -47,7 +47,6 @@
   "scripts": {
     "start": "expo start --clear",
     "start:tunnel": "expo start --tunnel --clear",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android --clear",
     "ios": "expo start --ios --clear",
     "web": "expo start --web --clear",
