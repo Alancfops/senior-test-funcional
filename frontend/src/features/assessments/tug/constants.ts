@@ -17,7 +17,7 @@ export const TUG_TRIALS = [
     progress: '02/03',
     image: require('@/assets/images/instruments/tug/trial-2.png') as ImageSourcePropType,
     instructions:
-      'Repita o percurso em linha reta de 3 metros até o marco, utilizando o dispositivo auxiliar habitual do paciente, se houver. Registre o tempo total do ensaio após a tentativa prática.',
+      'Repita o percurso em linha reta de 3 metros até o marco, utilizando o dispositivo auxiliar habitual do paciente, se houver. Registre o tempo total do ensaio.',
   },
   {
     index: 2,

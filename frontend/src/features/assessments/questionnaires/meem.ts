@@ -79,14 +79,14 @@ export const MEEM_QUESTIONNAIRE: QuestionnaireDefinition = {
       id: 'meem_registro',
       title: 'Registro (memória imediata)',
       instructions:
-        'Instruções: Mencione as palavras vaso, carro e tijolo. Peça para repetir. 1 ponto por palavra correta.',
+        'Instruções: Mencione as palavras vaso, carro e tijolo, levando 1 segundo para cada uma. Peça para repetir. 1 ponto por palavra correta.',
       config: meemNumeric('meem_registro', 0, 3),
     },
     {
       id: 'meem_atencao',
       title: 'Atenção e cálculo',
       instructions:
-        'Instruções: Sete seriado (100−7…) ou soletrar MUNDO de trás para frente. 1 ponto por resposta correta (máx. 5).',
+        'Instruções: Sete seriado (100−7=93−7=86−7=79−7=72−7=65), interrompendo após cinco respostas, ou soletrar MUNDO de trás para frente. 1 ponto por resposta correta (máx. 5).',
       config: meemNumeric('meem_atencao', 0, 5),
     },
     {
@@ -126,7 +126,7 @@ export const MEEM_QUESTIONNAIRE: QuestionnaireDefinition = {
       id: 'meem_l5',
       title: 'Linguagem — escrita',
       instructions:
-        'Instruções: Peça para escrever uma frase com sujeito e objeto (ignore ortografia).',
+        'Instruções: Peça para escrever uma frase de sua própria autoria, com sujeito e objeto e que faça sentido (ignore erros de ortografia).',
       config: meemNumeric('meem_l5', 0, 1),
     },
     {

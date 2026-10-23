@@ -43,12 +43,13 @@ export const KATZ_QUESTIONNAIRE: QuestionnaireDefinition = {
           {
             value: 'assistencia',
             label: 'Assistência',
-            description: 'Veste-se sem ajuda, exceto para amarrar os sapatos.',
+            description: 'Pega as roupas e veste-se sem ajuda, exceto para amarrar os sapatos.',
           },
           {
             value: 'dependente',
             label: 'Dependente',
-            description: 'Recebe ajuda para pegar as roupas ou vestir-se, ou permanece sem roupa.',
+            description:
+              'Recebe ajuda para pegar as roupas ou vestir-se, ou permanece parcial ou completamente sem roupa.',
           },
         ],
       },
@@ -64,12 +65,14 @@ export const KATZ_QUESTIONNAIRE: QuestionnaireDefinition = {
           {
             value: 'independente',
             label: 'Independente',
-            description: 'Vai ao banheiro, limpa-se e ajeita as roupas sem ajuda.',
+            description:
+              'Vai ao banheiro ou equivalente, limpa-se e ajeita as roupas sem ajuda (pode usar bengala, andador ou cadeira de rodas; pode usar comadre/urinol à noite, esvaziando-o de manhã).',
           },
           {
             value: 'assistencia',
             label: 'Assistência',
-            description: 'Recebe ajuda para ir, limpar-se, ajeitar roupas ou usar comadre/urinol.',
+            description:
+              'Recebe ajuda para ir ao banheiro ou equivalente, para limpar-se, para ajeitar as roupas após eliminações ou para usar comadre/urinol.',
           },
           {
             value: 'dependente',
@@ -150,7 +153,8 @@ export const KATZ_QUESTIONNAIRE: QuestionnaireDefinition = {
           {
             value: 'dependente',
             label: 'Dependente',
-            description: 'Recebe ajuda para alimentar-se ou é alimentado por outra pessoa.',
+            description:
+              'Recebe ajuda para alimentar-se, ou é alimentado parcial ou completamente pelo uso de cateteres ou fluidos intravenosos.',
           },
         ],
       },
