@@ -50,11 +50,13 @@ export default function ApplyAssessmentScreen() {
   const instrumentOptions = useMemo(() => ALL_ASSESSMENT_INSTRUMENT_OPTIONS, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- carga inicial da lista de pacientes
     void loadPatients();
   }, [loadPatients]);
 
   useEffect(() => {
     if (preselectedPatientId && patientOptions.some((option) => option.value === preselectedPatientId)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- aplica paciente pré-selecionado via rota quando a lista carrega
       setPatientId(preselectedPatientId);
     }
   }, [preselectedPatientId, patientOptions]);
@@ -64,6 +66,7 @@ export default function ApplyAssessmentScreen() {
       preselectedInstrumentCode &&
       instrumentOptions.some((option) => option.value === preselectedInstrumentCode.toLowerCase())
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- aplica teste pré-selecionado via rota
       setInstrumentCode(preselectedInstrumentCode.toLowerCase());
     }
   }, [preselectedInstrumentCode, instrumentOptions]);

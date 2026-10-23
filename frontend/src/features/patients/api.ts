@@ -116,7 +116,7 @@ export type PatientAssessmentSummary = {
 };
 
 export type PatientAssessmentsListResponse = {
-  data: Array<{
+  data: {
     id: string;
     instrumentCode: string;
     instrumentDisplayName: string;
@@ -127,7 +127,7 @@ export type PatientAssessmentsListResponse = {
       classificationLabel: string;
       classificationCode: string;
     } | null;
-  }>;
+  }[];
 };
 
 export type PatientAssessmentDetailResponse = {

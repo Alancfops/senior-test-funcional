@@ -19,6 +19,7 @@ export function StopwatchControl({ recordedSeconds, onRecord }: StopwatchControl
 
   useEffect(() => {
     if (recordedSeconds !== null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza o cronômetro com o tempo já registrado da tentativa
       setElapsedMs(Math.round(recordedSeconds * 1000));
       setRunning(false);
     }

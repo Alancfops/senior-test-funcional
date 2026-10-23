@@ -8,10 +8,10 @@ export const DEFAULT_ACTIVITY_LIST_FILTERS: ActivityListFilters = {
   instrumentCodes: [],
 };
 
-export const ACTIVITY_INSTRUMENT_OPTIONS: Array<{
+export const ACTIVITY_INSTRUMENT_OPTIONS: {
   value: ActivityInstrumentCode;
   label: string;
-}> = [
+}[] = [
   { value: 'TUG', label: 'TUG' },
   { value: 'KATZ', label: 'Katz' },
   { value: 'BERG', label: 'Berg' },

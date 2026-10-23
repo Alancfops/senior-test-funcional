@@ -8,6 +8,7 @@ export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- padrão de hidratação do template Expo (render estático na web)
     setHasHydrated(true);
   }, []);
 

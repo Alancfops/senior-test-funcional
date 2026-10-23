@@ -14,7 +14,7 @@ import {
   mapTimeseriesToChartPoints,
 } from '@/features/assessments/chart-config';
 import { mapAssessmentResultToDisplay } from '@/features/assessments/map-result';
-import { formatAssessmentDate, formatDurationMs } from '@/features/assessments/display-result';
+import { formatDurationMs } from '@/features/assessments/display-result';
 import {
   formatRelativeWhen,
   mapPatientAssessmentSummary,
@@ -58,6 +58,7 @@ export default function PatientAssessmentDetailScreen() {
 
     let cancelled = false;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reinicia a tela ao trocar de avaliação antes do fetch
     setLoading(true);
     setLoadError(null);
     setPatient(null);

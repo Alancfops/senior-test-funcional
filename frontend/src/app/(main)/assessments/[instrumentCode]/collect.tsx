@@ -7,7 +7,7 @@ import { AssessmentCollectHeader } from '@/components/assessments/AssessmentColl
 import { QuestionnaireItemCard } from '@/components/assessments/QuestionnaireItemCard';
 import { TugCollectScreen } from '@/components/assessments/TugCollectScreen';
 import { ButtonRow } from '@/components/ui/Button';
-import { getAssessmentInstrument } from '@/features/assessments/instruments';
+import { getAssessmentInstrument, isQuestionnaireInstrumentCode } from '@/features/assessments/instruments';
 import {
   formatProgress,
   getQuestionnaireDefinition,
@@ -16,7 +16,6 @@ import {
   ITEMS_PER_PAGE,
   paginateItems,
 } from '@/features/assessments/questionnaires';
-import { isQuestionnaireInstrumentCode } from '@/features/assessments/instruments';
 import {
   ensureQuestionnaireDraftSession,
   getQuestionnaireSession,

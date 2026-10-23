@@ -16,12 +16,12 @@ export const DEFAULT_PATIENT_LIST_FILTERS: PatientListFilters = {
   gender: null,
 };
 
-export const PATIENT_SORT_OPTIONS: Array<{
+export const PATIENT_SORT_OPTIONS: {
   id: string;
   label: string;
   sortBy: PatientSortBy;
   sortOrder: SortOrder;
-}> = [
+}[] = [
   { id: 'name-asc', label: 'Nome (A → Z)', sortBy: 'fullName', sortOrder: 'asc' },
   { id: 'name-desc', label: 'Nome (Z → A)', sortBy: 'fullName', sortOrder: 'desc' },
   { id: 'age-asc', label: 'Idade (menor → maior)', sortBy: 'age', sortOrder: 'asc' },

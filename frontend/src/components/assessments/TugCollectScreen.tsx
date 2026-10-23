@@ -44,6 +44,7 @@ export function TugCollectScreen({ patient, patientId, instrumentCode }: TugColl
   useEffect(() => {
     const session = ensureQuestionnaireSession(patientId, instrumentCode);
     if (session.tugTrials?.some((value) => value !== null)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- restaura tentativas salvas na sessão local do questionário
       setTrials([...session.tugTrials]);
     }
   }, [patientId, instrumentCode]);
