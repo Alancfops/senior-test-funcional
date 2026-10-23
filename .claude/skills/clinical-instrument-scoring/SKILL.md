@@ -12,7 +12,7 @@ Valida se **coleta**, **validação**, **cálculo** e **classificação** dos ci
 ## Fontes canônicas (ordem)
 
 1. [docs/clinical-protocols/instruments/](../../../docs/clinical-protocols/instruments/) — roteiro e pontuação
-2. [docs/backend/README.md](../../../docs/backend/README.md) §5 — o que o servidor calcula
+2. [docs/backend/README.md](../../../../stf-api/docs/backend/README.md) §5 — o que o servidor calcula
 3. [docs/product/requirements.md](../../../docs/product/requirements.md) — RF008–RF011
 4. [docs/frontend/README.md](../../../docs/frontend/README.md) §6 — coleta no app
 5. Tabelas por instrumento: [reference.md](reference.md)
@@ -45,7 +45,7 @@ Task Progress:
 
 ## Verificação por camada
 
-### Backend (`backend/src/assessments/instruments/<code>/`)
+### Backend (`../stf-api/src/assessments/instruments/<code>/`)
 
 - **schema (Zod):** campos, enums, min/max, `.strict()` ou equivalente
 - **score():** fórmula conforme reference.md

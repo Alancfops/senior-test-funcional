@@ -128,7 +128,7 @@ Se o Figma tiver composite nomeado (ex. `Card/Patient`), preferir **mesmo nome**
 
 ## API — lembrar ao implementar
 
-Consultar [docs/backend/README.md](../../../docs/backend/README.md) §4:
+Consultar [docs/backend/README.md](../../../../stf-api/docs/backend/README.md) §4:
 
 - Auth: register, login, forgot-password  
 - Patients: CRUD + list com busca  

@@ -1,6 +1,6 @@
 # Code Review — checklist do projeto
 
-Use as seções aplicáveis ao diff. Fontes: [backend README](../../../docs/backend/README.md), [frontend README](../../../docs/frontend/README.md), [requirements](../../../docs/product/requirements.md), [privacy-and-lgpd](../../../docs/product/privacy-and-lgpd.md).
+Use as seções aplicáveis ao diff. Fontes: [backend README](../../../../stf-api/docs/backend/README.md), [frontend README](../../../docs/frontend/README.md), [requirements](../../../docs/product/requirements.md), [privacy-and-lgpd](../../../docs/product/privacy-and-lgpd.md).
 
 ---
 
@@ -80,5 +80,5 @@ Use as seções aplicáveis ao diff. Fontes: [backend README](../../../docs/back
 | # | Item | Falha se… |
 |---|------|-----------|
 | DOC1 | RF | Comportamento novo sem atualizar `docs/product/` |
-| DOC2 | Contrato | Payload diverge de `docs/backend/` §4–§5 |
+| DOC2 | Contrato | Payload diverge de `../stf-api/docs/backend/` §4–§5 |
 | DOC3 | Protocolo | Regra clínica diverge de `clinical-protocols/` sem ADR |

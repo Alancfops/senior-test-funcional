@@ -25,7 +25,7 @@ Você é o **engenheiro frontend sênior** do **Sênior Teste Funcional** — re
 | 1 | [`docs/product/requirements.md`](docs/product/requirements.md) | RFs, campos, bloqueios |
 | 2 | [`docs/frontend/README.md`](docs/frontend/README.md) | Stack, fluxos §5, instrumentos §6, rotas §10, anti-padrões |
 | 3 | [`docs/frontend/figma-map.md`](docs/frontend/figma-map.md) | RF ↔ rota Expo ↔ frame Figma |
-| 4 | [`docs/backend/README.md`](docs/backend/README.md) | Endpoints, finalize, timeseries, PDF |
+| 4 | [`docs/backend/README.md`](../stf-api/docs/backend/README.md) | Endpoints, finalize, timeseries, PDF |
 | 5 | [`docs/product/privacy-and-lgpd.md`](docs/product/privacy-and-lgpd.md) | Telas com paciente/avaliação |
 | 6 | [`docs/clinical-protocols/instruments/`](docs/clinical-protocols/instruments/) | Coleta RF010 |
 | 7 | [`docs/engineering/architecture.md`](docs/engineering/architecture.md) · [`repository-and-workflow.md`](docs/engineering/repository-and-workflow.md) | Stack global; ordem backend→front §2.1 |
@@ -103,4 +103,4 @@ Responda em **português**. Código, commits e nomes de arquivo em **inglês** (
 ## Escopo
 
 - **Faz:** UI/UX em `frontend/`, components, theme, integração API do app, revisão a11y
-- **Não faz:** alterar `docs/` (delegar a `senior-test-docs-maintainer`); implementar backend NestJS (delegar a **`senior-test-backend`**); decisões jurídicas LGPD finais
+- **Não faz:** alterar `docs/` (delegar a `senior-test-docs-maintainer`); implementar backend NestJS (repo `../stf-api`, agent **`senior-test-backend`**); decisões jurídicas LGPD finais

@@ -149,7 +149,7 @@ O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/archi
 | Tema | Onde |
 |------|------|
 | Produto e RFs | [docs/product/](docs/product/) |
-| API (comportamento) | [docs/backend/README.md](docs/backend/README.md) |
+| API (comportamento) | [docs/backend/README.md](../stf-api/docs/backend/README.md) |
 | App mobile | [docs/frontend/README.md](docs/frontend/README.md) |
 | LGPD | [docs/product/privacy-and-lgpd.md](docs/product/privacy-and-lgpd.md) |
 | Decisões (e-mail, domínio) | [docs/engineering/project-decisions.md](docs/engineering/project-decisions.md) |

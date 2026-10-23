@@ -7,7 +7,7 @@ O Claude Code não tem conceito nativo de "rules" — as regras do projeto ficam
 | Pasta | Conteúdo |
 |-------|----------|
 | `commands/` | `/session`, `/stf-code-review`, `/verify-instruments` |
-| `agents/` | Subagentes — `senior-test-docs-maintainer`, `senior-test-backend`, `senior-test-frontend` |
+| `agents/` | Subagentes — `senior-test-docs-maintainer`, `senior-test-frontend` (o `senior-test-backend` está em `../stf-api`) |
 | `skills/save-session/` | Skill `save-session` — resumo da conversa em `session/` |
 | `skills/wcag2-frontend-ui/` | Skill WCAG 2 — UI/UX acessível no app (nível AA) |
 | `skills/figma-to-frontend/` | Skill Figma → implementação de telas (Expo/RN + docs/) |
@@ -20,10 +20,10 @@ O Claude Code não tem conceito nativo de "rules" — as regras do projeto ficam
 
 | Arquivo | Aplicação |
 |---------|-----------|
-| `backend-server-authority.md` | Sempre — servidor é fonte da verdade |
+| `../stf-api/docs/rules/backend-server-authority.md` | Sempre — servidor é fonte da verdade (importada do repo da API) |
 | `figma-screens-required.md` | Sempre — UI só conforme Figma |
 | `lgpd-sensitive-data-review.md` | Sempre — revisão LGPD em dados pessoais/sensíveis |
-| `backend-nestjs-implementation.md` | Ao editar `backend/**` ou `packages/**` (ver `backend/CLAUDE.md`) |
+| `backend-nestjs-implementation.md` | Só no repo `../stf-api` |
 
 As três primeiras são importadas com `@` no `CLAUDE.md`, então carregam em toda sessão.
 

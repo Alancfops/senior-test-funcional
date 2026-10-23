@@ -21,7 +21,7 @@ Decisões explícitas do titular/equipe que orientam implementação e documenta
 
 **Evolução futura (pós-TCC, se o produto for comercializado):** migrar para provedor transacional + domínio verificado; trocar só `notifications/` e `MAIL_*` — fluxo HTTP e telas RF003 permanecem.
 
-**Referências:** [backend/README.md § RF003](../backend/README.md), [requirements.md RF003](../product/requirements.md), `backend/.env.example`.
+**Referências:** [backend/README.md § RF003](../../../stf-api/docs/backend/README.md), [requirements.md RF003](../product/requirements.md), `backend/.env.example`.
 
 ---
 

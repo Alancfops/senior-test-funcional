@@ -2,7 +2,7 @@
 
 **Norma:** [Lei nº 13.709/2018 (LGPD)](http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm) · [ANPD](https://www.gov.br/anpd/pt-br)
 
-**Escopo deste documento:** tratamento de dados pessoais e **sensíveis (saúde)** no produto descrito em [PRD.md](./PRD.md) e [requirements.md](./requirements.md), com medidas técnicas alinhadas a [architecture.md](../engineering/architecture.md) e [data-model.md](../engineering/data-model.md).
+**Escopo deste documento:** tratamento de dados pessoais e **sensíveis (saúde)** no produto descrito em [PRD.md](./PRD.md) e [requirements.md](./requirements.md), com medidas técnicas alinhadas a [architecture.md](../engineering/architecture.md) e [data-model.md](../../../stf-api/docs/engineering/data-model.md).
 
 **Limite:** orientação **interna ao repositório** para produto e engenharia. Avisos ao titular, contratos com operadores, bases legais finais e designação de encarregado (DPO) competem ao **controlador** da implantação, com assessoria jurídica.
 
@@ -195,7 +195,7 @@ Antes de merge que introduza novo dado ou integração:
 ## 11. Referências no repositório
 
 - [PRD.md](./PRD.md) · [requirements.md](./requirements.md)  
-- [architecture.md](../engineering/architecture.md) · [data-model.md](../engineering/data-model.md)  
+- [architecture.md](../engineering/architecture.md) · [data-model.md](../../../stf-api/docs/engineering/data-model.md)  
 - [clinical-protocols/README.md](../clinical-protocols/README.md)
 
 ---

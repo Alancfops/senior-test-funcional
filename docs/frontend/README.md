@@ -2,7 +2,7 @@
 
 > **Especificação** em `docs/frontend/` — contexto, stack, fluxos e LGPD. **Código** em `frontend/` na raiz do monorepo.
 
-**Leitura relacionada:** [backend](../backend/README.md) (API) · [architecture](../engineering/architecture.md) · [requirements](../product/requirements.md) · [PRD](../product/PRD.md).
+**Leitura relacionada:** [backend](../../../stf-api/docs/backend/README.md) (API) · [architecture](../engineering/architecture.md) · [requirements](../product/requirements.md) · [PRD](../product/PRD.md).
 
 ---
 
@@ -34,7 +34,7 @@ O **frontend** é o **aplicativo mobile** — o canal onde o profissional **vive
 - Escolhe instrumento e paciente, lê o tutorial, conduz a coleta na interface.  
 - Vê resultado imediato, gráfico (quando já há histórico) e pede PDF.  
 
-Sem app, a API existe mas **ninguém opera** o sistema no consultório. Por isso o frontend é “canal principal”, mesmo que a **inteligência clínica oficial** mora no [backend](../backend/README.md).
+Sem app, a API existe mas **ninguém opera** o sistema no consultório. Por isso o frontend é “canal principal”, mesmo que a **inteligência clínica oficial** mora no [backend](../../../stf-api/docs/backend/README.md).
 
 **Público:** fisioterapeuta com formação para aplicar TUG, Katz, Berg, Tinetti e MEEM — o app **não substitui** treinamento clínico; oferece **roteiro e registro** alinhados à spec ([clinical-protocols](../clinical-protocols/README.md)).
 
@@ -121,7 +121,7 @@ A maior parte do estado **vem da API** (pacientes, histórico, resultado). Redux
 Mesmo que “pareça útil” mostrar soma parcial:
 
 - RF de MEEM pede **não** exibir pontuação interpretativa até o fim (evita viés na aplicação).  
-- PDF e RF011 devem coincidir com **um** motor — o do servidor ([backend](../backend/README.md) §5).
+- PDF e RF011 devem coincidir com **um** motor — o do servidor ([backend](../../../stf-api/docs/backend/README.md) §5).
 
 Preview local vira dívida técnica e risco de divergência.
 
@@ -232,7 +232,7 @@ A UI implementa **entrada**; o protocolo completo está em [clinical-protocols](
 | **Tinetti** | 16 itens; indicador “X de 16” | Todos itens | Soma API |
 | **MEEM** | Blocos na ordem do protocolo | Tetos por bloco; **sem** total parcial visível | Total + faixa escolaridade usada |
 
-**MEEM — escolaridade:** exibir valor do cadastro (RF004) e permitir **confirmar/corrigir** na sessão; enviar ao servidor o valor **efetivo** para cortes ([backend](../backend/README.md) §5).
+**MEEM — escolaridade:** exibir valor do cadastro (RF004) e permitir **confirmar/corrigir** na sessão; enviar ao servidor o valor **efetivo** para cortes ([backend](../../../stf-api/docs/backend/README.md) §5).
 
 **Acessibilidade (direção):** fontes legíveis, alvos de toque amplos (público idoso + profissional em pé), contraste adequado **desde a Fase A** ([repository-and-workflow](../engineering/repository-and-workflow.md) §3).
 
@@ -308,7 +308,7 @@ Se RF004 incluir foto: exibir via URL ou asset que a API referenciar; não assum
 - JSON `Content-Type`  
 - Tratar timeout com mensagem amigável  
 
-Endpoints e semântica: [backend/README.md](../backend/README.md) §4.
+Endpoints e semântica: [backend/README.md](../../../stf-api/docs/backend/README.md) §4.
 
 ### 9.3 Sincronização após mutações
 
@@ -328,7 +328,7 @@ Evita perfil desatualizado após novo teste.
 
 ### 9.5 Offline
 
-**MVP:** não prometer uso pleno offline. Sem rede, listas e finalize falham com mensagem clara. **Evolução:** fila de sync ou rascunho no servidor (PATCH) — prioridade menor que fechar RF com API online ([backend](../backend/README.md) §4.2).
+**MVP:** não prometer uso pleno offline. Sem rede, listas e finalize falham com mensagem clara. **Evolução:** fila de sync ou rascunho no servidor (PATCH) — prioridade menor que fechar RF com API online ([backend](../../../stf-api/docs/backend/README.md) §4.2).
 
 ---
 
@@ -402,7 +402,7 @@ Cronograma integrado: [repository-and-workflow](../engineering/repository-and-wo
 ## Referências
 
 - [figma-map.md](figma-map.md) — mapa Figma, rotas e RFs  
-- [../backend/README.md](../backend/README.md)  
+- [../backend/README.md](../../../stf-api/docs/backend/README.md)  
 - [../engineering/architecture.md](../engineering/architecture.md)  
 - [../engineering/repository-and-workflow.md](../engineering/repository-and-workflow.md)  
 - [../product/requirements.md](../product/requirements.md)  

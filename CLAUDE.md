@@ -11,7 +11,7 @@ Contexto técnico e de produto estão em **`docs/`**. A **implementação** do a
 
 | Camada | Documentação |
 |--------|----------------|
-| API | [docs/backend/README.md](docs/backend/README.md) |
+| API | [docs/backend/README.md](../stf-api/docs/backend/README.md) |
 | App | [docs/frontend/README.md](docs/frontend/README.md) |
 | LGPD | [docs/product/privacy-and-lgpd.md](docs/product/privacy-and-lgpd.md) |
 | Fluxo Git / fases | [docs/engineering/repository-and-workflow.md](docs/engineering/repository-and-workflow.md) |
@@ -54,7 +54,7 @@ senior-test-funcional/
 
 Importadas aqui para carregarem em toda sessão:
 
-@docs/rules/backend-server-authority.md
+@../stf-api/docs/rules/backend-server-authority.md
 @docs/rules/figma-screens-required.md
 @docs/rules/lgpd-sensitive-data-review.md
 
@@ -78,8 +78,8 @@ Definições: [.claude/commands/](.claude/commands/) · índice da configuraçã
 |------|------|--------|
 | Rule | [lgpd-sensitive-data-review](docs/rules/lgpd-sensitive-data-review.md) | Alterações com dados pessoais/sensíveis |
 | Rule | [figma-screens-required](docs/rules/figma-screens-required.md) | UI só conforme Figma; tela ausente → avisar usuário |
-| Rule | [backend-server-authority](docs/rules/backend-server-authority.md) | API = fonte da verdade; scoring no finalize; isolamento `therapist_id` |
-| Rule | [backend-nestjs-implementation](docs/rules/backend-nestjs-implementation.md) | Padrões NestJS/Prisma ao editar `backend/` |
+| Rule | [backend-server-authority](../stf-api/docs/rules/backend-server-authority.md) | API = fonte da verdade; scoring no finalize; isolamento `therapist_id` |
+| Rule | [backend-nestjs-implementation](../stf-api/docs/rules/backend-nestjs-implementation.md) | Padrões NestJS/Prisma (repo `stf-api`) |
 | Skill | [save-session](.claude/skills/save-session/SKILL.md) | `/session` — registrar conversa em `session/` |
 | Skill | [wcag2-frontend-ui](.claude/skills/wcag2-frontend-ui/SKILL.md) | UI/UX do app — WCAG 2 nível AA |
 | Skill | [figma-to-frontend](.claude/skills/figma-to-frontend/SKILL.md) | Telas do [Figma Senior Teste Funcional](https://www.figma.com/design/mtMbhRez2Xy2k414cfzcFm/Senior-Test-Funcional?node-id=1-11490) |
@@ -88,7 +88,7 @@ Definições: [.claude/commands/](.claude/commands/) · índice da configuraçã
 | Skill | [stf-code-review](.claude/skills/stf-code-review/SKILL.md) | Revisão — `/code-review` + `/security-review` + checklist LGPD/API |
 | Skill | [clinical-instrument-scoring](.claude/skills/clinical-instrument-scoring/SKILL.md) | Verificar questionários (TUG, Katz, Berg, Tinetti, MEEM) |
 | Agent | [senior-test-docs-maintainer](.claude/agents/senior-test-docs-maintainer.md) | Manutenção de documentação em `docs/` |
-| Agent | [senior-test-backend](.claude/agents/senior-test-backend.md) | API NestJS — Prisma, scoring, OpenAPI, linkagem com front |
+| Agent | [senior-test-backend](../stf-api/.claude/agents/senior-test-backend.md) | API NestJS (repo `stf-api`) — Prisma, scoring, OpenAPI |
 | Agent | [senior-test-frontend](.claude/agents/senior-test-frontend.md) | UI/UX mobile — Figma, WCAG 2 AA, Expo/RN, integração API |
 
 ## Invariantes de negócio (resumo)

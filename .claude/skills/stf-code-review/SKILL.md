@@ -107,7 +107,7 @@ Tabelas de achados: colunas **Severity**, **Location (file:line)**, **Finding** 
 - Checklist detalhado: [reference.md](reference.md)
 - Exemplos de pedido: [examples.md](examples.md)
 - LGPD: rule `lgpd-sensitive-data-review` + [docs/product/privacy-and-lgpd.md](../../../docs/product/privacy-and-lgpd.md)
-- Domínio API: [docs/backend/README.md](../../../docs/backend/README.md)
+- Domínio API: [docs/backend/README.md](../../../../stf-api/docs/backend/README.md)
 
 ## Não fazer
 

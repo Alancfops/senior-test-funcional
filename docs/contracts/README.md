@@ -20,6 +20,6 @@ docs/contracts/
 └── schemas/               # exemplos JSON opcionais para QA
 ```
 
-**Propagação:** artefatos dinâmicos vêm do `backend/`; esta pasta acumula apenas **snapshots** quando a equipe quiser versioná-los explicitamente.
+**Propagação:** artefatos dinâmicos vêm da API (repo `stf-api`); esta pasta acumula apenas **snapshots** quando a equipe quiser versioná-los explicitamente.
 
 Instalação e execução local: [README na raiz](../../README.md).

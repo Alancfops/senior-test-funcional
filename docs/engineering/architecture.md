@@ -1,9 +1,9 @@
 # Arquitetura do sistema — Sênior Teste Funcional
 
 **Público:** engenharia, produto técnico e implementação (incluindo agentes automatizados).  
-**Status:** stack e desenho **oficiais**. Implementação em `backend/` e `frontend/` ativa; **Fase D** (integração) em andamento (jul/2026). Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
+**Status:** stack e desenho **oficiais**. Implementação ativa no app (`frontend/`) e na API (repo `stf-api`); **Fase D** (integração) em andamento (jul/2026). Mudanças de tecnologia base exigem atualizar este arquivo (e, se aplicável, ADR em `engineering/adr/`).
 
-**Alinhamento:** [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), [data-model.md](./data-model.md). Fases de entrega: [repository-and-workflow.md](./repository-and-workflow.md).
+**Alinhamento:** [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), [data-model.md](../../../stf-api/docs/engineering/data-model.md). Fases de entrega: [repository-and-workflow.md](./repository-and-workflow.md).
 
 **Restrições de produto:** aplicativo **mobile** como canal principal; cinco instrumentos (**TUG, Katz, Berg, Tinetti, MEEM**); histórico longitudinal; PDF por instrumento (sem relatório consolidado multi-teste); segregação por fisioterapeuta; recuperação de senha via API + e-mail.
 
@@ -90,7 +90,7 @@ Todos os protocolos do MVP usam o mesmo pipeline (Prisma + JSONB + Zod por `inst
 
 Roteiros clínicos: [clinical-protocols/instruments/](../clinical-protocols/instruments/). Coleta: **RF010**; feedback: **RF011**.
 
-**Convenção de código:** persistência e API usam **MAIÚSCULAS** (`TUG`, `KATZ`, …); pastas de implementação e segmentos de URL usam **minúsculas** — ver [data-model §1.1](./data-model.md).
+**Convenção de código:** persistência e API usam **MAIÚSCULAS** (`TUG`, `KATZ`, …); pastas de implementação e segmentos de URL usam **minúsculas** — ver [data-model §1.1](../../../stf-api/docs/engineering/data-model.md).
 
 ### 3.3 Cliente mobile (detalhe)
 
@@ -168,7 +168,7 @@ flowchart LR
 
 ### 4.3 Modelo de persistência de avaliações
 
-Conforme [data-model.md](./data-model.md):
+Conforme [data-model.md](../../../stf-api/docs/engineering/data-model.md):
 
 - Tabelas relacionais: `Therapist`, `Patient`, `Instrument`, `Assessment`, `AssessmentResult`, tokens de recuperação.
 - `Assessment.payload`: **JSONB** validado com **Zod** conforme `instrument_code`.
@@ -185,16 +185,16 @@ Neste Git, **não há pastas de código** na raiz. A especificação de cada cam
 
 | Camada | Documentação |
 |--------|----------------|
-| API | [../backend/README.md](../backend/README.md) |
+| API (repo `stf-api`) | [stf-api/docs/backend/README.md](../../../stf-api/docs/backend/README.md) |
 | App mobile | [../frontend/README.md](../frontend/README.md) |
 | Transversal | `docs/engineering/`, `docs/product/`, `docs/contracts/` |
 
-**Quando o código existir** (monorepo ou repos separados), estrutura alvo típica:
+Estrutura adotada (repositórios separados):
 
 ```
-backend/          # NestJS + Prisma + OpenAPI (implementação)
-frontend/         # Expo + React Native (implementação)
-packages/         # Opcional: shared-contracts (Zod)
+stf-api/                         # NestJS + Prisma + OpenAPI
+senior-test-funcional/frontend/  # Expo + React Native
+stf-gerenciador-web/             # Vite + React (painel admin)
 ```
 
 **Fluxo de mudança:** modelo + API + OpenAPI primeiro; depois app contra contrato estável. Por tela/RF: backend do contrato → UI Figma ([repository-and-workflow.md §2.1](./repository-and-workflow.md), [figma-map.md](../frontend/figma-map.md)). Toolchain prevista: Bun workspaces, Prisma, Expo — ver [repository-and-workflow.md](./repository-and-workflow.md).
@@ -330,7 +330,7 @@ Trocar npm/pnpm por Bun **não** invalida esta arquitetura.
 
 Ao codificar, manter sincronizados:
 
-1. [data-model.md](./data-model.md) e schema Prisma/migrações reais  
+1. [data-model.md](../../../stf-api/docs/engineering/data-model.md) e schema Prisma/migrações reais  
 2. OpenAPI viva no Nest + snapshots em [../contracts/](../contracts/README.md) quando houver release  
 3. Este arquivo e [privacy-and-lgpd.md](../product/privacy-and-lgpd.md), se mudar stack ou fluxos de dados  
 
@@ -342,10 +342,10 @@ Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
 
 | # | Critério | Referência |
 |---|----------|------------|
-| 1 | Stack e módulos NestJS definidos | §3.4, §6 deste doc; [backend README §9](../backend/README.md) |
-| 2 | Modelo ER e `instrument_code` convenção | [data-model.md §1.1](./data-model.md) |
-| 3 | Endpoints RF001–RF005 mapeados | [backend README §4.4](../backend/README.md) |
-| 4 | Isolamento `therapist_id` documentado | [backend README §7.2](../backend/README.md) |
+| 1 | Stack e módulos NestJS definidos | §3.4, §6 deste doc; [backend README §9](../../../stf-api/docs/backend/README.md) |
+| 2 | Modelo ER e `instrument_code` convenção | [data-model.md §1.1](../../../stf-api/docs/engineering/data-model.md) |
+| 3 | Endpoints RF001–RF005 mapeados | [backend README §4.4](../../../stf-api/docs/backend/README.md) |
+| 4 | Isolamento `therapist_id` documentado | [backend README §7.2](../../../stf-api/docs/backend/README.md) |
 | 5 | LGPD checklist conhecido | [privacy-and-lgpd.md §10](../product/privacy-and-lgpd.md) |
 | 6 | Git: `develop` + branch `feature/backend-*` | [repository-and-workflow §6](./repository-and-workflow.md) |
 | 7 | Rules backend ativas | `docs/rules/backend-*.md` |
@@ -361,8 +361,8 @@ Use como gate antes de criar `backend/` e abrir `feature/backend-foundation`:
 - [PRD.md](../product/PRD.md)  
 - [requirements.md](../product/requirements.md)  
 - [privacy-and-lgpd.md](../product/privacy-and-lgpd.md)  
-- [data-model.md](./data-model.md)  
+- [data-model.md](../../../stf-api/docs/engineering/data-model.md)  
 - [repository-and-workflow.md](./repository-and-workflow.md)  
-- [../backend/README.md](../backend/README.md) — como a API deve funcionar  
+- [../backend/README.md](../../../stf-api/docs/backend/README.md) — como a API deve funcionar  
 - [../frontend/README.md](../frontend/README.md) — como o app deve funcionar  
 - [clinical-protocols/README.md](../clinical-protocols/README.md)

@@ -18,9 +18,9 @@ Review de segurança antes do merge do RF004
 
 | Arquivos no diff | Escopo |
 |------------------|--------|
-| `backend/src/auth/**` | Completa |
-| `backend/src/assessments/instruments/meem/**` | Completa + skill `clinical-instrument-scoring` |
-| `docs/backend/README.md` só | Bugs / lógica (checklist DOC*) |
+| `../stf-api/src/auth/**` | Completa |
+| `../stf-api/src/assessments/instruments/meem/**` | Completa + skill `clinical-instrument-scoring` |
+| `../stf-api/docs/backend/README.md` só | Bugs / lógica (checklist DOC*) |
 | `.claude/skills/**` | Bugs / lógica |
 
 ## Exemplo de bloqueador

@@ -2,7 +2,7 @@
 
 Este documento formaliza **como o projeto versionado será organizado** e **qual ordem de entrega preserva custo e conformidade**:
 
-- **API** e **app** como dois artefatos implantáveis independentes (documentados em [`../backend/README.md`](../backend/README.md) e [`../frontend/README.md`](../frontend/README.md));
+- **API** e **app** como dois artefatos implantáveis independentes (documentados em [`../backend/README.md`](../../../stf-api/docs/backend/README.md) e [`../frontend/README.md`](../frontend/README.md));
 - **Prioridade atual (2026):** implementar **telas do Figma no app** com navegação, validação client-side e **mocks controlados**, **antes** de codificar e integrar o backend em larga escala;
 - **Backend** em seguida: domínio, regras, persistência e **contratos HTTP** — integração substituindo mocks na **Fase D**.
 
@@ -15,21 +15,24 @@ Complementos obrigatórios: [architecture.md](./architecture.md), [PRD.md](../pr
 ## 1. Estrutura do repositório
 
 ```
-senior-test-funcional/
+senior-test-funcional/                # app mobile + especificação de produto
 ├── README.md
-├── docs/                              # Especificação
+├── docs/
 │   ├── product/
-│   ├── backend/
 │   ├── frontend/
 │   ├── engineering/
 │   ├── clinical-protocols/instruments/
 │   └── contracts/
-├── frontend/                          # Expo + RN (Fase A concluída; integração Fase D)
-├── backend/                           # NestJS + Prisma (Fases B–C concluídas)
-└── packages/                          # Opcional: shared-contracts (Zod)
+└── frontend/                          # Expo + RN
+
+stf-api/                               # API (repo irmão)
+├── src/ prisma/ test/                 # NestJS + Prisma
+└── docs/                              # backend/, engineering/data-model.md, rules/
+
+stf-gerenciador-web/                   # painel admin web (repo irmão)
 ```
 
-**Implementação (decisão adotada):** monorepo na raiz com `backend/`, `frontend/` e opcional `packages/` (Bun workspaces), conforme [architecture.md](./architecture.md). Repositórios separados só com ADR explícito — **OpenAPI** e **semver** da API permanecem obrigatórios quando o backend existir. A documentação em `docs/backend/` e `docs/frontend/` continua válida como especificação de comportamento.
+**Implementação (decisão adotada):** três repositórios irmãos — app (`senior-test-funcional`), API (`stf-api`) e painel admin (`stf-gerenciador-web`). A API começou como `backend/` neste repo e foi extraída para `stf-api` em out/2026 com o histórico Git preservado. **OpenAPI** e **semver** da API seguem obrigatórios, já que dois clientes a consomem.
 
 ### 1.1 Toolchain prevista (quando houver código)
 
@@ -49,7 +52,7 @@ Stack e monorepo leve descritos em **[architecture.md](./architecture.md)** (Bun
 
 **Invariantes (não mudam com a ordem de entrega):**
 
-- O comportamento **oficial** de negócio, scoring e PDF continua sendo do **servidor** quando a API existir ([backend-server-authority](../rules/backend-server-authority.md)).
+- O comportamento **oficial** de negócio, scoring e PDF continua sendo do **servidor** quando a API existir ([backend-server-authority](../../../stf-api/docs/rules/backend-server-authority.md)).
 - Mocks no app são **temporários** na Fase A: não simular classificação clínica, score parcial (MEEM/Katz) ou PDF montado no cliente.
 - A OpenAPI, quando publicada, passa a ser fonte técnica de verdade para integração (Fase D).
 
@@ -95,7 +98,7 @@ Quando a equipe for **implementar a tela de um RF**, a ordem **atual** é:
 
 ### Fase B — Backend fundação (`RF001`–`RF005`) — concluída
 
-- Schema PostgreSQL inicial ([data-model.md](./data-model.md)).
+- Schema PostgreSQL inicial ([data-model.md](../../../stf-api/docs/engineering/data-model.md)).
 - Registro, login e recuperação (token TTL, invalidações — [`RF003`](../product/requirements.md)).
 - CRUD de pacientes vinculado ao terapeuta; campos MEEM no cadastro.
 - Swagger/OpenAPI em desenvolvimento **ou** `openapi.yaml` versionado pela build CI.
@@ -199,9 +202,9 @@ Exemplo CI: `{ backend: bun run lint && bun test }, { frontend: bun run lint && 
 
 ## 8. Referências cruzadas
 
-- [data-model.md](./data-model.md)
+- [data-model.md](../../../stf-api/docs/engineering/data-model.md)
 - [architecture.md](./architecture.md)
-- [../backend/README.md](../backend/README.md) · [../frontend/README.md](../frontend/README.md) · [../frontend/figma-map.md](../frontend/figma-map.md)
+- [../backend/README.md](../../../stf-api/docs/backend/README.md) · [../frontend/README.md](../frontend/README.md) · [../frontend/figma-map.md](../frontend/figma-map.md)
 - [PRD.md](../product/PRD.md), [requirements.md](../product/requirements.md), [privacy-and-lgpd.md](../product/privacy-and-lgpd.md)
 
 ---

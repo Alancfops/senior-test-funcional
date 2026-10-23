@@ -80,7 +80,7 @@ Antes da tela (e **de novo** se o frame usar componente ainda não mapeado):
 |------------|-----------|----------|
 | 1 | [docs/product/requirements.md](../../../docs/product/requirements.md) | RFs, campos, regras, bloqueios |
 | 2 | [docs/frontend/README.md](../../../docs/frontend/README.md) | Fluxos §5, instrumentos §6, anti-padrões §11, rotas §10 |
-| 3 | [docs/backend/README.md](../../../docs/backend/README.md) | Endpoints, finalize, timeseries, PDF |
+| 3 | [docs/backend/README.md](../../../../stf-api/docs/backend/README.md) | Endpoints, finalize, timeseries, PDF |
 | 4 | [docs/product/privacy-and-lgpd.md](../../../docs/product/privacy-and-lgpd.md) | Telas com paciente/avaliação |
 | 5 | [docs/clinical-protocols/instruments/](../../../docs/clinical-protocols/instruments/) | RF010 por instrumento |
 | 6 | [docs/engineering/repository-and-workflow.md](../../../docs/engineering/repository-and-workflow.md) | Fases A→E (frontend primeiro; integração Fase D) |
