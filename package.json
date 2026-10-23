@@ -1,7 +1,7 @@
 {
   "name": "senior-test-funcional",
   "private": true,
-  "description": "Senior Teste Funcional — docs + monorepo (backend, frontend)",
+  "description": "Senior Teste Funcional — app Expo + especificação (API em stf-api)",
   "scripts": {
     "setup": "make setup",
     "dev": "make start",

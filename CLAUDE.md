@@ -1,6 +1,6 @@
 # CLAUDE.md — Sênior Teste Funcional
 
-Contexto técnico e de produto estão em **`docs/`**. A **implementação** vive em **`backend/`** (API NestJS) e **`frontend/`** (app Expo).
+Contexto técnico e de produto estão em **`docs/`**. A **implementação** do app vive em **`frontend/`** (Expo). A **API NestJS** foi extraída para o repositório **`../stf-api`** (histórico preservado) — mudanças de API são feitas lá.
 
 ## Por onde começar
 
@@ -25,7 +25,7 @@ Pastas em `docs/` com nomes em **inglês**; texto em **português**.
 | A — Telas Figma no app | Concluída |
 | B–C — API RF001–RF013 | Concluída |
 | D — Integração app ↔ API | Em andamento (`EXPO_PUBLIC_MOCK_AUTH=false`) |
-| Admin web / papel `ADMIN` | Em desenvolvimento (`backend/src/admin/`) |
+| Admin web / papel `ADMIN` | Implementado (`../stf-api/src/admin/` + `../stf-gerenciador-web`) |
 
 Detalhe das fases: [docs/engineering/repository-and-workflow.md](docs/engineering/repository-and-workflow.md).
 
@@ -34,8 +34,6 @@ Detalhe das fases: [docs/engineering/repository-and-workflow.md](docs/engineerin
 ```
 senior-test-funcional/
 ├── CLAUDE.md              ← este arquivo (entrada global)
-├── backend/               ← NestJS + Prisma + PostgreSQL
-│   └── CLAUDE.md          ← guia específico da API
 ├── frontend/              ← Expo SDK 57 + React Native
 │   └── CLAUDE.md          ← guia específico do app
 ├── docs/                  ← especificação (fonte de produto)
@@ -60,7 +58,7 @@ Importadas aqui para carregarem em toda sessão:
 @docs/rules/figma-screens-required.md
 @docs/rules/lgpd-sensitive-data-review.md
 
-`backend-nestjs-implementation.md` é escopo de código — carregada via [`backend/CLAUDE.md`](backend/CLAUDE.md) ao trabalhar em `backend/**`.
+`backend-nestjs-implementation.md` é escopo de código da API — carregada pelo `CLAUDE.md` do repo `../stf-api`.
 
 ## Comandos
 

@@ -2,7 +2,7 @@
 
 Plataforma digital para **fisioterapeutas** acompanharem pacientes idosos com instrumentos funcionais padronizados (histórico, evolução e relatórios).
 
-Monorepo com **API NestJS** (`backend/`), **app Expo/React Native** (`frontend/`) e especificação em **`docs/`**.
+Repositório do **app Expo/React Native** (`frontend/`) e da especificação de produto em **`docs/`**. A **API NestJS** fica no repositório [stf-api](https://github.com/Alancfops/stf-api), clonado **ao lado** deste (`../stf-api`); o painel admin fica em [stf-gerenciador-web](https://github.com/Alancfops/stf-gerenciador-web).
 
 ---
 
@@ -16,21 +16,22 @@ Monorepo com **API NestJS** (`backend/`), **app Expo/React Native** (`frontend/`
 | **Git** | qualquer | Clonar o repositório |
 | **Expo Go** (opcional) | app na loja | Testar no celular físico |
 
-Sem Docker, é possível apontar `DATABASE_URL` em `backend/.env` para um PostgreSQL já instalado na máquina.
+Sem Docker, é possível apontar `DATABASE_URL` em `../stf-api/.env` para um PostgreSQL já instalado na máquina.
 
 ---
 
 ## Instalação rápida
 
-Na raiz do repositório:
+Clone os dois repositórios lado a lado:
 
 ```bash
-git clone <url-do-repositorio> senior-test-funcional
+git clone git@github.com:Alancfops/stf-api.git
+git clone git@github.com:Alancfops/senior-test-funcional.git
 cd senior-test-funcional
 
-make setup      # instala deps, cria .env e sobe Postgres
-make migrate    # aplica migrations Prisma (primeira vez)
-make start      # sobe Postgres + API (:3000) + Expo
+make setup                    # deps do app + setup da API (.env, Postgres)
+make -C ../stf-api migrate    # aplica migrations Prisma (primeira vez)
+make start                    # sobe Postgres + API (:3000) + Expo
 ```
 
 O comando `make start` cria os `.env` a partir dos exemplos (se ainda não existirem), sobe o Postgres, sincroniza o IP da API no frontend e inicia API + Expo. Abre **dois processos** (API e Expo). Para encerrar: **Ctrl+C** no terminal. Para parar só o Postgres: `make stop`.
@@ -41,9 +42,9 @@ Dependências novas ou primeira vez no projeto: `make` ou `make install` antes d
 
 ## Configuração obrigatória
 
-### Backend — `backend/.env`
+### API — `../stf-api/.env`
 
-O `make setup` copia `backend/.env.example` → `backend/.env` se ainda não existir. Revise:
+O `make setup` copia `.env.example` → `.env` no repo da API se ainda não existir. Revise:
 
 | Variável | Descrição |
 |----------|-----------|
@@ -52,7 +53,7 @@ O `make setup` copia `backend/.env.example` → `backend/.env` se ainda não exi
 | `MAIL_PROVIDER` | `gmail` (e-mail real), `console` (código no terminal) ou `resend` |
 | `GMAIL_USER` / `GMAIL_APP_PASSWORD` | Conta Gmail **dedicada ao projeto** + [senha de app](https://myaccount.google.com/apppasswords) |
 
-Verifique o e-mail: `make mail-check`
+Verifique o e-mail: `make -C ../stf-api mail-check`
 
 ### Frontend — `frontend/.env`
 
@@ -81,22 +82,16 @@ Execute `make help` para listar todos os alvos.
 
 | Comando | O que faz |
 |---------|-----------|
-| `make` / `make install` | `npm install` em `frontend/` e `backend/` |
-| `make setup` | install + copia `.env` + `make db-up` |
-| `make start` | `.env` + Postgres + API NestJS (`:3000`) + Expo |
+| `make` / `make install` | `npm install` em `frontend/` |
+| `make setup` | install + `.env` do app + `make setup` da API |
+| `make start` | `.env` + API (`../stf-api`, `:3000`) + Expo |
 | `make start-backend` | Postgres + só a API (watch) |
 | `make start-frontend` | Só o Expo |
-| `make stop` | Para containers Docker |
-| `make db-up` / `make db-down` | Sobe / para PostgreSQL |
-| `make db-logs` | Logs do Postgres |
-| `make db-reset` | **Apaga volume** do banco e recria container |
-| `make migrate` | `prisma migrate dev` |
-| `make generate` | `prisma generate` |
-| `make prisma-studio` | Interface web do banco |
-| `make mail-check` | Valida configuração de e-mail RF003 |
-| `make secrets` | Gera `JWT_ACCESS_SECRET` aleatório |
-| `make lint` | ESLint frontend + backend |
-| `make test` | Testes unitários + e2e do backend |
+| `make stop` | Para o Postgres da API |
+| `make lint` | Lint do app |
+| `make test` | Testes do app |
+
+Banco, migrations, e-mail, segredos e testes da API: `make -C ../stf-api help` (ver README do [stf-api](https://github.com/Alancfops/stf-api)).
 
 ---
 
@@ -117,7 +112,7 @@ Swagger da API (dev): [http://localhost:3000/api/docs](http://localhost:3000/api
 - O código tem **6 dígitos** e expira em **10 minutos**.
 - E-mails do Gmail do projeto podem ir para **spam** — confira também Promoções.
 - Ao clicar em **Reenviar**, o código anterior é **invalidado**; use só o e-mail **mais recente**.
-- Para testes locais **sem depender de e-mail**, use `MAIL_PROVIDER=console` em `backend/.env` — o código aparece no **terminal da API**.
+- Para testes locais **sem depender de e-mail**, use `MAIL_PROVIDER=console` em `../stf-api/.env` — o código aparece no **terminal da API**.
 - A API sempre responde “e-mail enviado” mesmo se o endereço não estiver cadastrado (segurança).
 
 ---
@@ -128,10 +123,10 @@ Swagger da API (dev): [http://localhost:3000/api/docs](http://localhost:3000/api
 |---------|-----------------|
 | Lista de pacientes carregando infinito | IP da API desatualizado — rode `make start` (sincroniza IP) ou `make sync-frontend-api-url`; celular na mesma Wi‑Fi que o PC |
 | `ECONNREFUSED` / sem conexão | API rodando? `curl http://localhost:3000/health` |
-| Código de senha não chega | Spam; e-mail cadastrado? `make mail-check`; ou `MAIL_PROVIDER=console` |
+| Código de senha não chega | Spam; e-mail cadastrado? `make -C ../stf-api mail-check`; ou `MAIL_PROVIDER=console` |
 | Código inválido após reenvio | Usar código do **último** e-mail, não de tentativas anteriores |
-| Erro de banco na API | `make db-up` e `make migrate` |
-| Porta 5432 ocupada | Outro Postgres local ou container antigo — `make db-down` |
+| Erro de banco na API | `make -C ../stf-api db-up` e `make -C ../stf-api migrate` |
+| Porta 5432 ocupada | Outro Postgres local ou container antigo — `make stop` |
 
 ---
 
@@ -140,7 +135,7 @@ Swagger da API (dev): [http://localhost:3000/api/docs](http://localhost:3000/api
 | Camada | Pasta | Função |
 |--------|-------|--------|
 | **App mobile** | `frontend/` | Interface do fisioterapeuta |
-| **API** | `backend/` | Regras, persistência, PDF, permissões |
+| **API** | repo `stf-api` | Regras, persistência, PDF, permissões |
 | **PostgreSQL** | Docker / externo | Contas, pacientes, avaliações |
 
 O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/architecture.md](docs/engineering/architecture.md).

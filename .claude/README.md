@@ -1,6 +1,6 @@
 # Configuração Claude Code deste projeto
 
-Entrada global do repositório: [`../CLAUDE.md`](../CLAUDE.md). Guias por camada: [`../backend/CLAUDE.md`](../backend/CLAUDE.md) e [`../frontend/CLAUDE.md`](../frontend/CLAUDE.md).
+Entrada global do repositório: [`../CLAUDE.md`](../CLAUDE.md). Guia do app: [`../frontend/CLAUDE.md`](../frontend/CLAUDE.md). A API (e cópias dos agents/skills de backend) fica no repo `../stf-api`.
 
 O Claude Code não tem conceito nativo de "rules" — as regras do projeto ficam em [`../docs/rules/`](../docs/rules/) e são carregadas via `@import` no `CLAUDE.md`.
 
