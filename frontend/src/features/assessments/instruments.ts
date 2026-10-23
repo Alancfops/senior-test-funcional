@@ -37,28 +37,26 @@ export const QUESTIONNAIRE_INSTRUMENTS: readonly QuestionnaireInstrument[] = [
     tutorial: {
       step1: {
         body:
-          'A Escala de Equilíbrio de Berg (EEB) é um teste padrão-ouro na fisioterapia para avaliar equilíbrio estático e dinâmico e o risco de quedas.',
+          'A Escala de Equilíbrio de Berg (EEB) avalia equilíbrio estático e dinâmico por meio de tarefas funcionais.',
         bullets: [
           'Composta por 14 tarefas do cotidiano (sentar, levantar, alcançar objetos, etc.).',
           'Cada tarefa recebe pontuação de 0 a 4 conforme o desempenho observado.',
-          'Quanto menor o escore total, maior o risco de quedas.',
+          'Quanto maior o escore total, melhor o equilíbrio funcional.',
         ],
         scoringGuide: [
-          { score: '0', description: 'Incapaz de completar a tarefa ou necessita ajuda máxima.' },
-          { score: '1', description: 'Executa com ajuda mínima ou de forma muito limitada.' },
-          { score: '2', description: 'Completa com dificuldade, supervisão ou várias tentativas.' },
-          { score: '3', description: 'Completa com uso das mãos ou supervisão leve.' },
-          { score: '4', description: 'Execução independente e segura (desempenho máximo do item).' },
+          { score: '0', description: 'Incapacidade de completar a tarefa.' },
+          { score: '4', description: 'Execução independente da tarefa.' },
         ],
         scoringGuideNote:
-          'Cada um dos 14 itens usa esta escala 0–4 conforme o protocolo Berg (Miyamoto et al., 2004).',
+          'Os critérios de 0 a 4 são específicos de cada item (Miyamoto et al., 2004) — a legenda de cada nota aparece na coleta.',
       },
       step2: {
-        body: 'A nota máxima é 56 pontos, e quanto menor o escore, maior o risco de quedas:',
+        body: 'A nota máxima é 56 pontos. Interpretação do escore total:',
         bullets: [
-          '0 a 20 pontos: risco gravíssimo, indicando possível necessidade de cadeira de rodas.',
-          '21 a 40 pontos: risco moderado a alto, indicando necessidade de auxílio para marcha (andador ou bengala).',
-          '41 a 56 pontos: baixo risco, sugerindo independência e segurança para locomoção.',
+          '0 a 20 pontos: prejuízo do equilíbrio.',
+          '21 a 40 pontos: equilíbrio aceitável.',
+          '41 a 56 pontos: bom equilíbrio.',
+          'Valores abaixo de 45 são usados com frequência como alerta para maior risco de quedas, mas o ponto de corte pode variar.',
         ],
       },
     },

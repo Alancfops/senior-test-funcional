@@ -138,7 +138,7 @@ export const TINETTI_QUESTIONNAIRE: QuestionnaireDefinition = {
     {
       id: 'tinetti_14',
       title: 'Desvio da linha reta',
-      instructions: 'Observação: caminhada em linha reta (~3 m).',
+      instructions: 'Observação: caminhada em linha reta (~3 m de comprimento por 30 cm de largura).',
       config: tinettiNumeric('tinetti_14', 0, 2),
     },
     {

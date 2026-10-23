@@ -16,12 +16,12 @@ function sumNumericAnswers(definition: QuestionnaireDefinition, answers: Questio
 
 function classifyBerg(total: number): string {
   if (total <= 20) {
-    return 'Risco gravíssimo de quedas, com possível necessidade de cadeira de rodas. Recomenda-se reavaliação frequente e plano de prevenção intensivo.';
+    return 'Prejuízo do equilíbrio.';
   }
   if (total <= 40) {
-    return 'Risco moderado a alto de quedas. Pode ser necessário auxílio para marcha (andador ou bengala) e supervisão nas transferências.';
+    return 'Equilíbrio aceitável.';
   }
-  return 'Baixo risco de quedas, sugerindo independência e segurança relativas para locomoção. Mantenha monitoramento longitudinal.';
+  return 'Bom equilíbrio.';
 }
 
 function classifyKatz(answers: QuestionnaireAnswers): { stratum: number; text: string } {
