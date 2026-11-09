@@ -6,6 +6,26 @@ Repositório do **app Expo/React Native** (`frontend/`) e da especificação de 
 
 ---
 
+## O ecossistema STF
+
+O STF são três repositórios, clonados lado a lado na mesma pasta:
+
+| Sistema | Quem usa | O que faz |
+|---------|----------|-----------|
+| **App mobile** (este repo, `frontend/`) | Fisioterapeutas (alunos de fisioterapia) | Cadastrar pacientes idosos, aplicar os testes funcionais (TUG, Katz, Berg, Tinetti, MEEM) com tutorial e coleta guiada, ver histórico, gráfico de evolução e PDF de cada avaliação |
+| **STF API** (`../stf-api`) | Os dois clientes | Guarda os dados (PostgreSQL), calcula pontuações e classificações, gera PDFs, envia e-mails, controla permissões e auditoria |
+| **Gerenciador web** (`../stf-gerenciador-web`) | Professora e ajudantes | Painel de supervisão de toda a equipe: alunos, pacientes, transferências, exclusões, relatórios e auditoria |
+
+```
+App mobile ──┐
+             ├──► STF API (NestJS) ──► PostgreSQL
+Gerenciador ─┘
+```
+
+O app não calcula nem interpreta resultados: ele coleta as respostas e mostra o que a API devolve. Cada aluno só vê os próprios pacientes; a visão de toda a equipe fica no gerenciador.
+
+---
+
 ## Pré-requisitos
 
 | Ferramenta | Versão sugerida | Uso |
