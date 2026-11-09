@@ -25,7 +25,7 @@ export default function MainTabLayout() {
         name="index"
         options={{
           title: 'Início',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color as string} />,
           tabBarAccessibilityLabel: 'Início',
         }}
       />
@@ -33,7 +33,7 @@ export default function MainTabLayout() {
         name="patients"
         options={{
           title: 'Pacientes',
-          tabBarIcon: ({ color, size }) => <Ionicons name="people-outline" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="people-outline" size={size} color={color as string} />,
           tabBarAccessibilityLabel: 'Pacientes',
         }}
       />
@@ -42,7 +42,7 @@ export default function MainTabLayout() {
         options={{
           title: 'Histórico',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="time-outline" size={size} color={color} />
+            <Ionicons name="time-outline" size={size} color={color as string} />
           ),
           tabBarAccessibilityLabel: 'Histórico',
         }}
@@ -52,7 +52,7 @@ export default function MainTabLayout() {
         options={{
           title: 'Config.',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+            <Ionicons name="settings-outline" size={size} color={color as string} />
           ),
           tabBarAccessibilityLabel: 'Configurações',
         }}

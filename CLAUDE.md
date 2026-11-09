@@ -34,7 +34,7 @@ Detalhe das fases: [docs/engineering/repository-and-workflow.md](docs/engineerin
 ```
 senior-test-funcional/
 ├── CLAUDE.md              ← este arquivo (entrada global)
-├── frontend/              ← Expo SDK 57 + React Native
+├── frontend/              ← Expo SDK 58 + React Native
 │   └── CLAUDE.md          ← guia específico do app
 ├── docs/                  ← especificação (fonte de produto)
 ├── session/               ← histórico local de conversas (não versionado)

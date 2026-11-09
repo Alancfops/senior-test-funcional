@@ -137,7 +137,7 @@ export default function RegisterScreen() {
             autoComplete="new-password"
             textContentType="newPassword"
             returnKeyType="done"
-            onSubmitEditing={onSubmit}
+            onSubmitEditing={() => onSubmit()}
           />
         )}
       />
