@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput as RNTextInput,
+  type TextInputInstance,
   TextInputProps as RNTextInputProps,
   View,
 } from 'react-native';
@@ -20,7 +21,7 @@ type TextInputProps = RNTextInputProps & {
   labelTone?: 'brand' | 'neutral';
 };
 
-export const TextInput = forwardRef<RNTextInput, TextInputProps>(function TextInput(
+export const TextInput = forwardRef<TextInputInstance, TextInputProps>(function TextInput(
   {
     label,
     error,

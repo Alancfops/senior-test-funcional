@@ -109,7 +109,7 @@ export default function ForgotPasswordNewPasswordScreen() {
             autoComplete="new-password"
             textContentType="newPassword"
             returnKeyType="done"
-            onSubmitEditing={onSubmit}
+            onSubmitEditing={() => onSubmit()}
           />
         )}
       />

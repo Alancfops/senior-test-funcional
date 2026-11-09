@@ -93,7 +93,7 @@ export default function LoginScreen() {
             autoComplete="password"
             textContentType="password"
             returnKeyType="done"
-            onSubmitEditing={onSubmit}
+            onSubmitEditing={() => onSubmit()}
           />
         )}
       />
@@ -111,7 +111,7 @@ export default function LoginScreen() {
         </Text>
       ) : null}
 
-      <Button label="Entrar" onPress={onSubmit} loading={submitting} />
+      <Button label="Entrar" onPress={() => onSubmit()} loading={submitting} />
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Não possui conta? </Text>

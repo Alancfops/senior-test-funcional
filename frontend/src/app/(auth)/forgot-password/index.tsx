@@ -66,7 +66,7 @@ export default function ForgotPasswordEmailScreen() {
             autoComplete="email"
             textContentType="emailAddress"
             returnKeyType="send"
-            onSubmitEditing={onSubmit}
+            onSubmitEditing={() => onSubmit()}
           />
         )}
       />
