@@ -26,6 +26,5 @@ Leia a documentação **versionada** antes de escrever código: https://docs.exp
 
 ## Integração com a API
 
-- `EXPO_PUBLIC_MOCK_AUTH=false` — auth e dados reais (Fase D)
 - `EXPO_PUBLIC_API_URL` — sem barra final; `make start` sincroniza IP LAN para celular físico
 - **Não** calcular score clínico, classificação ou PDF no cliente — consumir a API

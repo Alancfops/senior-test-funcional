@@ -84,14 +84,13 @@ Quando a equipe for **implementar a tela de um RF**, a ordem **atual** é:
 > | **A** — Telas Figma + navegação | Concluída |
 > | **B** — Auth + pacientes + OpenAPI | Concluída |
 > | **C** — Instrumentos + PDF (RF007–RF013) | Concluída |
-> | **D** — Integração app ↔ API | **Em andamento** — `EXPO_PUBLIC_MOCK_AUTH=false`; ver [figma-map](../frontend/figma-map.md) |
+> | **D** — Integração app ↔ API | **Concluída** — ver [figma-map](../frontend/figma-map.md) |
 > | **E** — Polish visual | Pendente |
 
 ### Fase A — Frontend UI (Figma + mocks) — concluída
 
 - Telas dos RFs conforme arquivo Figma oficial (`mtMbhRez2Xy2k414cfzcFm`).
 - Navegação `(auth)` / `(main)`, tab bar, formulários com validação client-side.
-- **Mocks controlados (legado):** auth via `EXPO_PUBLIC_MOCK_AUTH=true` — padrão atual é API real.
 - Tokens, componentes reutilizáveis, WCAG 2 AA baseline ([frontend README §12](../frontend/README.md)).
 
 **Entrega:** app navegável e fiel ao Figma (concluída).

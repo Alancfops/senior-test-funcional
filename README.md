@@ -80,7 +80,6 @@ Verifique o e-mail: `make -C ../stf-api mail-check`
 | Variável | Descrição |
 |----------|-----------|
 | `EXPO_PUBLIC_API_URL` | URL da API **sem barra final** |
-| `EXPO_PUBLIC_MOCK_AUTH` | `false` para usar a API real |
 
 **Onde testar:**
 

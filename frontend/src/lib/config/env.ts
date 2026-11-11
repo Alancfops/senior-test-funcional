@@ -28,6 +28,4 @@ function resolveApiUrl(): string {
 
 export const env = {
   apiUrl: resolveApiUrl(),
-  /** Simula login sem API — defina `EXPO_PUBLIC_MOCK_AUTH=false` para usar backend real. */
-  mockAuth: process.env.EXPO_PUBLIC_MOCK_AUTH !== 'false',
 };

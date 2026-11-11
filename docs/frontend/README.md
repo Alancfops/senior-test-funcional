@@ -355,7 +355,7 @@ frontend/
 │   ├── features/                # api, auth, patients, assessments, reports
 │   ├── lib/                     # client HTTP, env, auth storage
 │   └── theme/
-└── .env                         # EXPO_PUBLIC_API_URL, EXPO_PUBLIC_MOCK_AUTH
+└── .env                         # EXPO_PUBLIC_API_URL
 ```
 
 Instalação e Makefile: [README na raiz](../../README.md).
@@ -391,7 +391,7 @@ Roteiro completo: [repository-and-workflow](../engineering/repository-and-workfl
 | **D** | Integração API real; loading, vazio, erro, 401 | **Em andamento** |
 | **E** | Polish, animações, microcopy | Pendente |
 
-**Auth mock:** `EXPO_PUBLIC_MOCK_AUTH=true` ainda disponível para demo offline; padrão em `.env.example` é `false` (API real).
+**Auth:** sempre pela API real (o mock de login da fase de protótipo foi removido).
 
 **Acessibilidade:** WCAG 2 AA desde a Fase A — não postergar para a Fase E.
 

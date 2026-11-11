@@ -51,7 +51,7 @@
 | Coleta TUG (cronômetro) | RF010 | `src/app/(main)/assessments/[instrumentCode]/collect.tsx` | integrado |
 | Resultado avaliação | RF011 | `src/app/(main)/assessments/[instrumentCode]/result.tsx` | integrado |
 
-**Legenda:** `integrado` = consome API real com `EXPO_PUBLIC_MOCK_AUTH=false`. Auth mock (`features/auth/mock.ts`) permanece disponível só se `EXPO_PUBLIC_MOCK_AUTH=true`.
+**Legenda:** `integrado` = consome a API real.
 
 ---
 

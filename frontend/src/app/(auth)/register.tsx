@@ -9,7 +9,6 @@ import { PasswordRequirements } from '@/components/auth/PasswordRequirements';
 import { ButtonRow } from '@/components/ui/Button';
 import { TextInput } from '@/components/ui/TextInput';
 import { registerRequest } from '@/features/auth/api';
-import { isMockAuthEnabled, mockRegister } from '@/features/auth/mock';
 import { RegisterFormValues, registerSchema } from '@/features/auth/schemas';
 import { ApiError } from '@/lib/api/client';
 import { saveAccessToken, saveSessionUser } from '@/lib/auth/storage';
@@ -31,14 +30,6 @@ export default function RegisterScreen() {
     setFormError(null);
     setSubmitting(true);
     try {
-      if (isMockAuthEnabled()) {
-        const session = mockRegister(values.fullName, values.email);
-        await saveAccessToken(session.accessToken);
-        await saveSessionUser({ fullName: values.fullName, email: values.email });
-        router.replace('/');
-        return;
-      }
-
       const { accessToken } = await registerRequest(values.fullName, values.email, values.password);
       await saveAccessToken(accessToken);
       await saveSessionUser({ fullName: values.fullName, email: values.email });
