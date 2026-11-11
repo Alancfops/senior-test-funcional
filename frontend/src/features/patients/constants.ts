@@ -26,18 +26,3 @@ export function getSchoolingLabel(value: string | null | undefined) {
 
   return SCHOOLING_OPTIONS.find((option) => option.value === value)?.label ?? value;
 }
-
-export const MOCK_RECENT_ACTIVITIES = [
-  {
-    id: '1',
-    patientName: 'Albertino Silva',
-    description: 'Escala de Equilíbrio de Berg',
-    when: 'Hoje',
-  },
-  {
-    id: '2',
-    patientName: 'Maria de Luordes',
-    description: 'Sem testes cadastrados',
-    when: '—',
-  },
-];
