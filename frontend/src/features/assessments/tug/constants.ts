@@ -1,5 +1,3 @@
-export const TUG_TRIAL_COUNT = 3;
-
 export const TUG_TRIALS = [
   {
     index: 0,
@@ -37,22 +35,4 @@ export function formatStopwatchMs(elapsedMs: number) {
 
 export function formatTrialSeconds(seconds: number) {
   return formatStopwatchMs(Math.round(seconds * 1000));
-}
-
-export function averageTugTrials(trials: readonly (number | null)[]) {
-  const valid = trials.filter((value): value is number => value !== null && value > 0);
-  if (valid.length === 0) {
-    return 0;
-  }
-  return valid.reduce((sum, value) => sum + value, 0) / valid.length;
-}
-
-export function classifyTugAverage(averageSeconds: number): string {
-  if (averageSeconds < 10) {
-    return 'Desempenho funcional muito bom para idosos ativos (média abaixo de 10 segundos).';
-  }
-  if (averageSeconds < 13.5) {
-    return 'Desempenho funcional esperado, com atenção clínica ao contexto (média entre 10 e 13,4 segundos).';
-  }
-  return 'Maior risco de quedas em idosos da comunidade (média igual ou acima de 13,5 segundos).';
 }

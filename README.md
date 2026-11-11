@@ -2,7 +2,26 @@
 
 Plataforma digital para **fisioterapeutas** acompanharem pacientes idosos com instrumentos funcionais padronizados (histórico, evolução e relatórios).
 
-Repositório do **app Expo/React Native** (`frontend/`) e da especificação de produto em **`docs/`**. A **API NestJS** fica no repositório [stf-api](https://github.com/Alancfops/stf-api), clonado **ao lado** deste (`../stf-api`); o painel admin fica em [stf-gerenciador-web](https://github.com/Alancfops/stf-gerenciador-web).
+Este repositório contém o **app mobile** (Expo / React Native, em `frontend/`) usado pelos alunos de fisioterapia da clínica-escola, e a **especificação do produto** em `docs/` (requisitos, protocolos clínicos, LGPD).
+
+| Repositório | Link |
+|-------------|------|
+| **App mobile** (este) | [github.com/Alancfops/senior-test-funcional](https://github.com/Alancfops/senior-test-funcional) |
+| STF API | [github.com/Alancfops/stf-api](https://github.com/Alancfops/stf-api) |
+| Gerenciador web | [github.com/Alancfops/senior-test-web](https://github.com/Alancfops/senior-test-web) |
+
+## Sumário
+
+1. [O ecossistema STF](#o-ecossistema-stf)
+2. [Arquitetura do sistema](#arquitetura-do-sistema)
+3. [Pré-requisitos](#pré-requisitos)
+4. [Instalação rápida](#instalação-rápida)
+5. [Configuração obrigatória](#configuração-obrigatória)
+6. [Makefile — referência](#makefile--referência)
+7. [Uso do aplicativo](#uso-do-aplicativo-fluxo-principal)
+8. [Recuperação de senha](#recuperação-de-senha-rf003)
+9. [Solução de problemas](#solução-de-problemas)
+10. [Documentação do produto](#documentação-do-produto)
 
 ---
 
@@ -12,17 +31,41 @@ O STF são três repositórios, clonados lado a lado na mesma pasta:
 
 | Sistema | Quem usa | O que faz |
 |---------|----------|-----------|
-| **App mobile** (este repo, `frontend/`) | Fisioterapeutas (alunos de fisioterapia) | Cadastrar pacientes idosos, aplicar os testes funcionais (TUG, Katz, Berg, Tinetti, MEEM) com tutorial e coleta guiada, ver histórico, gráfico de evolução e PDF de cada avaliação |
-| **STF API** (`../stf-api`) | Os dois clientes | Guarda os dados (PostgreSQL), calcula pontuações e classificações, gera PDFs, envia e-mails, controla permissões e auditoria |
-| **Gerenciador web** (`../stf-gerenciador-web`) | Professora e ajudantes | Painel de supervisão de toda a equipe: alunos, pacientes, transferências, exclusões, relatórios e auditoria |
+| **App mobile** (este repo) | Fisioterapeutas (alunos de fisioterapia) | Cadastrar pacientes idosos, aplicar os testes funcionais (TUG, Katz, Berg, Tinetti, MEEM) com tutorial e coleta guiada, ver histórico, gráfico de evolução e PDF de cada avaliação |
+| **[STF API](https://github.com/Alancfops/stf-api)** | Os dois clientes | Guarda os dados (PostgreSQL), calcula pontuações e classificações, gera PDFs, envia e-mails, controla permissões e auditoria |
+| **[Gerenciador web](https://github.com/Alancfops/senior-test-web)** | Professora e ajudantes | Painel de supervisão de toda a equipe: alunos, pacientes, transferências, exclusões, relatórios e auditoria |
 
-```
-App mobile ──┐
-             ├──► STF API (NestJS) ──► PostgreSQL
-Gerenciador ─┘
-```
+Instrumentos aplicados pelo app: **TUG** (mobilidade), **Katz** (atividades de vida diária), **Berg** (equilíbrio), **Tinetti** (equilíbrio e marcha) e **MEEM** (rastreio cognitivo).
 
 O app não calcula nem interpreta resultados: ele coleta as respostas e mostra o que a API devolve. Cada aluno só vê os próprios pacientes; a visão de toda a equipe fica no gerenciador.
+
+---
+
+## Arquitetura do sistema
+
+```mermaid
+flowchart LR
+    ALUNO(["👤 Aluno"]) --> APP["App mobile<br/>Expo / React Native"]
+    PROF(["👤 Professora / ajudante"]) --> WEB["Gerenciador web<br/>Vite / React"]
+    APP -->|"HTTPS + JWT<br/>/auth · /patients · /assessments · /reports"| API
+    WEB -->|"HTTPS + JWT<br/>/auth · /admin/*"| API
+    subgraph SRV["Servidor"]
+        API["STF API<br/>NestJS"]
+        DB[("PostgreSQL")]
+        FS[/"uploads/<br/>fotos de pacientes"/]
+    end
+    API -->|Prisma| DB
+    API --> FS
+    API -->|"Gmail / Resend"| MAIL["✉️ E-mail<br/>recuperação de senha<br/>senha temporária"]
+```
+
+| Camada | Onde | Função |
+|--------|------|--------|
+| **App mobile** | `frontend/` (este repo) | Telas do aluno; token JWT guardado no `expo-secure-store`; dados do servidor via TanStack Query |
+| **STF API** | [stf-api](https://github.com/Alancfops/stf-api) | Regras, cálculo dos resultados, PDF, permissões, e-mail |
+| **PostgreSQL** | Docker / servidor | Contas, pacientes, avaliações e resultados |
+
+O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/architecture.md](docs/engineering/architecture.md).
 
 ---
 
@@ -80,7 +123,6 @@ Verifique o e-mail: `make -C ../stf-api mail-check`
 | Variável | Descrição |
 |----------|-----------|
 | `EXPO_PUBLIC_API_URL` | URL da API **sem barra final** |
-| `EXPO_PUBLIC_MOCK_AUTH` | `false` para usar a API real |
 
 **Onde testar:**
 
@@ -150,18 +192,6 @@ Swagger da API (dev): [http://localhost:3000/api/docs](http://localhost:3000/api
 
 ---
 
-## Arquitetura (resumo)
-
-| Camada | Pasta | Função |
-|--------|-------|--------|
-| **App mobile** | `frontend/` | Interface do fisioterapeuta |
-| **API** | repo `stf-api` | Regras, persistência, PDF, permissões |
-| **PostgreSQL** | Docker / externo | Contas, pacientes, avaliações |
-
-O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/architecture.md](docs/engineering/architecture.md).
-
----
-
 ## Documentação do produto
 
 Índice completo: **[docs/README.md](docs/README.md)**
@@ -169,11 +199,9 @@ O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/archi
 | Tema | Onde |
 |------|------|
 | Produto e RFs | [docs/product/](docs/product/) |
-| API (comportamento) | [docs/backend/README.md](../stf-api/docs/backend/README.md) |
+| API (comportamento) | [stf-api/docs/backend](https://github.com/Alancfops/stf-api/blob/main/docs/backend/README.md) |
 | App mobile | [docs/frontend/README.md](docs/frontend/README.md) |
 | LGPD | [docs/product/privacy-and-lgpd.md](docs/product/privacy-and-lgpd.md) |
 | Decisões (e-mail, domínio) | [docs/engineering/project-decisions.md](docs/engineering/project-decisions.md) |
 
 Entrada para agentes automatizados: [CLAUDE.md](CLAUDE.md)
-
-Especificação completa do produto: [docs/README.md](docs/README.md)

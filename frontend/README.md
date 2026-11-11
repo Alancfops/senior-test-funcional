@@ -25,7 +25,6 @@ Arquivo `frontend/.env` (criado por `make setup`):
 | Variável | Uso |
 |----------|-----|
 | `EXPO_PUBLIC_API_URL` | URL da API — `http://localhost:3000` (web/emulador) ou `http://SEU_IP:3000` (celular) |
-| `EXPO_PUBLIC_MOCK_AUTH` | `false` = API real (padrão em `.env.example`) |
 
 Após alterar `.env`, reinicie o Expo.
 

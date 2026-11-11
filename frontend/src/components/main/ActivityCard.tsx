@@ -37,13 +37,10 @@ export function ActivityCard({
   onPress,
 }: ActivityCardProps) {
   const palette = toneStyles[tone];
+  const accessibilityLabel = `${patientName}. ${description}. ${when}`;
 
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${patientName}. ${description}. ${when}`}
-      onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
+  const content = (
+    <>
       <View style={[styles.iconWrap, { backgroundColor: palette.bg }]}>
         <ActivityCardIcon gender={patientGender} color={palette.icon} />
       </View>
@@ -55,8 +52,29 @@ export function ActivityCard({
 
       <View style={styles.trailing}>
         <Text style={styles.when}>{when}</Text>
-        <Ionicons name="chevron-forward" size={18} color={tokens.colors.textMuted} />
+        {onPress ? (
+          <Ionicons name="chevron-forward" size={18} color={tokens.colors.textMuted} />
+        ) : null}
       </View>
+    </>
+  );
+
+  // Sem destino: card informativo, sem seta nem toque.
+  if (!onPress) {
+    return (
+      <View accessible accessibilityLabel={accessibilityLabel} style={styles.card}>
+        {content}
+      </View>
+    );
+  }
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      onPress={onPress}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
+      {content}
     </Pressable>
   );
 }

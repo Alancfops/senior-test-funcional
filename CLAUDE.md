@@ -24,7 +24,7 @@ Pastas em `docs/` com nomes em **inglês**; texto em **português**.
 |------|--------|
 | A — Telas Figma no app | Concluída |
 | B–C — API RF001–RF013 | Concluída |
-| D — Integração app ↔ API | Em andamento (`EXPO_PUBLIC_MOCK_AUTH=false`) |
+| D — Integração app ↔ API | Concluída (auth e dados reais pela API) |
 | Admin web / papel `ADMIN` | Implementado (`../stf-api/src/admin/` + `../stf-gerenciador-web`) |
 
 Detalhe das fases: [docs/engineering/repository-and-workflow.md](docs/engineering/repository-and-workflow.md).
