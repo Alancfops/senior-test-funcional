@@ -93,7 +93,10 @@ export async function createPatientRequest(payload: CreatePatientPayload) {
   });
 }
 
-export type UpdatePatientPayload = CreatePatientPayload;
+export type UpdatePatientPayload = CreatePatientPayload & {
+  /** Apaga a foto salva (não enviar junto com `avatarImage`). */
+  removeAvatar?: boolean;
+};
 
 export async function updatePatientRequest(patientId: string, payload: UpdatePatientPayload) {
   const token = await getAccessToken();

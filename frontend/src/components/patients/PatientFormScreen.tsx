@@ -38,6 +38,7 @@ type PatientFormBodyProps = {
   avatar: PatientAvatarSelection | null;
   setAvatar: (value: PatientAvatarSelection | null) => void;
   existingAvatarUrl: string | null;
+  onRemoveAvatar: () => void;
   formError: string | null;
   submitting: boolean;
   onSubmit: () => void;
@@ -50,6 +51,7 @@ function PatientFormBody({
   avatar,
   setAvatar,
   existingAvatarUrl,
+  onRemoveAvatar,
   formError,
   submitting,
   onSubmit,
@@ -66,6 +68,7 @@ function PatientFormBody({
         value={avatar}
         onChange={setAvatar}
         existingUri={!avatar ? existingAvatarUrl : null}
+        onRemove={onRemoveAvatar}
       />
 
       <View style={styles.form}>
@@ -191,6 +194,16 @@ export function PatientFormScreen({ mode, patientId }: PatientFormScreenProps) {
   const [formError, setFormError] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<PatientAvatarSelection | null>(null);
   const [existingAvatarUrl, setExistingAvatarUrl] = useState<string | null>(null);
+  /** Edição: a foto salva foi removida e deve ser apagada na API ao salvar. */
+  const [removeSavedAvatar, setRemoveSavedAvatar] = useState(false);
+
+  function handleRemoveAvatar() {
+    setAvatar(null);
+    if (existingAvatarUrl) {
+      setExistingAvatarUrl(null);
+      setRemoveSavedAvatar(true);
+    }
+  }
 
   const {
     control,
@@ -272,7 +285,9 @@ export function PatientFormScreen({ mode, patientId }: PatientFormScreenProps) {
                 base64: avatar.base64,
               },
             }
-          : {}),
+          : isEdit && removeSavedAvatar
+            ? { removeAvatar: true }
+            : {}),
       };
 
       if (isEdit && patientId) {
@@ -337,6 +352,7 @@ export function PatientFormScreen({ mode, patientId }: PatientFormScreenProps) {
           avatar={avatar}
           setAvatar={setAvatar}
           existingAvatarUrl={existingAvatarUrl}
+          onRemoveAvatar={handleRemoveAvatar}
           formError={formError}
           submitting={submitting}
           onSubmit={onSubmit}

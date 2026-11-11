@@ -16,6 +16,8 @@ type ProfilePhotoFieldProps = {
   onChange?: (value: PatientAvatarSelection | null) => void;
   /** URI já salva no servidor (modo edição), exibida até o usuário escolher outra. */
   existingUri?: string | null;
+  /** Remove a foto exibida (nova ou já salva); efetivado ao salvar o formulário. */
+  onRemove?: () => void;
   error?: string;
 };
 
@@ -55,7 +57,13 @@ function assetToSelection(asset: ImagePicker.ImagePickerAsset): PatientAvatarSel
 }
 
 /** RF004 — foto opcional; permissões de câmera/galeria só ao escolher a foto. */
-export function ProfilePhotoField({ value, onChange, existingUri, error }: ProfilePhotoFieldProps) {
+export function ProfilePhotoField({
+  value,
+  onChange,
+  existingUri,
+  onRemove,
+  error,
+}: ProfilePhotoFieldProps) {
   const previewUri = value?.uri ?? existingUri ?? null;
   const hasPhoto = Boolean(previewUri);
   async function pickFromLibrary() {
@@ -113,10 +121,6 @@ export function ProfilePhotoField({ value, onChange, existingUri, error }: Profi
     ]);
   }
 
-  function handleRemovePhoto() {
-    onChange?.(null);
-  }
-
   return (
     <View style={styles.wrapper}>
       <Text style={styles.label}>Foto de perfil</Text>
@@ -125,7 +129,6 @@ export function ProfilePhotoField({ value, onChange, existingUri, error }: Profi
         accessibilityLabel={hasPhoto ? 'Alterar foto de perfil' : 'Adicionar foto de perfil'}
         accessibilityHint="Abre câmera ou galeria para escolher uma foto JPG ou PNG"
         onPress={handlePickPhoto}
-        onLongPress={value ? handleRemovePhoto : undefined}
         style={({ pressed }) => [styles.photoWrap, pressed && styles.pressed]}>
         <View style={styles.avatarShell}>
           <View style={styles.circle}>
@@ -136,20 +139,43 @@ export function ProfilePhotoField({ value, onChange, existingUri, error }: Profi
             )}
           </View>
 
-          {!hasPhoto ? (
-            <View style={styles.addBadge} pointerEvents="none">
-              <Ionicons name="add" size={16} color={tokens.colors.onPrimary} />
-            </View>
-          ) : null}
+          <View style={styles.addBadge} pointerEvents="none">
+            <Ionicons
+              name={hasPhoto ? 'camera' : 'add'}
+              size={hasPhoto ? 14 : 16}
+              color={tokens.colors.onPrimary}
+            />
+          </View>
         </View>
       </Pressable>
-      <Text style={styles.hint}>
-        {value
-          ? 'Toque para trocar · segure para remover'
-          : hasPhoto
-            ? 'Toque para trocar a foto'
-            : 'Adicionar foto (câmera ou galeria)'}
-      </Text>
+      <View style={styles.actions}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={hasPhoto ? 'Trocar foto de perfil' : 'Adicionar foto de perfil'}
+          accessibilityHint="Abre câmera ou galeria para escolher uma foto JPG ou PNG"
+          onPress={handlePickPhoto}
+          hitSlop={8}
+          style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
+          <Ionicons
+            name={hasPhoto ? 'camera-outline' : 'add-circle-outline'}
+            size={16}
+            color={tokens.colors.link}
+          />
+          <Text style={styles.actionText}>{hasPhoto ? 'Trocar foto' : 'Adicionar foto'}</Text>
+        </Pressable>
+        {hasPhoto && onRemove ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Remover foto de perfil"
+            accessibilityHint="O paciente fica sem foto ao salvar"
+            onPress={onRemove}
+            hitSlop={8}
+            style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
+            <Ionicons name="trash-outline" size={16} color={tokens.colors.error} />
+            <Text style={[styles.actionText, styles.removeText]}>Remover foto</Text>
+          </Pressable>
+        ) : null}
+      </View>
       {error ? (
         <Text style={styles.error} accessibilityRole="alert" accessibilityLiveRegion="polite">
           {error}
@@ -210,14 +236,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     zIndex: 1,
   },
-  hint: {
+  actions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    columnGap: tokens.spacing.lg,
+    rowGap: tokens.spacing.xs,
+    alignSelf: 'stretch',
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    minHeight: 32,
+  },
+  actionText: {
     ...tokens.typography.caption,
+    fontWeight: '600',
     color: tokens.colors.link,
-    textAlign: 'center',
+    // Folga para o Android não cortar a última letra ao medir o texto.
+    paddingRight: 1,
+  },
+  removeText: {
+    color: tokens.colors.error,
   },
   error: {
     ...tokens.typography.caption,
     color: tokens.colors.error,
     textAlign: 'center',
+    alignSelf: 'stretch',
   },
 });
