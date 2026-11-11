@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -208,7 +208,6 @@ export default function PatientAssessmentDetailScreen() {
           description={instrumentName}
           when={relativeWhen || displayDate}
           tone={activityToneForIndex(0)}
-          onPress={() => router.back()}
         />
 
         <View style={styles.detailCard}>
