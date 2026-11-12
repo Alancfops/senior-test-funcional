@@ -27,10 +27,10 @@ O monorepo contém **`docs/`** (o quê/por quê), **`backend/`** (API) e **`fron
 | RF001–RF013 | [product/requirements.md](product/requirements.md) |
 | LGPD | [product/privacy-and-lgpd.md](product/privacy-and-lgpd.md) |
 | Arquitetura global e stack | [engineering/architecture.md](engineering/architecture.md) |
-| **Backend (API)** — repo `stf-api` | [stf-api/docs/backend/README.md](../../stf-api/docs/backend/README.md) |
+| **Backend (API)** — repo `senior-test-api` | [stf-api/docs/backend/README.md](../../stf-api/docs/backend/README.md) |
 | **Frontend (app)** | [frontend/README.md](frontend/README.md) |
 | Mapa Figma ↔ rotas ↔ RFs | [frontend/figma-map.md](frontend/figma-map.md) |
-| Modelo de dados — repo `stf-api` | [stf-api/docs/engineering/data-model.md](../../stf-api/docs/engineering/data-model.md) |
+| Modelo de dados — repo `senior-test-api` | [stf-api/docs/engineering/data-model.md](../../stf-api/docs/engineering/data-model.md) |
 | Fases A→E | [engineering/repository-and-workflow.md](engineering/repository-and-workflow.md) |
 | Decisões explícitas (TCC, e-mail, escopo) | [engineering/project-decisions.md](engineering/project-decisions.md) |
 | Protocolos clínicos | [clinical-protocols/README.md](clinical-protocols/README.md) |
@@ -42,7 +42,7 @@ O monorepo contém **`docs/`** (o quê/por quê), **`backend/`** (API) e **`fron
 ## Manutenção
 
 1. Comportamento oficial → **`product/`** primeiro.  
-2. Papel do app → **`frontend/`**; da API → `docs/backend/` no repo **`stf-api`**.  
+2. Papel do app → **`frontend/`**; da API → `docs/backend/` no repo **`senior-test-api`**.  
 3. Decisões técnicas transversais → **`engineering/`**.  
 4. Texto clínico → **`clinical-protocols/`**.
 

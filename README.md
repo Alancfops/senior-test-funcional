@@ -7,7 +7,7 @@ Este repositório contém o **app mobile** (Expo / React Native, em `frontend/`)
 | Repositório | Link |
 |-------------|------|
 | **App mobile** (este) | [github.com/Alancfops/senior-test-funcional](https://github.com/Alancfops/senior-test-funcional) |
-| STF API | [github.com/Alancfops/stf-api](https://github.com/Alancfops/stf-api) |
+| STF API | [github.com/Alancfops/senior-test-api](https://github.com/Alancfops/senior-test-api) |
 | Gerenciador web | [github.com/Alancfops/senior-test-web](https://github.com/Alancfops/senior-test-web) |
 
 ## Sumário
@@ -32,7 +32,7 @@ O STF são três repositórios, clonados lado a lado na mesma pasta:
 | Sistema | Quem usa | O que faz |
 |---------|----------|-----------|
 | **App mobile** (este repo) | Fisioterapeutas (alunos de fisioterapia) | Cadastrar pacientes idosos, aplicar os testes funcionais (TUG, Katz, Berg, Tinetti, MEEM) com tutorial e coleta guiada, ver histórico, gráfico de evolução e PDF de cada avaliação |
-| **[STF API](https://github.com/Alancfops/stf-api)** | Os dois clientes | Guarda os dados (PostgreSQL), calcula pontuações e classificações, gera PDFs, envia e-mails, controla permissões e auditoria |
+| **[STF API](https://github.com/Alancfops/senior-test-api)** | Os dois clientes | Guarda os dados (PostgreSQL), calcula pontuações e classificações, gera PDFs, envia e-mails, controla permissões e auditoria |
 | **[Gerenciador web](https://github.com/Alancfops/senior-test-web)** | Professora e ajudantes | Painel de supervisão de toda a equipe: alunos, pacientes, transferências, exclusões, relatórios e auditoria |
 
 Instrumentos aplicados pelo app: **TUG** (mobilidade), **Katz** (atividades de vida diária), **Berg** (equilíbrio), **Tinetti** (equilíbrio e marcha) e **MEEM** (rastreio cognitivo).
@@ -62,7 +62,7 @@ flowchart LR
 | Camada | Onde | Função |
 |--------|------|--------|
 | **App mobile** | `frontend/` (este repo) | Telas do aluno; token JWT guardado no `expo-secure-store`; dados do servidor via TanStack Query |
-| **STF API** | [stf-api](https://github.com/Alancfops/stf-api) | Regras, cálculo dos resultados, PDF, permissões, e-mail |
+| **STF API** | [senior-test-api](https://github.com/Alancfops/senior-test-api) | Regras, cálculo dos resultados, PDF, permissões, e-mail |
 | **PostgreSQL** | Docker / servidor | Contas, pacientes, avaliações e resultados |
 
 O servidor é a **fonte da verdade** clínica. Detalhes: [docs/engineering/architecture.md](docs/engineering/architecture.md).
@@ -88,7 +88,7 @@ Sem Docker, é possível apontar `DATABASE_URL` em `../stf-api/.env` para um Pos
 Clone os dois repositórios lado a lado:
 
 ```bash
-git clone git@github.com:Alancfops/stf-api.git
+git clone git@github.com:Alancfops/senior-test-api.git stf-api
 git clone git@github.com:Alancfops/senior-test-funcional.git
 cd senior-test-funcional
 
@@ -153,7 +153,7 @@ Execute `make help` para listar todos os alvos.
 | `make lint` | Lint do app |
 | `make test` | Testes do app |
 
-Banco, migrations, e-mail, segredos e testes da API: `make -C ../stf-api help` (ver README do [stf-api](https://github.com/Alancfops/stf-api)).
+Banco, migrations, e-mail, segredos e testes da API: `make -C ../stf-api help` (ver README do [senior-test-api](https://github.com/Alancfops/senior-test-api)).
 
 ---
 
@@ -199,7 +199,7 @@ Swagger da API (dev): [http://localhost:3000/api/docs](http://localhost:3000/api
 | Tema | Onde |
 |------|------|
 | Produto e RFs | [docs/product/](docs/product/) |
-| API (comportamento) | [stf-api/docs/backend](https://github.com/Alancfops/stf-api/blob/main/docs/backend/README.md) |
+| API (comportamento) | [senior-test-api/docs/backend](https://github.com/Alancfops/senior-test-api/blob/main/docs/backend/README.md) |
 | App mobile | [docs/frontend/README.md](docs/frontend/README.md) |
 | LGPD | [docs/product/privacy-and-lgpd.md](docs/product/privacy-and-lgpd.md) |
 | Decisões (e-mail, domínio) | [docs/engineering/project-decisions.md](docs/engineering/project-decisions.md) |
